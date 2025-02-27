@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileWriter;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
@@ -10,7 +11,17 @@ public class Database {
 	private ArrayList<Client> allClients;
 	private ArrayList<Manager> allManagers;
 	private ArrayList<ParkingLot> allParkingLots;
+	private ArrayList<ParkingSpace> allParkingSpaces;
 	
+	public Database() {
+		this.allPayments = new ArrayList<Payment>();
+		this.allBookings = new ArrayList<Booking>();
+		this.allClients = new ArrayList<Client>();
+		this.allManagers = new ArrayList<Manager>();
+		this.allParkingLots = new ArrayList<ParkingLot>();
+		this.allParkingSpaces = new ArrayList<ParkingSpace>();
+		
+	}
 	public ArrayList<Client> getAllClients() {
 		return allClients;
 	}
@@ -19,7 +30,7 @@ public class Database {
 		this.allClients = allClients;
 	}
 
-	private ArrayList<ParkingSpace> allParkingSpace;
+
 	
 	public void load(String path) throws Exception{
 		CsvReader reader = new CsvReader(path); 
@@ -31,41 +42,42 @@ public class Database {
 			String pass = reader.get("password");
 			
 			client = new Client(email, pass);
+			System.out.println(client.getEmail());
 			this.allClients.add(client);
 		}
 		
 	}//comment
 	
-	public void update(String type, String path) throws Exception{
-		try {		
-				CsvWriter csvOutput = new CsvWriter(new FileWriter(path, false), ',');
-				
-				if (type.equals("Client")) {
-					for(Client c: this.allClients) {
-						csvOutput.write(c.getEmail());
-						csvOutput.write(c.getPassword());
-					}
-				}
-				csvOutput.close();
-			
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
+	public void update(String type, String path) throws Exception {
+	    try {
+	    	CsvWriter csvOutput = new CsvWriter(new FileWriter(path, false), ',');
+	    	csvOutput.write("email");
+            csvOutput.write("password");
+            csvOutput.endRecord();
+	        if (type.equals("Client")) {
+	            for (Client c : this.allClients) {
+	                csvOutput.write(c.getEmail());
+	                csvOutput.write(c.getPassword());
+	                csvOutput.endRecord(); // Properly ends the row
+	            }
+	        }
+	        csvOutput.flush(); // Ensure all data is written before closing
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		String path = "/Users/rayyanahmed/eclipse-workspace/3311-deliverable-2/src/clientData.csv";
-		Database db = new Database();
-		try {
-			db.load(path);
-			db.allClients.get(1).setEmail("mynameisrayy@gmail.com");
-			System.out.println(db.allClients.get(1).getEmail());
-			db.update("Client", path);
-			System.out.println("HI THERE");
-		} catch (Exception e) {
-		}
-		// comment
+		String relativePath = Paths.get("src", "clientData.csv").toString();
+	    Database db = new Database();
+	    try {
+	    	db.load(relativePath);
+	        db.allClients.get(1).setEmail("mynameisrayyyyyyyyyy@gmail.com");
+	        System.out.println(db.allClients.get(1).getEmail());
+	        db.update("Client", relativePath);
+	    } catch (Exception e) {
+	        e.printStackTrace(); // Print exception details
+	    }
 	}
 
 }
