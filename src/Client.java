@@ -27,7 +27,8 @@ public abstract class Client {
 	
 	public boolean authenticate(String email, String password) {
 		boolean isLoggedIn = false;
-		Database database = new Database();
+		Database database = Database.getInstance();
+		
 		for (Client client : database.getAllClients()) {
 			if (client.getEmail().equals(email) && client.getPassword().equals(password)) {
 				isLoggedIn = true;

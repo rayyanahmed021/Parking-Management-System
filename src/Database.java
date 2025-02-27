@@ -6,22 +6,33 @@ import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 
 public class Database {
+	private static Database instance = null; // Singleton instance
+
 	private ArrayList<Payment> allPayments;
 	private ArrayList<Booking> allBookings;
 	private ArrayList<Client> allClients;
 	private ArrayList<Manager> allManagers;
 	private ArrayList<ParkingLot> allParkingLots;
 	private ArrayList<ParkingSpace> allParkingSpaces;
-	
-	public Database() {
-		this.allPayments = new ArrayList<Payment>();
-		this.allBookings = new ArrayList<Booking>();
-		this.allClients = new ArrayList<Client>();
-		this.allManagers = new ArrayList<Manager>();
-		this.allParkingLots = new ArrayList<ParkingLot>();
-		this.allParkingSpaces = new ArrayList<ParkingSpace>();
-		
+
+	// Private constructor to prevent direct instantiation
+	private Database() {
+		this.allPayments = new ArrayList<>();
+		this.allBookings = new ArrayList<>();
+		this.allClients = new ArrayList<>();
+		this.allManagers = new ArrayList<>();
+		this.allParkingLots = new ArrayList<>();
+		this.allParkingSpaces = new ArrayList<>();
 	}
+
+	// Singleton getInstance method
+	public static Database getInstance() {
+		if (instance == null) {
+			instance = new Database();
+		}
+		return instance;
+	}
+
 	public ArrayList<Client> getAllClients() {
 		return allClients;
 	}
@@ -30,86 +41,84 @@ public class Database {
 		this.allClients = allClients;
 	}
 
-
-	
-	public void load(String path) throws Exception{
-		CsvReader reader = new CsvReader(path); 
+	public void load(String path) throws Exception {
+		CsvReader reader = new CsvReader(path);
 		reader.readHeaders();
 		Client client = null;
-		
-		while(reader.readRecord()){ 
+
+		while (reader.readRecord()) {
 			String email = reader.get("email");
 			String pass = reader.get("password");
 			String type = reader.get("type");
-			
-			
-			if (type.equals("student")) {
-				client = new Student(email,pass);
+
+			switch (type) {
+			case "student":
+				client = new Student(email, pass);
 				System.out.println("student");
-			}
-			else if (type.equals("visitor")) {
-				client = new Visitor(email,pass);
+				break;
+			case "visitor":
+				client = new Visitor(email, pass);
 				System.out.println("visitor");
-			}
-			else if (type.equals("faculty")) {
-				client = new Faculty(email,pass);
+				break;
+			case "faculty":
+				client = new Faculty(email, pass);
 				System.out.println("faculty");
-			}
-			else if (type.equals("nonfaculty")) {
-				client = new NonFaculty(email,pass);
+				break;
+			case "nonfaculty":
+				client = new NonFaculty(email, pass);
 				System.out.println("nonfaculty");
+				break;
 			}
 			this.allClients.add(client);
 		}
-		
-	}//comment
-	
-	public void update(String type, String path) throws Exception {
-	    try {
-	    	CsvWriter csvOutput = new CsvWriter(new FileWriter(path, false), ',');
-	    	csvOutput.write("email");
-            csvOutput.write("password");
-            csvOutput.write("type");
-            csvOutput.endRecord();
-	        if (type.equals("Client")) {
-	            for (Client c : this.allClients) {
-	                csvOutput.write(c.getEmail());
-	                csvOutput.write(c.getPassword());
-//	                System.out.println(c.getClass(),Student.class);
-	                
-	                if(c.getClass() == Student.class) {
-	                	csvOutput.write("student");
-	                }
-	                else if(c.getClass() == Faculty.class) {
-	                	csvOutput.write("faculty");
-	                }
-	                else if(c.getClass() == NonFaculty.class) {
-	                	csvOutput.write("nonfaculty");
-	                }
-	                else if(c.getClass() == Visitor.class) {
-	                	csvOutput.write("visitor");
-	                }
-//	                csvOutput.write();
-	                csvOutput.endRecord(); // Properly ends the row
-	            }
-	        }
-	        csvOutput.flush(); // Ensure all data is written before closing
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
 	}
-	
+
+	public void update(String type, String path) throws Exception {
+		try {
+			CsvWriter csvOutput = new CsvWriter(new FileWriter(path, false), ',');
+			csvOutput.write("email");
+			csvOutput.write("password");
+			csvOutput.write("type");
+			csvOutput.endRecord();
+
+			if (type.equals("Client")) {
+				for (Client c : this.allClients) {
+					csvOutput.write(c.getEmail());
+					csvOutput.write(c.getPassword());
+
+					if (c instanceof Student) {
+						csvOutput.write("student");
+					} else if (c instanceof Faculty) {
+						csvOutput.write("faculty");
+					} else if (c instanceof NonFaculty) {
+						csvOutput.write("nonfaculty");
+					} else if (c instanceof Visitor) {
+						csvOutput.write("visitor");
+					}
+
+					csvOutput.endRecord(); // Ends the row properly
+				}
+			}
+			csvOutput.flush(); // Ensure data is written before closing
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void main(String[] args) {
 		String relativePath = Paths.get("src", "clientData.csv").toString();
-	    Database db = new Database();
-	    try {
-	    	db.load(relativePath);
-	        db.allClients.get(1).setEmail("mynameisrayy@gmail.com");
-	        System.out.println(db.allClients.get(1).getEmail());
-	        db.update("Client", relativePath);
-	    } catch (Exception e) {
-	        e.printStackTrace(); // Print exception details
-	    }
+		Database db = Database.getInstance();
+		Client c = new Student("ra","123");
+		
+		try {
+			db.load(relativePath);
+			db.allClients.get(1).setEmail("jordanyan@gmail.com");
+			System.out.println(db.allClients.get(1).getEmail());
+			db.update("Client", relativePath);
+			System.out.println(c.authenticate("ra@gmail.com", "123"));
+		} catch (Exception e) {
+			e.printStackTrace(); // Print exception details
+		}
 	}
 
 }
