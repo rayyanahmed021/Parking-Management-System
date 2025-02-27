@@ -42,17 +42,22 @@ public class Database {
 			String pass = reader.get("password");
 			String type = reader.get("type");
 			
+			
 			if (type.equals("student")) {
 				client = new Student(email,pass);
+				System.out.println("student");
 			}
-			else if (type.equals("vistor")) {
-				client = new Vistor(email,pass);
+			else if (type.equals("visitor")) {
+				client = new Visitor(email,pass);
+				System.out.println("visitor");
 			}
 			else if (type.equals("faculty")) {
 				client = new Faculty(email,pass);
+				System.out.println("faculty");
 			}
 			else if (type.equals("nonfaculty")) {
 				client = new NonFaculty(email,pass);
+				System.out.println("nonfaculty");
 			}
 			this.allClients.add(client);
 		}
@@ -70,6 +75,21 @@ public class Database {
 	            for (Client c : this.allClients) {
 	                csvOutput.write(c.getEmail());
 	                csvOutput.write(c.getPassword());
+//	                System.out.println(c.getClass(),Student.class);
+	                
+	                if(c.getClass() == Student.class) {
+	                	csvOutput.write("student");
+	                }
+	                else if(c.getClass() == Faculty.class) {
+	                	csvOutput.write("faculty");
+	                }
+	                else if(c.getClass() == NonFaculty.class) {
+	                	csvOutput.write("nonfaculty");
+	                }
+	                else if(c.getClass() == Visitor.class) {
+	                	csvOutput.write("visitor");
+	                }
+//	                csvOutput.write();
 	                csvOutput.endRecord(); // Properly ends the row
 	            }
 	        }
@@ -87,7 +107,6 @@ public class Database {
 	        db.allClients.get(1).setEmail("mynameisrayy@gmail.com");
 	        System.out.println(db.allClients.get(1).getEmail());
 	        db.update("Client", relativePath);
-	        System.out.println("HI THERE");
 	    } catch (Exception e) {
 	        e.printStackTrace(); // Print exception details
 	    }
