@@ -25,7 +25,7 @@ public class Database {
 			this.allClients.add(client);
 		}
 		
-	}
+	}//comment
 	
 	public void update(String type, String path) throws Exception{
 		try {		
