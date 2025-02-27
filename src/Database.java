@@ -10,6 +10,15 @@ public class Database {
 	private ArrayList<Client> allClients;
 	private ArrayList<Manager> allManagers;
 	private ArrayList<ParkingLot> allParkingLots;
+	
+	public ArrayList<Client> getAllClients() {
+		return allClients;
+	}
+
+	public void setAllClients(ArrayList<Client> allClients) {
+		this.allClients = allClients;
+	}
+
 	private ArrayList<ParkingSpace> allParkingSpace;
 	
 	public void load(String path) throws Exception{
