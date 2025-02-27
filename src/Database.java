@@ -40,9 +40,20 @@ public class Database {
 		while(reader.readRecord()){ 
 			String email = reader.get("email");
 			String pass = reader.get("password");
+			String type = reader.get("type");
 			
-			client = new Client(email, pass);
-			System.out.println(client.getEmail());
+			if (type.equals("student")) {
+				client = new Student(email,pass);
+			}
+			else if (type.equals("vistor")) {
+				client = new Vistor(email,pass);
+			}
+			else if (type.equals("faculty")) {
+				client = new Faculty(email,pass);
+			}
+			else if (type.equals("nonfaculty")) {
+				client = new NonFaculty(email,pass);
+			}
 			this.allClients.add(client);
 		}
 		
@@ -53,6 +64,7 @@ public class Database {
 	    	CsvWriter csvOutput = new CsvWriter(new FileWriter(path, false), ',');
 	    	csvOutput.write("email");
             csvOutput.write("password");
+            csvOutput.write("type");
             csvOutput.endRecord();
 	        if (type.equals("Client")) {
 	            for (Client c : this.allClients) {
@@ -75,18 +87,15 @@ public class Database {
 	        db.allClients.get(1).setEmail("mynameisrayyyyyyyyyy@gmail.com");
 	        System.out.println(db.allClients.get(1).getEmail());
 	        db.update("Client", relativePath);
-	    } catch (Exception e) {
-	        e.printStackTrace(); // Print exception details
-	    }
+	    
 	        db.allClients.get(1).setEmail("mynameisrayy@gmail.com");
 	        System.out.println(db.allClients.get(1).getEmail());
 	        db.update("Client", relativePath);
 	        System.out.println("HI THERE");
-	    } 
-		catch (Exception e) {
+	    } catch (Exception e) {
 	        e.printStackTrace(); // Print exception details
 	    }
+	    } 
 		// comment
-	}
 
 }
