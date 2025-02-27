@@ -8,11 +8,12 @@ public class Booking {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private ParkingSpace parkingSpace;
+    private ParkingLot parkingLot;
     private Payment payment;
-
+    
     // Constructor
     public Booking(int id, Client client, double totalPrice, String licensePlate, 
-                   LocalDateTime startTime, LocalDateTime endTime, Payment payment, ParkingSpace parkingSpace) {
+                   LocalDateTime startTime, LocalDateTime endTime, Payment payment, ParkingSpace parkingSpace, ParkingLot parkingLot) {
         this.id = id;
         this.client = client;
         this.totalPrice = totalPrice;
@@ -21,6 +22,7 @@ public class Booking {
         this.endTime = endTime;
         this.payment = payment;
         this.parkingSpace = parkingSpace;
+        this.parkingLot = parkingLot;
     }
 
     // Getters

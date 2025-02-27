@@ -1,5 +1,11 @@
-email	password
-ra@gmail.com	12
-r@gmail.com	123
-rah@gmail.com	1234
-rayyy@gmail.com	12345
+id,client,totalPrice,licensePlate,startTime,endTime,parkingSpace,parkingLot,payment
+1,client1@example.com,124.53,ABC-384,2025-03-12 08:00,2025-03-12 12:00,30,1,0
+2,client2@example.com,87.29,ABC-237,2025-03-21 14:00,2025-03-21 17:00,12,2,1
+3,client3@example.com,42.75,ABC-452,2025-03-05 09:00,2025-03-05 10:00,7,3,2
+4,client4@example.com,190.12,ABC-921,2025-03-15 16:00,2025-03-15 19:00,22,4,3
+5,client5@example.com,58.34,ABC-188,2025-03-09 07:00,2025-03-09 10:00,41,5,4
+6,client6@example.com,33.91,ABC-719,2025-03-18 13:00,2025-03-18 15:00,18,6,5
+7,client7@example.com,129.45,ABC-625,2025-03-26 11:00,2025-03-26 13:00,5,7,6
+8,client8@example.com,76.50,ABC-934,2025-03-04 17:00,2025-03-04 20:00,36,8,7
+9,client9@example.com,101.23,ABC-512,2025-03-22 10:00,2025-03-22 15:00,27,9,8
+10,client10@example.com,67.89,ABC-367,2025-03-29 06:00,2025-03-29 09:00,13,10,9

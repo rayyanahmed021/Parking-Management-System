@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
@@ -42,7 +43,7 @@ public class Database {
 		this.allClients = allClients;
 	}
 
-	public void load(String path) throws Exception {
+	public void loadClients(String path) throws Exception {
 		CsvReader reader = new CsvReader(path);
 		reader.readHeaders();
 		Client client = null;
@@ -71,6 +72,36 @@ public class Database {
 				break;
 			}
 			this.allClients.add(client);
+		}
+	}
+	
+	public void loadBookings(String path) throws Exception {
+		CsvReader reader = new CsvReader(path);
+		reader.readHeaders();
+		Client client = null;
+
+		while (reader.readRecord()) {
+			String bookingId = reader.get("id");
+			String clientEmail = reader.get("client");
+			double totalPrice = Double.parseDouble(reader.get("totalPrice"));
+			String licensePlate = reader.get("licensePlate");
+			LocalDateTime startTime = LocalDateTime.parse(reader.get("startTime"),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+			LocalDateTime endTime = LocalDateTime.parse(reader.get("endTime"),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+			int parkingSpaceId = Integer.parseInt(reader.get("parkingSpace"));
+			String parkingLotId = reader.get("parkingLot");
+			ParkingLot parkingLot = null;
+			
+			for (ParkingLot p: this.allParkingLots) {
+				//add logic here
+			}
+			//ParkingSpace space = parkingLot.parkingSpaces[parkingSpaceId];
+			String paymentId = reader.get("payment");
+			Payment payment = null;
+			for (Payment p: this.allPayments) {
+				//add logic here
+			}
+			//Booking booking = new Booking()
+//			this.allBookings.add(booking);
 		}
 	}
 
@@ -107,15 +138,15 @@ public class Database {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String relativePath = Paths.get("src", "clientData.csv").toString();
-
+		String clientDataPath = Paths.get("src", "clientData.csv").toString();
+		String bookingDataPath = Paths.get("src", "bookingData.csv").toString();
 		Database db = Database.getInstance();
 		
 		
 		
 		try {
-			db.load(relativePath);
-			
+			db.loadClients(clientDataPath);
+			db.loadBookings(bookingDataPath);
 //			Client client = new Student("ugly@gmail.com", "123");
 //
 //	        // Creating a payment strategy (Credit Card)
@@ -136,7 +167,7 @@ public class Database {
 //
 //			//System.out.println(c.authenticate("ra@gmail.com", "123"));
 //	        printBookingDetails(booking);
-			db.update("Client", relativePath);
+			db.update("Client", clientDataPath);
 			
 		} catch (Exception e) {
 			e.printStackTrace(); // Print exception details
