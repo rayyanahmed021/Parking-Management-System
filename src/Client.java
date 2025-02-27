@@ -19,4 +19,7 @@ public class Client {
 	public String getPassword() {
 		return this.password;
 	}
+	
+	
+	
 }
