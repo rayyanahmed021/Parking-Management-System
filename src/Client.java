@@ -21,5 +21,10 @@ public class Client {
 	}
 	
 	
+	public boolean authenticate(String email, String password) {
+		boolean isLoggedIn = false;
+		
+		return isLoggedIn;
+	}
 	
 }
