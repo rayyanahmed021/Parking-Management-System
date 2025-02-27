@@ -110,14 +110,13 @@ public class Database {
 
 		Database db = Database.getInstance();
 		
-		Client c = Client.registerUser("student", "ra","123");
+		
 		
 		try {
 			db.load(relativePath);
-			db.allClients.get(1).setEmail("jordanyan@gmail.com");
-			System.out.println(db.allClients.get(1).getEmail());
+			Client c = Client.registerUser("student", "ugly@gmail.com","123");
+			//System.out.println(c.authenticate("ra@gmail.com", "123"));
 			db.update("Client", relativePath);
-			System.out.println(c.authenticate("ra@gmail.com", "123"));
 		} catch (Exception e) {
 			e.printStackTrace(); // Print exception details
 		}

@@ -1,4 +1,6 @@
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class Client {
 	protected String email;
@@ -25,18 +27,34 @@ public abstract class Client {
 	}
 	
 	public static Client registerUser(String clientType, String email, String password) throws Exception {
-		Database database = Database.getInstance();
-		
-		for (Client client : database.getAllClients()) {
-			if (client.getEmail().equals(email)) {
-				throw new Exception();
-			}
-		}
-		
-		GenerateClientFactory factory = new GenerateClientFactory();
-		Client registeredClient = factory.getClientInstance(clientType, email, password);
-		
-		return registeredClient;
+	    Database database = Database.getInstance();
+
+	    // Validate email format
+	    if (!isValidEmail(email)) {
+	        throw new Exception("Invalid email format.");
+	    }
+
+	    // Check if email is already registered
+	    for (Client client : database.getAllClients()) {
+	        if (client.getEmail().equals(email)) {
+	            throw new Exception("Email is already registered.");
+	        }
+	    }
+
+	    // Create client using Factory pattern
+	    GenerateClientFactory factory = new GenerateClientFactory();
+	    Client registeredClient = factory.getClientInstance(clientType, email, password);
+	    database.getAllClients().add(registeredClient);
+
+	    return registeredClient;
+	}
+
+	// Email validation function
+	private static boolean isValidEmail(String email) {
+	    String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+	    Pattern pattern = Pattern.compile(emailRegex);
+	    Matcher matcher = pattern.matcher(email);
+	    return matcher.matches();
 	}
 	
 	public boolean authenticate(String email, String password) {
