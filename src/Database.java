@@ -84,10 +84,6 @@ public class Database {
 	    Database db = new Database();
 	    try {
 	    	db.load(relativePath);
-	        db.allClients.get(1).setEmail("mynameisrayyyyyyyyyy@gmail.com");
-	        System.out.println(db.allClients.get(1).getEmail());
-	        db.update("Client", relativePath);
-	    
 	        db.allClients.get(1).setEmail("mynameisrayy@gmail.com");
 	        System.out.println(db.allClients.get(1).getEmail());
 	        db.update("Client", relativePath);
@@ -95,7 +91,6 @@ public class Database {
 	    } catch (Exception e) {
 	        e.printStackTrace(); // Print exception details
 	    }
-	    } 
-		// comment
+	}
 
 }
