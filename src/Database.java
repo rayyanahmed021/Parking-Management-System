@@ -105,10 +105,12 @@ public class Database {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		String relativePath = Paths.get("src", "clientData.csv").toString();
+
 		Database db = Database.getInstance();
-		Client c = new Student("ra","123");
+		
+		Client c = Client.registerUser("student", "ra","123");
 		
 		try {
 			db.load(relativePath);
@@ -119,6 +121,7 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace(); // Print exception details
 		}
+	  
 	}
 
 }

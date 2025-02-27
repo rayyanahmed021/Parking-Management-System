@@ -24,6 +24,20 @@ public abstract class Client {
 		return this.password;
 	}
 	
+	public static Client registerUser(String clientType, String email, String password) throws Exception {
+		Database database = Database.getInstance();
+		
+		for (Client client : database.getAllClients()) {
+			if (client.getEmail().equals(email)) {
+				throw new Exception();
+			}
+		}
+		
+		GenerateClientFactory factory = new GenerateClientFactory();
+		Client registeredClient = factory.getClientInstance(clientType, email, password);
+		
+		return registeredClient;
+	}
 	
 	public boolean authenticate(String email, String password) {
 		boolean isLoggedIn = false;
