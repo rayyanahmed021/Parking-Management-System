@@ -1,11 +1,15 @@
+import java.util.*;
 
-public class Client {
-	private String email;
-	private String password;
+public abstract class Client {
+	protected String email;
+	protected String password;
+	protected ArrayList<Booking> bookings;
+	
 	
 	public Client(String email, String password) {
 		this.email = email;
 		this.password = password;
+		this.bookings = new ArrayList<Booking>();
 	}
 	public void setEmail(String email) {
 		this.email = email;

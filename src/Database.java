@@ -78,6 +78,15 @@ public class Database {
 	    } catch (Exception e) {
 	        e.printStackTrace(); // Print exception details
 	    }
+	        db.allClients.get(1).setEmail("mynameisrayy@gmail.com");
+	        System.out.println(db.allClients.get(1).getEmail());
+	        db.update("Client", relativePath);
+	        System.out.println("HI THERE");
+	    } 
+		catch (Exception e) {
+	        e.printStackTrace(); // Print exception details
+	    }
+		// comment
 	}
 
 }
