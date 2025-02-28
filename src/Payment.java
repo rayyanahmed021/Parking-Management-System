@@ -3,7 +3,12 @@ public class Payment {
     private boolean isRefunded;
     private PaymentStrategy strategy;
 
-    // Constructor
+    // Constructors
+    // Default Constructor
+    public Payment() {
+    	
+    }
+    
     public Payment(double total, boolean isRefunded, PaymentStrategy strategy) {
         this.total = total;
         this.isRefunded = isRefunded;
@@ -34,5 +39,9 @@ public class Payment {
 
     public void setPaymentMethod(PaymentStrategy strategy) {
         this.strategy = strategy;
+    }
+    
+    public Payment payAmount(double amount) {
+    	return this.strategy.processPayment(amount);
     }
 }

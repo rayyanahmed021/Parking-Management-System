@@ -150,10 +150,12 @@ public class Database {
 //			Client client = new Student("ugly@gmail.com", "123");
 //
 //	        // Creating a payment strategy (Credit Card)
-//	        PaymentStrategy creditCardStrategy = new PayPalStrategy("user@example.com", "securepassword");
+//	        PaymentStrategy payPalStrategy = new PayPalStrategy("user@example.com", "securepassword");
 //
 //	        // Processing the payment
-//	        Payment payment = creditCardStrategy.processPayment(100.0);
+//	        Payment payment = new Payment();
+//	        payment.setPaymentMethod(payPalStrategy);
+//	        payment = payment.payAmount(100.0);
 //
 //	        // Creating a parking space
 //	        ParkingSpace parkingSpace = new ParkingSpace();
@@ -161,13 +163,16 @@ public class Database {
 //	        // Creating start and end times for the booking
 //	        LocalDateTime startTime = LocalDateTime.of(2025, 3, 1, 10, 0); // March 1, 2025, 10:00 AM
 //	        LocalDateTime endTime = LocalDateTime.of(2025, 3, 1, 12, 0);   // March 1, 2025, 12:00 PM
+//	        
+//	        ParkingLot parkingLot = null;
+//	        
 //
 //	        // Creating a booking with the processed payment
-//	        Booking booking = new Booking(1, client, 100.0, "ABC-123", startTime, endTime, payment, parkingSpace);
+//	        Booking booking = new Booking(1, client, 100.0, "ABC-123", startTime, endTime, payment, parkingSpace, parkingLot);
 //
 //			//System.out.println(c.authenticate("ra@gmail.com", "123"));
 //	        printBookingDetails(booking);
-			db.update("Client", clientDataPath);
+//			db.update("Client", clientDataPath);
 			
 		} catch (Exception e) {
 			e.printStackTrace(); // Print exception details
@@ -176,20 +181,20 @@ public class Database {
 	  
 	}
 	
-//	private static void printBookingDetails(Booking booking) {
-//        System.out.println("\n--- Booking Details ---");
-//        System.out.println("Booking ID: " + booking.getID());
-////        System.out.println("Client: " + booking.getClient().getEmail());
-//        System.out.println("Email: " + booking.getClient().getEmail());
-//        System.out.println("License Plate: " + booking.getLicensePlate());
-//        System.out.println("Start Time: " + booking.getStartTime());
-//        System.out.println("End Time: " + booking.getEndTime());
-////        System.out.println("Parking Space ID: " + booking.getParkingSpace().getSpaceID());
-//
-//        System.out.println("\n--- Payment Details ---");
-//        System.out.println("Amount Paid: $" + booking.getPayment().getTotal());
-//        System.out.println("Refund Status: " + (booking.getPayment().getIsRefunded() ? "Refunded" : "Not Refunded"));
-//        System.out.println("Payment Method: " + booking.getPayment().getPaymentMethod().getClass().getSimpleName());
-//    }
+	private static void printBookingDetails(Booking booking) {
+        System.out.println("\n--- Booking Details ---");
+        System.out.println("Booking ID: " + booking.getID());
+//        System.out.println("Client: " + booking.getClient().getEmail());
+        System.out.println("Email: " + booking.getClient().getEmail());
+        System.out.println("License Plate: " + booking.getLicensePlate());
+        System.out.println("Start Time: " + booking.getStartTime());
+        System.out.println("End Time: " + booking.getEndTime());
+//        System.out.println("Parking Space ID: " + booking.getParkingSpace().getSpaceID());
+
+        System.out.println("\n--- Payment Details ---");
+        System.out.println("Amount Paid: $" + booking.getPayment().getTotal());
+        System.out.println("Refund Status: " + (booking.getPayment().getIsRefunded() ? "Refunded" : "Not Refunded"));
+        System.out.println("Payment Method: " + booking.getPayment().getPaymentMethod().getClass().getSimpleName());
+    }
 
 }
