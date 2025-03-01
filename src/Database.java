@@ -104,6 +104,52 @@ public class Database {
 //			this.allBookings.add(booking);
 		}
 	}
+	
+	public void loadPayments(String path) throws Exception {
+		PaymentStrategy paymentStrategy = null;
+		int paymentId;
+		double total;
+		boolean refund;
+		String paymentMethod = "";
+		CsvReader reader = new CsvReader(path);
+		reader.readHeaders();
+
+		while (reader.readRecord()) {
+			paymentId = Integer.parseInt(reader.get("id"));
+			Payment.nextPaymentId = Math.max(paymentId,Payment.nextPaymentId);
+			total = Double.parseDouble(reader.get("total"));
+			refund = Boolean.parseBoolean(reader.get("refund"));
+			paymentMethod = reader.get("method");
+			
+			if (paymentMethod.equals("Credit Card")) {
+				long cardNumber = Long.parseLong(reader.get("card number"));
+				String cardName = reader.get("card name");
+				String cvv = reader.get("cvv");
+				String expiryDate = reader.get("expiry date");
+				paymentStrategy = new CreditCardStrategy(cardNumber, cardName,cvv,expiryDate);
+				
+			} else if (paymentMethod.equals("Debit Card")) {
+				long cardNumber = Long.parseLong(reader.get("card number"));
+				String cardName = reader.get("card name");
+				String cvv = reader.get("cvv");
+				String expiryDate = reader.get("expiry date");
+				paymentStrategy = new DebitCardStrategy(cardNumber, cardName,cvv,expiryDate);
+			}
+			else if (paymentMethod.equals("PayPal")) {
+				String username = reader.get("username");
+				String password = reader.get("password");
+				paymentStrategy = new PayPalStrategy(username,password);
+			}
+			else if (paymentMethod.equals("Mobile")) {
+				String mobileNumber = reader.get("mobile number");
+				String provider = reader.get("provider");
+				paymentStrategy = new MobilePaymentStrategy(mobileNumber,provider);
+			}
+			Payment payment = paymentStrategy.processPayment(total);
+			System.out.println(payment.getId());
+			this.allPayments.add(payment);
+		}
+	}
 
 	public void update(String type, String path) throws Exception {
 		try {
@@ -140,6 +186,7 @@ public class Database {
 	public static void main(String[] args) throws Exception {
 		String clientDataPath = Paths.get("src", "clientData.csv").toString();
 		String bookingDataPath = Paths.get("src", "bookingData.csv").toString();
+		String paymentDataPath = Paths.get("src", "paymentData.csv").toString();
 		Database db = Database.getInstance();
 		
 		
@@ -172,7 +219,14 @@ public class Database {
 //
 //			//System.out.println(c.authenticate("ra@gmail.com", "123"));
 //	        printBookingDetails(booking);
+////			db.update("Client", clientDataPath);
+
+//			db.loadPayments(paymentDataPath);
+//			PaymentStrategy paymentStrategy = new MobilePaymentStrategy("asdasd","apple pay");
+//			Payment p = paymentStrategy.processPayment(100);
+//			System.out.println(p.getId());
 //			db.update("Client", clientDataPath);
+
 			
 		} catch (Exception e) {
 			e.printStackTrace(); // Print exception details

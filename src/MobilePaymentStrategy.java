@@ -12,7 +12,7 @@ public class MobilePaymentStrategy implements PaymentStrategy {
     @Override
     public Payment processPayment(double amount) {
         System.out.println("Processing mobile payment of $" + amount);
-        return new Payment(amount, false, this);
+        return new Payment(Payment.nextPaymentId, amount, false, this);
     }
 
     // Getters
