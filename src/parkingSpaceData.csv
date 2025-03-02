@@ -1,5 +1,6 @@
-email	password
-ra@gmail.com	12
-r@gmail.com	123
-rah@gmail.com	1234
-rayyy@gmail.com	12345
+id,lot,occupied,location
+1,1,false,Toronto
+2,2,true,Montreal
+3,3,false,Wuebec
+4,4,true,Toronto
+2,2,true,Montreal

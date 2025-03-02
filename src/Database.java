@@ -56,23 +56,57 @@ public class Database {
 			switch (type) {
 			case "student":
 				client = new Student(email, pass);
-				System.out.println("student");
 				break;
 			case "visitor":
 				client = new Visitor(email, pass);
-				System.out.println("visitor");
 				break;
 			case "faculty":
 				client = new Faculty(email, pass);
-				System.out.println("faculty");
 				break;
 			case "nonfaculty":
 				client = new NonFaculty(email, pass);
-				System.out.println("nonfaculty");
 				break;
 			}
 			this.allClients.add(client);
 		}
+	}
+	public void loadParkingSpaces(String path) throws Exception {
+		CsvReader reader = new CsvReader(path);
+		String parkingLotId;
+        reader.readHeaders();
+
+        while (reader.readRecord()) {
+            ParkingSpace parkingSpace = new ParkingSpace();
+            parkingSpace.setId(Integer.parseInt(reader.get("id")));
+//            parkingSpace.setParkingLot(new ParkingLot(Integer.parseInt(reader.get("lot"))))); //change this
+            parkingLotId = reader.get("lot");
+            for (ParkingLot lot: this.allParkingLots) {
+            	if (lot.getId().equals(parkingLotId)) {
+            		parkingSpace.setParkingLot(lot);
+            	}
+            }
+//            parkingSpace.setParkingLot(new ParkingLot());
+            parkingSpace.setOccupied(Boolean.parseBoolean(reader.get("occupied")));
+            parkingSpace.setLocation(reader.get("location"));
+            this.allParkingSpaces.add(parkingSpace);
+        }
+	}
+	
+	
+	public void loadParkingLot(String path) throws Exception {
+		CsvReader reader = new CsvReader(path);
+        reader.readHeaders();
+
+        while (reader.readRecord()) {
+//            ParkingLot parkingLot = new ParkingLot(
+//                reader.get("id"),
+//                reader.get("name"),
+//                ParkingLotState.valueOf(reader.get("state")) // Assuming ParkingLotState is an enum
+//            );
+        	ParkingLot parkingLot = new ParkingLot(reader.get("id"),reader.get("name"));
+            this.allParkingLots.add(parkingLot);
+        }
+        reader.close();
 	}
 	
 	public void loadBookings(String path) throws Exception {
@@ -145,13 +179,126 @@ public class Database {
 				String provider = reader.get("provider");
 				paymentStrategy = new MobilePaymentStrategy(mobileNumber,provider);
 			}
-			Payment payment = paymentStrategy.processPayment(total);
-			System.out.println(payment.getId());
+			Payment payment = new Payment(paymentId, total, refund, paymentStrategy);
 			this.allPayments.add(payment);
 		}
 	}
+	
+	
+	public void updateParkingSpaces(String path) throws Exception {
+        CsvWriter writer = new CsvWriter(path);
+        writer.write("id");
+        writer.write("lot");
+        writer.write("occupied");
+        writer.write("location");
+        writer.endRecord();
 
-	public void update(String type, String path) throws Exception {
+        for (ParkingSpace space : this.allParkingSpaces) {
+            writer.write(String.valueOf(space.getId()));
+//            writer.write(String.valueOf(space.getParkingLot().getId())); // make changes here
+            writer.write(String.valueOf(space.getId()));
+            writer.write(String.valueOf(space.isOccupied()));
+            writer.write(space.getLocation());
+            writer.endRecord();
+        }
+        writer.close();
+    }
+	
+	public void updateParkingLot(String path) throws Exception {
+        CsvWriter writer = new CsvWriter(path);
+        
+        writer.write("id");
+        writer.write("name");
+        writer.write("state");
+        writer.endRecord();
+
+        for (ParkingLot lot : this.allParkingLots) {
+            writer.write(String.valueOf(lot.getId()));
+            writer.write(String.valueOf(lot.getName()));
+//            writer.write(String.valueOf(lot.getState));
+            writer.write("enabled");
+            writer.endRecord();
+        }
+        writer.close();
+    }
+
+	public void updatePayments(String path) throws Exception {
+		try {
+			CsvWriter csvOutput = new CsvWriter(new FileWriter(path, false), ',');
+			csvOutput.write("id");
+			csvOutput.write("total");
+			csvOutput.write("refund");
+			csvOutput.write("method");
+			csvOutput.write("card number");
+			csvOutput.write("card name");
+			csvOutput.write("cvv");
+			csvOutput.write("expiry date");
+			csvOutput.write("username");
+			csvOutput.write("password");
+			csvOutput.write("mobile number");
+			csvOutput.write("provider");
+			csvOutput.endRecord();
+
+			for (Payment payment : this.allPayments) {
+				csvOutput.write(String.valueOf(payment.getId()));
+				csvOutput.write(String.valueOf(payment.getTotal()));
+				csvOutput.write(String.valueOf(payment.getIsRefunded()));
+				String paymentMethod = payment.getPaymentMethod();
+				csvOutput.write(paymentMethod);
+				
+				if (paymentMethod.equals("Credit Card")) {
+					CreditCardStrategy creditCardStrategy = (CreditCardStrategy) payment.getPaymentStrategy();
+					csvOutput.write(String.valueOf(creditCardStrategy.getCardNumber()));
+					csvOutput.write(creditCardStrategy.getCardHolderName());
+					csvOutput.write(creditCardStrategy.getCVV());
+					csvOutput.write(creditCardStrategy.getExpiryDate());
+					csvOutput.write("");
+					csvOutput.write("");
+					csvOutput.write("");
+					csvOutput.write("");
+				}
+				else if (paymentMethod.equals("Debit Card")) {
+					DebitCardStrategy debitCardStrategy = (DebitCardStrategy) payment.getPaymentStrategy();
+					csvOutput.write(String.valueOf(debitCardStrategy.getCardNumber()));
+					csvOutput.write(debitCardStrategy.getCardHolderName());
+					csvOutput.write(debitCardStrategy.getCVV());
+					csvOutput.write(debitCardStrategy.getExpiryDate());
+					csvOutput.write("");
+					csvOutput.write("");
+					csvOutput.write("");
+					csvOutput.write("");
+				}
+				else if (paymentMethod.equals("PayPal")) {
+					PayPalStrategy payPalStrategy = (PayPalStrategy) payment.getPaymentStrategy();
+					csvOutput.write("");
+					csvOutput.write("");
+					csvOutput.write("");
+					csvOutput.write("");
+					csvOutput.write(payPalStrategy.getUsername());
+					csvOutput.write(payPalStrategy.getPassword());
+					csvOutput.write("");
+					csvOutput.write("");
+				}
+				else {
+					MobilePaymentStrategy mobilePaymentStrategy = (MobilePaymentStrategy) payment.getPaymentStrategy();
+					csvOutput.write("");
+					csvOutput.write("");
+					csvOutput.write("");
+					csvOutput.write("");
+					csvOutput.write("");
+					csvOutput.write("");
+					csvOutput.write(mobilePaymentStrategy.getMobileNumber());
+					csvOutput.write(mobilePaymentStrategy.getProvider());
+				}
+				csvOutput.endRecord(); // Ends the row properly
+			}
+			csvOutput.flush(); // Ensure data is written before closing
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void updateClients(String path) throws Exception {
 		try {
 			CsvWriter csvOutput = new CsvWriter(new FileWriter(path, false), ',');
 			csvOutput.write("email");
@@ -159,23 +306,21 @@ public class Database {
 			csvOutput.write("type");
 			csvOutput.endRecord();
 
-			if (type.equals("Client")) {
-				for (Client c : this.allClients) {
-					csvOutput.write(c.getEmail());
-					csvOutput.write(c.getPassword());
+			for (Client c : this.allClients) {
+				csvOutput.write(c.getEmail());
+				csvOutput.write(c.getPassword());
 
-					if (c instanceof Student) {
-						csvOutput.write("student");
-					} else if (c instanceof Faculty) {
-						csvOutput.write("faculty");
-					} else if (c instanceof NonFaculty) {
-						csvOutput.write("nonfaculty");
-					} else if (c instanceof Visitor) {
-						csvOutput.write("visitor");
-					}
-
-					csvOutput.endRecord(); // Ends the row properly
+				if (c instanceof Student) {
+					csvOutput.write("student");
+				} else if (c instanceof Faculty) {
+					csvOutput.write("faculty");
+				} else if (c instanceof NonFaculty) {
+					csvOutput.write("nonfaculty");
+				} else if (c instanceof Visitor) {
+					csvOutput.write("visitor");
 				}
+
+				csvOutput.endRecord(); // Ends the row properly
 			}
 			csvOutput.flush(); // Ensure data is written before closing
 		} catch (Exception e) {
@@ -187,6 +332,8 @@ public class Database {
 		String clientDataPath = Paths.get("src", "clientData.csv").toString();
 		String bookingDataPath = Paths.get("src", "bookingData.csv").toString();
 		String paymentDataPath = Paths.get("src", "paymentData.csv").toString();
+		String parkingSpaceDataPath = Paths.get("src", "parkingSpaceData.csv").toString();
+		String parkingLotDataPath = Paths.get("src", "parkinglotData.csv").toString();
 		Database db = Database.getInstance();
 		
 		
@@ -194,6 +341,14 @@ public class Database {
 		try {
 			db.loadClients(clientDataPath);
 			db.loadBookings(bookingDataPath);
+			db.loadPayments(paymentDataPath);
+			db.loadParkingLot(parkingLotDataPath);
+			db.loadParkingSpaces(parkingSpaceDataPath);
+			
+			db.allParkingLots.add(db.allParkingLots.get(0));
+			
+			db.updateParkingSpaces(parkingSpaceDataPath);
+			db.updateParkingLot(parkingLotDataPath);
 //			Client client = new Student("ugly@gmail.com", "123");
 //
 //	        // Creating a payment strategy (Credit Card)
@@ -222,11 +377,13 @@ public class Database {
 ////			db.update("Client", clientDataPath);
 
 //			db.loadPayments(paymentDataPath);
-//			PaymentStrategy paymentStrategy = new MobilePaymentStrategy("asdasd","apple pay");
+//			PaymentStrategy paymentStrategy = new MobilePaymentStrategy("asdasd","google pay");
+//			Payment p = new Payment(++Payment.nextPaymentId,31,false,paymentStrategy);
+//			db.allPayments.add(p);
+//			db.updatePayments(paymentDataPath);
 //			Payment p = paymentStrategy.processPayment(100);
 //			System.out.println(p.getId());
 //			db.update("Client", clientDataPath);
-
 			
 		} catch (Exception e) {
 			e.printStackTrace(); // Print exception details

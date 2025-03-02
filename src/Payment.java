@@ -12,14 +12,14 @@ public class Payment {
     }
     // Constructor
     public Payment(int id, double total, boolean isRefunded, PaymentStrategy strategy) {
-        this.id = nextPaymentId++;
+        this.id = id;
         this.total = total;
         this.isRefunded = isRefunded;
         this.strategy = strategy;
     }
 
     // Getters
-    public double getId() {
+    public int getId() {
         return id;
     }
     
@@ -31,7 +31,25 @@ public class Payment {
         return isRefunded;
     }
 
-    public PaymentStrategy getPaymentMethod() {
+    public PaymentStrategy getPaymentStrategy() {
+        return strategy;
+    }
+    
+    public String getPaymentMethod() {
+    	String strategy = "";
+    	
+    	if (this.strategy instanceof CreditCardStrategy) {
+    		strategy = "Credit Card";
+    	}
+    	else if (this.strategy instanceof DebitCardStrategy) {
+    		strategy = "Debit Card";
+    	}
+    	else if (this.strategy instanceof PayPalStrategy) {
+    		strategy = "PayPal";
+    	}
+    	else if (this.strategy instanceof MobilePaymentStrategy) {
+    		strategy = "Mobile";
+    	}
         return strategy;
     }
 
