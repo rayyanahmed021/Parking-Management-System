@@ -275,6 +275,7 @@ public class Database {
             writer.write(String.valueOf(booking.getEndTime()).replace('T', ' '));
             writer.write(String.valueOf(booking.getParkingSpace().getId()));
             writer.write(booking.getParkingLot().getId());
+            writer.write(String.valueOf(booking.getPayment().getId()));
             writer.endRecord();
         }
         writer.close();
