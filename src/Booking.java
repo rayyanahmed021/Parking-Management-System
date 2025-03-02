@@ -13,7 +13,8 @@ public class Booking {
     
     // Constructor
     public Booking(int id, Client client, double totalPrice, String licensePlate, 
-                   LocalDateTime startTime, LocalDateTime endTime, Payment payment, ParkingSpace parkingSpace, ParkingLot parkingLot) {
+                   LocalDateTime startTime, LocalDateTime endTime, 
+                   Payment payment, ParkingSpace parkingSpace, ParkingLot parkingLot) {
         this.id = id;
         this.client = client;
         this.totalPrice = totalPrice;
@@ -23,6 +24,9 @@ public class Booking {
         this.payment = payment;
         this.parkingSpace = parkingSpace;
         this.parkingLot = parkingLot;
+    }
+    public Booking() {
+    	
     }
 
     // Getters
@@ -57,6 +61,10 @@ public class Booking {
     public ParkingSpace getParkingSpace() {
         return parkingSpace;
     }
+    
+    public ParkingLot getParkingLot() {
+        return parkingLot;
+    }
 
     // Setters
     public void setID(int id) {
@@ -86,8 +94,13 @@ public class Booking {
     public void setPayment(Payment payment) {
         this.payment = payment;
     }
+    
 
     public void setParkingSpace(ParkingSpace parkingSpace) {
         this.parkingSpace = parkingSpace;
+    }
+    
+    public void setParkingLot(ParkingLot parkingLot) {
+        this.parkingLot = parkingLot;
     }
 }

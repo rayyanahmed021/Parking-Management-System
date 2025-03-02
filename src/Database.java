@@ -70,19 +70,40 @@ public class Database {
 			this.allClients.add(client);
 		}
 	}
+	
+	public void loadManagers(String path) throws Exception {
+		CsvReader reader = new CsvReader(path);
+        reader.readHeaders();
+
+        while (reader.readRecord()) {
+            String name = reader.get("name");
+            String password = reader.get("password");
+            boolean isSuperManager = Boolean.parseBoolean(reader.get("isSuperManager"));
+
+//            Manager manager = new Manager(name, password, isSuperManager);
+//            this.allManagers.add(manager);
+        }
+        reader.close();
+	}
+	
 	public void loadParkingSpaces(String path) throws Exception {
 		CsvReader reader = new CsvReader(path);
 		String parkingLotId;
+		int parkingSpaceId;
         reader.readHeaders();
 
         while (reader.readRecord()) {
             ParkingSpace parkingSpace = new ParkingSpace();
-            parkingSpace.setId(Integer.parseInt(reader.get("id")));
+            parkingSpaceId = Integer.parseInt(reader.get("id"));
+            parkingSpace.setId(parkingSpaceId);
 //            parkingSpace.setParkingLot(new ParkingLot(Integer.parseInt(reader.get("lot"))))); //change this
             parkingLotId = reader.get("lot");
             for (ParkingLot lot: this.allParkingLots) {
             	if (lot.getId().equals(parkingLotId)) {
             		parkingSpace.setParkingLot(lot);
+            		ParkingSpace[] parkingSpaces = lot.getParkingSpaces();
+            		parkingSpaces[parkingSpaceId] = parkingSpace;
+            		lot.setParkingSpaces(parkingSpaces);
             	}
             }
 //            parkingSpace.setParkingLot(new ParkingLot());
@@ -115,27 +136,55 @@ public class Database {
 		Client client = null;
 
 		while (reader.readRecord()) {
-			String bookingId = reader.get("id");
+			Booking booking = new Booking();
+			
+			int bookingId = Integer.valueOf(reader.get("id"));
+			booking.setID(bookingId);
 			String clientEmail = reader.get("client");
-			double totalPrice = Double.parseDouble(reader.get("totalPrice"));
-			String licensePlate = reader.get("licensePlate");
+			
+			
+			
+			for(Client c: this.allClients) {
+				if(c.getEmail().equals(clientEmail)) {
+					c.bookings.add(booking);
+					booking.setClient(c);
+				}
+			}
+			
+			booking.setTotalPrice(Double.parseDouble(reader.get("totalPrice")));
+			booking.setLicensePlate(reader.get("licensePlate"));
 			LocalDateTime startTime = LocalDateTime.parse(reader.get("startTime"),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 			LocalDateTime endTime = LocalDateTime.parse(reader.get("endTime"),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+			booking.setStartTime(startTime);
+			booking.setEndTime(endTime);
 			int parkingSpaceId = Integer.parseInt(reader.get("parkingSpace"));
 			String parkingLotId = reader.get("parkingLot");
 			ParkingLot parkingLot = null;
 			
-			for (ParkingLot p: this.allParkingLots) {
-				//add logic here
+			
+			for (ParkingLot lot: this.allParkingLots) {
+				if(lot.getId().equals(parkingLotId)) {
+					booking.setParkingLot(lot);
+				}
 			}
-			//ParkingSpace space = parkingLot.parkingSpaces[parkingSpaceId];
-			String paymentId = reader.get("payment");
+			
+			
+			System.out.println(parkingSpaceId);
+			ParkingSpace space = booking.getParkingLot().getParkingSpaces()[parkingSpaceId];
+			System.out.println(space.getId());
+			
+			booking.setParkingSpace(space);
+			
+			int paymentId = Integer.valueOf(reader.get("payment"));
 			Payment payment = null;
+			
 			for (Payment p: this.allPayments) {
-				//add logic here
+				if(p.getId() == paymentId) {
+					booking.setPayment(p);
+				}
 			}
-			//Booking booking = new Booking()
-//			this.allBookings.add(booking);
+			
+			this.allBookings.add(booking);
 		}
 	}
 	
@@ -199,6 +248,50 @@ public class Database {
             writer.write(String.valueOf(space.getId()));
             writer.write(String.valueOf(space.isOccupied()));
             writer.write(space.getLocation());
+            writer.endRecord();
+        }
+        writer.close();
+    }
+	
+	public void updateBookings(String path) throws Exception {
+        CsvWriter writer = new CsvWriter(path);
+        writer.write("id");
+        writer.write("client");
+        writer.write("totalPrice");
+        writer.write("licensePlate");
+        writer.write("startTime");
+        writer.write("endTime");
+        writer.write("parkingSpace");
+        writer.write("parkingLot");
+        writer.write("payment");
+        writer.endRecord();
+
+        for (Booking booking : this.allBookings) {
+            writer.write(String.valueOf(booking.getID()));
+            writer.write(booking.getClient().getEmail());
+            writer.write(String.valueOf(booking.getTotalPrice()));
+            writer.write(booking.getLicensePlate());
+            writer.write(String.valueOf(booking.getStartTime()).replace('T', ' '));
+            writer.write(String.valueOf(booking.getEndTime()).replace('T', ' '));
+            writer.write(String.valueOf(booking.getParkingSpace().getId()));
+            writer.write(booking.getParkingLot().getId());
+            writer.endRecord();
+        }
+        writer.close();
+    }
+	
+	public void updateManagers(String path) throws Exception {
+        CsvWriter writer = new CsvWriter(path);
+        
+        writer.write("name");
+        writer.write("password");
+        writer.write("isSuperManager");
+        writer.endRecord();
+
+        for (Manager manager : this.allManagers) {
+//            writer.write(manager.getName());
+//            writer.write(manager.getPassword());
+//            writer.write(String.valueOf(manager.isSuperManager()));
             writer.endRecord();
         }
         writer.close();
@@ -340,15 +433,16 @@ public class Database {
 		
 		try {
 			db.loadClients(clientDataPath);
-			db.loadBookings(bookingDataPath);
+			
 			db.loadPayments(paymentDataPath);
 			db.loadParkingLot(parkingLotDataPath);
 			db.loadParkingSpaces(parkingSpaceDataPath);
+			db.loadBookings(bookingDataPath);
 			
-			db.allParkingLots.add(db.allParkingLots.get(0));
+			db.updateBookings(bookingDataPath);
 			
-			db.updateParkingSpaces(parkingSpaceDataPath);
-			db.updateParkingLot(parkingLotDataPath);
+//			db.updateParkingSpaces(parkingSpaceDataPath);
+//			db.updateParkingLot(parkingLotDataPath);
 //			Client client = new Student("ugly@gmail.com", "123");
 //
 //	        // Creating a payment strategy (Credit Card)

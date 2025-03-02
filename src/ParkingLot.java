@@ -1,7 +1,7 @@
 public class ParkingLot {
     private String id;
     private String name;
-    private ParkingSpace[] parkingSpaces = new ParkingSpace[100];
+    private ParkingSpace[] parkingSpaces = new ParkingSpace[6];
 //    private ParkingLotState state;
 
 //    public ParkingLot(String id, String name, ParkingLotState state) {
