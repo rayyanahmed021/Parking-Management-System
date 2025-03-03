@@ -13,4 +13,9 @@ public class NonFaculty extends Client{
 	public void setAccountApproved(boolean accountApproved) {
 		this.accountApproved = accountApproved;
 	}
+
+	@Override
+	public double calculateDepositClient() {
+		return NonFaculty.RATE;
+	}
 }

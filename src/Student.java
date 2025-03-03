@@ -13,4 +13,11 @@ public class Student extends Client{
 	public void setAccountApproved(boolean accountApproved) {
 		this.accountApproved = accountApproved;
 	}
+
+	@Override
+	public double calculateDepositClient() {
+		return Student.RATE;
+	}
+	
+	
 }

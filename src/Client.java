@@ -70,4 +70,6 @@ public abstract class Client {
 		return isLoggedIn;
 	}
 	
+	public abstract double calculateDepositClient();
+	
 }
