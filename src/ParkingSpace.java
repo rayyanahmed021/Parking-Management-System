@@ -24,7 +24,7 @@ public class ParkingSpace {
     }
     
     public ParkingSpace() {
-    	
+    	this.parkingSensor = new ParkingSensor(this);
     }
     
     public int getId() {
