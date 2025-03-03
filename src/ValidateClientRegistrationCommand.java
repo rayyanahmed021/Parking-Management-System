@@ -42,13 +42,13 @@ public class ValidateClientRegistrationCommand implements ParkingCommand {
     }
 
     private boolean isValidEmail(String email, String clientType) {
-        if (clientType.equalsIgnoreCase("student") && email.endsWith("@student.university.edu")) {
+        if (clientType.equalsIgnoreCase("student") && email.endsWith("@student.yorku.ca")) {
             return true;
-        } else if (clientType.equalsIgnoreCase("faculty") && email.endsWith("@faculty.university.edu")) {
+        } else if (clientType.equalsIgnoreCase("faculty") && email.endsWith("@faculty.yorku.ca")) {
             return true;
-        } else if (clientType.equalsIgnoreCase("nonfaculty") && email.endsWith("@staff.university.edu")) {
+        } else if (clientType.equalsIgnoreCase("nonfaculty") && email.endsWith("@staff.yorku.ca")) {
             return true;
-        }else if (clientType.equalsIgnoreCase("visitor") && !email.endsWith("@staff.university.edu") && !email.endsWith("@faculty.university.edu") && !email.endsWith("@student.university.edu")) {
+        }else if (clientType.equalsIgnoreCase("visitor") && !email.endsWith("@staff.yorku.ca") && !email.endsWith("@faculty.yorku.ca") && !email.endsWith("@student.yorku.ca")) {
         	return true;
         }return false;
     }
