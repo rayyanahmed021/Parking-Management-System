@@ -72,7 +72,6 @@ public class Database {
 	}
 	
 	
-	
 	public ArrayList<Payment> getAllPayments() {
 		return allPayments;
 	}
