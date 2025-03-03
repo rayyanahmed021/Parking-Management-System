@@ -1,3 +1,4 @@
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,6 +64,14 @@ public abstract class Client {
 	    return matcher.matches();
 	}
 	
+	// License plate validation function
+		private static boolean isValidLicensePlate(String licensePlate) {
+			String plateRegex = "^[A-Z0-9]{1,3}-?[A-Z0-9]{1,4}$";
+		    Pattern pattern = Pattern.compile(plateRegex);
+		    Matcher matcher = pattern.matcher(licensePlate);
+		    return matcher.matches();
+		}
+	
 	public boolean authenticate(String email, String password) {
 		boolean isLoggedIn = false;
 		Database database = Database.getInstance();
@@ -76,6 +85,81 @@ public abstract class Client {
 		return isLoggedIn;
 	}
 	
+
 	public abstract double calculateDepositClient();
+
+	// Assume payment is being passed from the front end
+	public boolean selectSpace(String lot, int space, String licensePlate, int id, 
+		double totalPrice, LocalDateTime startTime, LocalDateTime endTime,
+		Payment payment) {
+		
+		Database db = Database.getInstance();
+		ParkingLot parkingLot = null;
+		ParkingSpace parkingSpace;
+		
+		// Check if licensePlate is valid
+		if (isValidLicensePlate(licensePlate)) {
+			// Check if lot state is enabled
+			for (ParkingLot lots : db.getAllParkingLots()) {
+				if (lots.getId().equals(lot)) {
+					parkingLot = lots;
+					if (!(lots.getState() instanceof EnabledState)) {
+						return false;
+					}
+					else {
+						break;
+					}
+				}
+			}
+			
+			// Check if space state is enabled and not occupied
+			for (ParkingSpace spaces : db.getAllParkingSpaces()) {
+				if (spaces.getId() == space) {
+					parkingSpace = spaces;
+					// W.I.P: Understand how parking space states are handled
+					if (spaces.isEnabled() && !spaces.isOccupied()) {
+						// TODO: Add all booking parameters to selectSpace method as well
+						Booking booking = new Booking(id, this, totalPrice, licensePlate,
+						startTime, endTime, payment, parkingSpace, parkingLot);
+						this.bookings.add(booking);
+						spaces.setOccupied(true);
+					}
+					else {
+						return false;
+					}
+				}
+			}
+		}
+		else {
+			return false;
+		}
+		return true;
+	}
+	
+	// Changed change string to LocalDateTime array for simplicity
+	public boolean updateParking(String changeType, LocalDateTime[] change, Booking booking) {
+		if (changeType.equals("Cancel")) {
+			this.bookings.remove(booking);
+		}
+		else if (changeType.equals("Extend")) {
+			for (Booking bookings : this.bookings) {
+				if (bookings == booking) {
+					bookings.setEndTime(change[1]);
+				}
+			}
+		}
+		else if (changeType.equals("Edit")) {
+			for (Booking bookings : this.bookings) {
+				if (bookings == booking) {
+					bookings.setStartTime(change[0]);
+					bookings.setEndTime(change[1]);
+				}
+			}
+		}
+		else {
+			return false;
+		}
+		return true;
+	}
 	
 }

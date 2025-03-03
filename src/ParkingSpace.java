@@ -4,13 +4,23 @@ public class ParkingSpace {
     private boolean isOccupied;
     private String location;
     private ParkingSensor parkingSensor;
+    private boolean isEnabled;
 
-    public ParkingSpace(int id, ParkingLot parkingLot, String location) {
+    public boolean isEnabled() {
+		return isEnabled;
+	}
+
+	public void setEnabled(boolean isEnabled) {
+		this.isEnabled = isEnabled;
+	}
+
+	public ParkingSpace(int id, ParkingLot parkingLot, String location, boolean isEnabled) {
         this.id = id;
         this.parkingLot = parkingLot;
         this.isOccupied = false;
         this.location = location;
         this.parkingSensor = new ParkingSensor(this);
+        this.isEnabled = isEnabled;
     }
     
     public ParkingSpace() {
