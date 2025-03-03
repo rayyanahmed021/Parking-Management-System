@@ -165,7 +165,7 @@ public class Database {
 //                reader.get("name"),
 //                ParkingLotState.valueOf(reader.get("state")) // Assuming ParkingLotState is an enum
 //            );
-        	ParkingLot parkingLot = new ParkingLot(reader.get("id"),reader.get("name"));
+        	ParkingLot parkingLot = new ParkingLot(reader.get("id"),reader.get("name"),new ParkingSpace[6]);
             this.allParkingLots.add(parkingLot);
         }
         reader.close();

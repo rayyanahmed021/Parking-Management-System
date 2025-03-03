@@ -2,13 +2,14 @@ public class ParkingLot {
     private String id;
     private String name;
     private ParkingSpace[] parkingSpaces = new ParkingSpace[6];
-//    private ParkingLotState state;
+    private ParkingLotState state;
 
 //    public ParkingLot(String id, String name, ParkingLotState state) {
-    public ParkingLot(String id, String name) {
+    public ParkingLot(String id, String name, ParkingSpace[] parkingSpaces) {
         this.id = id;
         this.name = name;
-//        this.state = state;
+        this.parkingSpaces = parkingSpaces;
+        this.state = new EnabledState(); // Default state
     }
 
     public String getId() {
@@ -35,11 +36,15 @@ public class ParkingLot {
         this.parkingSpaces = parkingSpaces;
     }
 
-//    public ParkingLotState getState() {
-//        return state;
-//    }
+    public void setState(ParkingLotState state) {
+        this.state = state;
+    }
 
-//    public void setState(ParkingLotState state) {
-//        this.state = state;
-//    }
+    public ParkingLotState getState() {
+        return state;
+    }
+  /// check class diagram if we need this method in diagram
+    public void handleStateChange() {
+        state.handle(this);
+    }
 }
