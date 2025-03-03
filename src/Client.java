@@ -63,7 +63,7 @@ public abstract class Client {
 	    return matcher.matches();
 	}
 	
-	public boolean authenticate(String email, String password) {
+	public static boolean authenticate(String email, String password) {
 		boolean isLoggedIn = false;
 		Database database = Database.getInstance();
 		
