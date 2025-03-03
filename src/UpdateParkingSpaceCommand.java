@@ -1,19 +1,26 @@
 public class UpdateParkingSpaceCommand implements ParkingCommand {
     private String actionType;
     private ParkingSpace space;
-
-    public UpdateParkingSpaceCommand(String actionType, ParkingSpace space) {
+    private ParkingLot lot;
+    
+    public UpdateParkingSpaceCommand(String actionType, int spaceId, String lotId) {
         this.actionType = actionType;
-        this.space = space;
+        Database db = Database.getInstance();
+        for(ParkingLot lot: db.getAllParkingLots()) {
+        	if(lot.getId().equals(lotId)) {
+        		this.lot = lot;
+        		this.space = lot.getParkingSpaces()[spaceId];
+        	}
+        }
     }
 
     @Override
     public void execute() {
         if (actionType.equalsIgnoreCase("enable")) {
-            space.setOccupied(false);
+            space.setEnabled(true);
            // System.out.println("enabled.");
         } else if (actionType.equalsIgnoreCase("disable")) {
-            space.setOccupied(true);
+        	space.setEnabled(false);
             //System.out.println("disabled.");
         }
     }

@@ -65,7 +65,7 @@ public abstract class Client {
 	}
 	
 	// License plate validation function
-		private static boolean isValidLicensePlate(String licensePlate) {
+		public static boolean isValidLicensePlate(String licensePlate) {
 			String plateRegex = "^[A-Z0-9]{1,3}-?[A-Z0-9]{1,4}$";
 		    Pattern pattern = Pattern.compile(plateRegex);
 		    Matcher matcher = pattern.matcher(licensePlate);
@@ -114,22 +114,20 @@ public abstract class Client {
 			}
 			
 			// Check if space state is enabled and not occupied
-			for (ParkingSpace spaces : db.getAllParkingSpaces()) {
-				if (spaces.getId() == space) {
-					parkingSpace = spaces;
+				if (parkingLot != null && parkingLot.getParkingSpaces()[space] != null) {
+					parkingSpace = parkingLot.getParkingSpaces()[space];
 					// W.I.P: Understand how parking space states are handled
-					if (spaces.isEnabled() && !spaces.isOccupied()) {
+					if (parkingSpace.isEnabled() && !parkingSpace.isOccupied()) {
 						// TODO: Add all booking parameters to selectSpace method as well
 						Booking booking = new Booking(id, this, totalPrice, licensePlate,
 						startTime, endTime, payment, parkingSpace, parkingLot);
 						this.bookings.add(booking);
-						spaces.setOccupied(true);
+						parkingSpace.setOccupied(true);
 					}
 					else {
 						return false;
 					}
 				}
-			}
 		}
 		else {
 			return false;
@@ -140,9 +138,12 @@ public abstract class Client {
 	// Changed change string to LocalDateTime array for simplicity
 	public boolean updateParking(String changeType, LocalDateTime[] change, Booking booking) {
 		if (changeType.equals("Cancel")) {
+			//cannot cancel at the current
+			//provide refund
 			this.bookings.remove(booking);
 		}
 		else if (changeType.equals("Extend")) {
+			//recalcualte the total
 			for (Booking bookings : this.bookings) {
 				if (bookings == booking) {
 					bookings.setEndTime(change[1]);
@@ -150,6 +151,7 @@ public abstract class Client {
 			}
 		}
 		else if (changeType.equals("Edit")) {
+			//update payment
 			for (Booking bookings : this.bookings) {
 				if (bookings == booking) {
 					bookings.setStartTime(change[0]);

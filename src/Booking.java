@@ -1,6 +1,7 @@
 import java.time.LocalDateTime;
 
 public class Booking {
+	static int nextBookingId = 0;
     private int id;
     private Client client;
     private double totalPrice;

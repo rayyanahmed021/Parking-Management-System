@@ -3,8 +3,9 @@ public class Faculty extends Client{
 	public static final int RATE = 8;
 	private boolean accountApproved;
 	
-	public Faculty(String email, String password) {
+	public Faculty(String email, String password, boolean isApproved) {
 		super(email, password);
+		this.accountApproved = isApproved;
 	}
 	
 	public boolean getAccountApproved() {

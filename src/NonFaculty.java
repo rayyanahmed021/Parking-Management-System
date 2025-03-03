@@ -3,8 +3,9 @@ public class NonFaculty extends Client{
 	public static final int RATE = 10;
 	private boolean accountApproved;
 	
-	public NonFaculty(String email, String password) {
+	public NonFaculty(String email, String password, boolean isApproved) {
 		super(email, password);
+		this.accountApproved = isApproved;
 	}
 	
 	public boolean getAccountApproved() {

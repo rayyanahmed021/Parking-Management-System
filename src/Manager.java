@@ -25,9 +25,24 @@ public class Manager {
         this.password = password;
     }
 
-    public boolean authenticate(String username, String password) {
-        return this.name.equals(username) && this.password.equals(password);
-    }
+//    public boolean authenticate(String username, String password) {
+//    	
+//        return this.name.equals(username) && this.password.equals(password);
+//    }
+    public static boolean authenticate(String name, String password) {
+
+		boolean isLoggedIn = false;
+		Database database = Database.getInstance();
+		
+		for (Manager manager : database.getAllManagers()) {
+			if (manager.getName().equals(name) && manager.getPassword().equals(password)) {
+				isLoggedIn = true;
+				return isLoggedIn;
+			}
+		}
+		return isLoggedIn;
+	}
+    
     
     public void executeCommand(ParkingCommand command) {
         invoker.executeCommand(command);

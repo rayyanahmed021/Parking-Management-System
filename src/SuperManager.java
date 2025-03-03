@@ -1,19 +1,26 @@
 public class SuperManager extends Manager {
     private static SuperManager singleSuperManagerInstance;
 
-    private SuperManager() {
-        super("Admin", "SecurePassword"); // Default credentials
+    private SuperManager(String name, String password) {
+        super(name, password); // Default credentials
     }
 
-    public String createManagerAccount(String name, String password) {
+    public boolean createManagerAccount(String name, String password) {
+    	Database db = Database.getInstance();
+    	for(Manager m: db.getAllManagers()) {
+    		if (name.equals(m.getName())) {
+    			return false;
+    		}
+    	}
         Manager newManager = new Manager(name, password);
-        Database.getInstance().getAllManagers().add(newManager);
-        return "Manager account created for: " + name;
+        db.getAllManagers().add(newManager);
+        
+        return true;
     }
     
-    public static SuperManager getSuperManagerInstance() {
+    public static SuperManager getSuperManagerInstance(String name, String password) {
         if (singleSuperManagerInstance == null) {
-            singleSuperManagerInstance = new SuperManager();
+            singleSuperManagerInstance = new SuperManager(name,password);
         }
         return singleSuperManagerInstance;
     }

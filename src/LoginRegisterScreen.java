@@ -11,7 +11,7 @@ public class LoginRegisterScreen {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        SwingUtilities.invokeLater(() -> startGUI());
+//        SwingUtilities.invokeLater(() -> startGUI());
     }
 
     private static void startGUI() {

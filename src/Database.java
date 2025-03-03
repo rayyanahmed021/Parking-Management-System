@@ -52,19 +52,20 @@ public class Database {
 			String email = reader.get("email");
 			String pass = reader.get("password");
 			String type = reader.get("type");
+			boolean isApproved = Boolean.parseBoolean(reader.get("isApproved"));
 
 			switch (type) {
 			case "student":
-				client = new Student(email, pass);
+				client = new Student(email, pass, isApproved);
 				break;
 			case "visitor":
 				client = new Visitor(email, pass);
 				break;
 			case "faculty":
-				client = new Faculty(email, pass);
+				client = new Faculty(email, pass, isApproved);
 				break;
 			case "nonfaculty":
-				client = new NonFaculty(email, pass);
+				client = new NonFaculty(email, pass, isApproved);
 				break;
 			}
 			this.allClients.add(client);
@@ -120,9 +121,15 @@ public class Database {
             String name = reader.get("name");
             String password = reader.get("password");
             boolean isSuperManager = Boolean.parseBoolean(reader.get("isSuperManager"));
+            if (isSuperManager) {
+            	SuperManager superManager = SuperManager.getSuperManagerInstance(name, password);
+            	this.allManagers.add(superManager);
+            }
+            else {
+              Manager manager = new Manager(name, password);
+              this.allManagers.add(manager);
+            }
 
-//            Manager manager = new Manager(name, password, isSuperManager);
-//            this.allManagers.add(manager);
         }
         reader.close();
 	}
@@ -150,6 +157,7 @@ public class Database {
 //            parkingSpace.setParkingLot(new ParkingLot());
             parkingSpace.setOccupied(Boolean.parseBoolean(reader.get("occupied")));
             parkingSpace.setLocation(reader.get("location"));
+            parkingSpace.setEnabled(Boolean.parseBoolean(reader.get("isEnabled")));
             this.allParkingSpaces.add(parkingSpace);
         }
 	}
@@ -180,6 +188,7 @@ public class Database {
 			Booking booking = new Booking();
 			
 			int bookingId = Integer.valueOf(reader.get("id"));
+			Booking.nextBookingId = Math.max(bookingId, Booking.nextBookingId);
 			booking.setID(bookingId);
 			String clientEmail = reader.get("client");
 			
@@ -465,6 +474,7 @@ public class Database {
 
 	public static void loadEverything() throws Exception {
 		String clientDataPath = Paths.get("src", "clientData.csv").toString();
+		String managerDataPath = Paths.get("src", "managerData.csv").toString();
 		String bookingDataPath = Paths.get("src", "bookingData.csv").toString();
 		String paymentDataPath = Paths.get("src", "paymentData.csv").toString();
 		String parkingSpaceDataPath = Paths.get("src", "parkingSpaceData.csv").toString();
@@ -475,12 +485,39 @@ public class Database {
 		
 		try {
 			db.loadClients(clientDataPath);
-			
+			db.loadManagers(managerDataPath);
 			db.loadPayments(paymentDataPath);
 			db.loadParkingLot(parkingLotDataPath);
 			db.loadParkingSpaces(parkingSpaceDataPath);
 			db.loadBookings(bookingDataPath);
 			
+			NonFaculty n = (NonFaculty) db.allClients.get(0);
+			System.out.println(n.getAccountApproved());
+			Student newClient = (Student) Client.registerUser("Student", "test@gmail.com", "321");
+			System.out.println(newClient.getAccountApproved());
+			SuperManager superM = SuperManager.getSuperManagerInstance("admin", "admin");
+			superM.executeCommand(new UpdateParkingSpaceCommand("disable",3,"1"));
+			
+			System.out.println(db.getAllParkingLots().get(0).getParkingSpaces()[3].isEnabled());
+			superM.executeCommand(new UpdateParkingSpaceCommand("enable",3,"1"));
+			System.out.println(db.getAllParkingLots().get(0).getParkingSpaces()[3].isEnabled());
+//			System.out.println(SuperManager.getSuperManagerInstance("", "").getSuperManagerData());
+			
+//			System.out.println(Manager.authenticate("justin", "67823123"));
+//			Student s = new Student("jordan","123");
+//			LocalDateTime startTime = LocalDateTime.of(2025, 3, 1, 10, 0);
+//			LocalDateTime endTime = LocalDateTime.of(2025, 3, 1, 12, 0);
+//			Payment p = new Payment();
+//			p.setPaymentMethod(new PayPalStrategy("email", "password"));
+//			p.payAmount(35.0);
+//			
+//			System.out.println(s.selectSpace("1",3,"ABC-123",100,35.0,startTime, endTime, p));
+//			
+//			s.updateParking("Extend", null, s.bookings.get(0));
+//			System.out.println(s.bookings.size());
+			
+			//System.out.println(s.isValidLicensePlate("ABC-123"));
+//			System.out.println(s.bookings.get(0).getEndTime());
 //			db.updateBookings(bookingDataPath);
 			
 //			db.updateParkingSpaces(parkingSpaceDataPath);

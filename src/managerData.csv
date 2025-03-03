@@ -2,4 +2,4 @@ name,password,isSuperManager
 rayyan,123,false
 jordan,1234,true
 justin,678,false
-smit,12345,true
+smit,12345,false
