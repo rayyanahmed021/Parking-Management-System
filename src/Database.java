@@ -463,7 +463,7 @@ public class Database {
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void loadEverything() throws Exception {
 		String clientDataPath = Paths.get("src", "clientData.csv").toString();
 		String bookingDataPath = Paths.get("src", "bookingData.csv").toString();
 		String paymentDataPath = Paths.get("src", "paymentData.csv").toString();
@@ -481,7 +481,7 @@ public class Database {
 			db.loadParkingSpaces(parkingSpaceDataPath);
 			db.loadBookings(bookingDataPath);
 			
-			db.updateBookings(bookingDataPath);
+//			db.updateBookings(bookingDataPath);
 			
 //			db.updateParkingSpaces(parkingSpaceDataPath);
 //			db.updateParkingLot(parkingLotDataPath);
