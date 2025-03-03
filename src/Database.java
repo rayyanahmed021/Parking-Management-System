@@ -71,6 +71,48 @@ public class Database {
 		}
 	}
 	
+	
+	
+	public ArrayList<Payment> getAllPayments() {
+		return allPayments;
+	}
+
+	public void setAllPayments(ArrayList<Payment> allPayments) {
+		this.allPayments = allPayments;
+	}
+
+	public ArrayList<Booking> getAllBookings() {
+		return allBookings;
+	}
+
+	public void setAllBookings(ArrayList<Booking> allBookings) {
+		this.allBookings = allBookings;
+	}
+
+	public ArrayList<Manager> getAllManagers() {
+		return allManagers;
+	}
+
+	public void setAllManagers(ArrayList<Manager> allManagers) {
+		this.allManagers = allManagers;
+	}
+
+	public ArrayList<ParkingLot> getAllParkingLots() {
+		return allParkingLots;
+	}
+
+	public void setAllParkingLots(ArrayList<ParkingLot> allParkingLots) {
+		this.allParkingLots = allParkingLots;
+	}
+
+	public ArrayList<ParkingSpace> getAllParkingSpaces() {
+		return allParkingSpaces;
+	}
+
+	public void setAllParkingSpaces(ArrayList<ParkingSpace> allParkingSpaces) {
+		this.allParkingSpaces = allParkingSpaces;
+	}
+
 	public void loadManagers(String path) throws Exception {
 		CsvReader reader = new CsvReader(path);
         reader.readHeaders();
