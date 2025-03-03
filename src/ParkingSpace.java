@@ -3,12 +3,14 @@ public class ParkingSpace {
     private ParkingLot parkingLot;
     private boolean isOccupied;
     private String location;
+    private ParkingSensor parkingSensor;
 
-    public ParkingSpace(int id, ParkingLot parkingLot, boolean isOccupied, String location) {
+    public ParkingSpace(int id, ParkingLot parkingLot, String location) {
         this.id = id;
         this.parkingLot = parkingLot;
-        this.isOccupied = isOccupied;
+        this.isOccupied = false;
         this.location = location;
+        this.parkingSensor = new ParkingSensor(this);
     }
     
     public ParkingSpace() {
@@ -37,6 +39,7 @@ public class ParkingSpace {
 
     public void setOccupied(boolean isOccupied) {
         this.isOccupied = isOccupied;
+        parkingSensor.notifyObservers();
     }
 
     public String getLocation() {
@@ -45,5 +48,12 @@ public class ParkingSpace {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+    public ParkingSensor getParkingSensor() {
+        return parkingSensor;
+    }
+
+    public void setParkingSensor(ParkingSensor parkingSensor) {
+        this.parkingSensor = parkingSensor;
     }
 }
