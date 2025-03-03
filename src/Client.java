@@ -26,6 +26,12 @@ public abstract class Client {
 		return this.password;
 	}
 	
+	public ArrayList<Booking> getBookings() {
+		return bookings;
+	}
+	public void setBookings(ArrayList<Booking> bookings) {
+		this.bookings = bookings;
+	}
 	public static Client registerUser(String clientType, String email, String password) throws Exception {
 	    Database database = Database.getInstance();
 
