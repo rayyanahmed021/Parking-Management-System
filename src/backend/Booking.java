@@ -78,6 +78,7 @@ public class Booking {
     }
 
     public void setTotalPrice(double totalPrice) {
+    	// this.payment.setTotal(totalPrice);
         this.totalPrice = totalPrice;
     }
 

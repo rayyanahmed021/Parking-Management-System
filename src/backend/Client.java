@@ -126,6 +126,8 @@ public abstract class Client {
 						this.bookings.add(booking);
 						parkingSpace.setOccupied(true);
 //						payment.
+						// Booking Deposit
+						booking.setTotalPrice(booking.getTotalPrice() + this.calculateDepositClient());
 					}
 					else {
 						return false;

@@ -509,28 +509,31 @@ public class Database implements ParkingObserver{
 			
 //			System.out.println(Manager.authenticate("justin", "67823123"));
 //			Student s = new Student("jordan","123");
-//			LocalDateTime startTime = LocalDateTime.of(2025, 3, 1, 10, 0);
-//			LocalDateTime endTime = LocalDateTime.of(2025, 3, 1, 12, 0);
-//			Payment p = new Payment();
+			LocalDateTime startTime = LocalDateTime.of(2025, 3, 1, 10, 0);
+			LocalDateTime endTime = LocalDateTime.of(2025, 3, 1, 12, 0);
+			Payment p = new Payment();
 //			p.setPaymentMethod(new PayPalStrategy("email", "password"));
 //			p.payAmount(35.0);
-//			
-//			System.out.println(s.selectSpace("1",3,"ABC-123",100,35.0,startTime, endTime, p));
+			
+			// Test selectSpace booking deposit
+			System.out.println(newClient.getBookings());
+			System.out.println(newClient.selectSpace("1", 3, "ABC-123", 100, 0,startTime, endTime, p));
+			System.out.println(newClient.getBookings().get(0).getTotalPrice());
 //			
 //			s.updateParking("Extend", null, s.bookings.get(0));
 //			System.out.println(s.bookings.size());
 			
 //			// Updating Booking (UpdateParking Method)
-			LocalDateTime startTime = LocalDateTime.of(2025, 3, 5, 10, 0);
-			LocalDateTime endTime = LocalDateTime.of(2025, 3, 5, 12, 0);
-			LocalDateTime[] change = new LocalDateTime[]{startTime, endTime};
-			Booking booking = new Booking();
-			Payment p = new Payment();
-			booking.setPayment(p);
-			booking.setStartTime(startTime);
-			booking.setEndTime(endTime);
-			newClient.bookings.add(booking);
-			long hoursDifference = Duration.between(change[0], change[1]).toHours();
+//			LocalDateTime startTime = LocalDateTime.of(2025, 3, 5, 10, 0);
+//			LocalDateTime endTime = LocalDateTime.of(2025, 3, 5, 12, 0);
+//			LocalDateTime[] change = new LocalDateTime[]{startTime, endTime};
+//			Booking booking = new Booking();
+//			Payment p = new Payment();
+//			booking.setPayment(p);
+//			booking.setStartTime(startTime);
+//			booking.setEndTime(endTime);
+//			newClient.bookings.add(booking);
+//			long hoursDifference = Duration.between(change[0], change[1]).toHours();
 			
 			// Test Cancel Booking
 //			System.out.println(newClient.bookings);
