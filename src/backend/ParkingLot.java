@@ -1,4 +1,9 @@
+<<<<<<< Updated upstream:src/backend/ParkingLot.java
 package backend;
+=======
+import java.util.Random;
+import java.util.UUID;
+>>>>>>> Stashed changes:src/ParkingLot.java
 
 public class ParkingLot {
     private String id;
@@ -12,6 +17,29 @@ public class ParkingLot {
         this.name = name;
         this.parkingSpaces = parkingSpaces;
         this.state = new EnabledState(); // Default state
+    }
+    
+    public static String randomIdGenerator() {
+    	//generate id
+    	Database db = Database.getInstance();
+    	String generatedId;
+        boolean idExists;
+
+        do {
+            // Generate a random unique identifier
+            generatedId = UUID.randomUUID().toString().substring(0, 5);
+            idExists = false;
+            
+            // Check if the generated ID already exists in the database
+            for (ParkingLot lot : db.getAllParkingLots()) {
+                if (lot.getId().equals(generatedId)) {
+                    idExists = true;
+                    break;
+                }
+            }
+        } while (idExists);
+        
+        return generatedId;
     }
 
     public String getId() {

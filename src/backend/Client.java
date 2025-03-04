@@ -127,6 +127,7 @@ public abstract class Client {
 						startTime, endTime, payment, parkingSpace, parkingLot);
 						this.bookings.add(booking);
 						parkingSpace.setOccupied(true);
+//						payment.
 					}
 					else {
 						return false;

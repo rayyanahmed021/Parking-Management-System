@@ -2,9 +2,14 @@ public class UpdateParkingLotCommand implements ParkingCommand {
     private String actionType;
     private ParkingLot lot;
 
-    public UpdateParkingLotCommand(String actionType, ParkingLot lot) {
+    public UpdateParkingLotCommand(String actionType, String lotId) {
         this.actionType = actionType;
-        this.lot = lot;
+        Database db = Database.getInstance();
+        for(ParkingLot lot: db.getAllParkingLots()) {
+        	if(lot.getId().equals(lotId)) {
+        		this.lot = lot;
+        	}
+        }
     }
 
     @Override

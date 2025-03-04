@@ -1,4 +1,4 @@
 package backend;
 public interface ParkingObserver {
-    void update(int spaceID, boolean isOccupied);
+    void update(int spaceID, String lotId, boolean isOccupied);
 }

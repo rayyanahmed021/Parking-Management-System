@@ -4,6 +4,7 @@ import java.util.List;
 
 public class ParkingSensor {
     private ParkingSpace parkingSpace;
+    private ParkingLot parkingLot;
     private Car carInfo;
     private List<ParkingObserver> observers;
 
@@ -34,7 +35,7 @@ public class ParkingSensor {
 
     public void notifyObservers() {
         for (ParkingObserver observer : observers) {
-            observer.update(parkingSpace.getId(), parkingSpace.isOccupied());
+            observer.update(parkingSpace.getId(), parkingLot.getId()  , parkingSpace.isOccupied());
         }
     }
 }

@@ -1,6 +1,10 @@
+<<<<<<< Updated upstream:src/backend/ParkingSpace.java
 package backend;
 
 public class ParkingSpace {
+=======
+public class ParkingSpace implements ParkingObserver{
+>>>>>>> Stashed changes:src/ParkingSpace.java
     private int id;
     private ParkingLot parkingLot;
     private boolean isOccupied;
@@ -68,4 +72,9 @@ public class ParkingSpace {
     public void setParkingSensor(ParkingSensor parkingSensor) {
         this.parkingSensor = parkingSensor;
     }
+
+	@Override
+	public void update(int spaceID, String lotId, boolean isOccupied) {
+		this.isOccupied = isOccupied;
+	}
 }

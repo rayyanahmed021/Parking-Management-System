@@ -1,12 +1,8 @@
 public class AddParkingLotCommand implements ParkingCommand {
-    private String lotId;
-    private String location;
     private ParkingLot lot;
 
-    public AddParkingLotCommand(String lotId, String location, ParkingLot lot) {
-        this.lotId = lotId;
-        this.location = location;
-        this.lot = lot;
+    public AddParkingLotCommand(String lotId, String name) {
+        this.lot = new ParkingLot(lotId, name, new ParkingSpace[6]); //edit this
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 
-public class Database {
+public class Database implements ParkingObserver{
 	private static Database instance = null; // Singleton instance
 
 	private ArrayList<Payment> allPayments;
@@ -497,11 +497,13 @@ public class Database {
 			Student newClient = (Student) Client.registerUser("Student", "test@gmail.com", "321");
 			System.out.println(newClient.getAccountApproved());
 			SuperManager superM = SuperManager.getSuperManagerInstance("admin", "admin");
-			superM.executeCommand(new UpdateParkingSpaceCommand("disable",3,"1"));
+//			superM.executeCommand(new UpdateParkingSpaceCommand("disable",3,"1"));
 			
 			System.out.println(db.getAllParkingLots().get(0).getParkingSpaces()[3].isEnabled());
-			superM.executeCommand(new UpdateParkingSpaceCommand("enable",3,"1"));
-			System.out.println(db.getAllParkingLots().get(0).getParkingSpaces()[3].isEnabled());
+			superM.executeCommand(new AddParkingLotCommand(ParkingLot.randomIdGenerator(),"Jordan"));
+			System.out.println("asdada");
+//			System.out.println(db.getAllParkingLots().get(0));
+			System.out.println(db.getAllParkingLots().get(3).getName());
 //			System.out.println(SuperManager.getSuperManagerInstance("", "").getSuperManagerData());
 			
 //			System.out.println(Manager.authenticate("justin", "67823123"));
@@ -581,5 +583,16 @@ public class Database {
         System.out.println("Refund Status: " + (booking.getPayment().getIsRefunded() ? "Refunded" : "Not Refunded"));
         System.out.println("Payment Method: " + booking.getPayment().getPaymentMethod().getClass().getSimpleName());
     }
+
+	@Override
+	public void update(int spaceId,String lotId, boolean isOccupied) {
+		for (ParkingLot lot: this.allParkingLots) {
+			if(lot.getId().equals(lotId)) {
+				lot.getParkingSpaces()[spaceId].setOccupied(isOccupied);
+			}
+		}
+		
+		
+	}
 
 }
