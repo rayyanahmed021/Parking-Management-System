@@ -1,3 +1,4 @@
+package backend;
 import java.time.LocalDateTime;
 
 public class Booking {

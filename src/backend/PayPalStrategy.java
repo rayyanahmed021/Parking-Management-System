@@ -1,3 +1,5 @@
+package backend;
+
 public class PayPalStrategy implements PaymentStrategy {
     private String username;
     private String password;

@@ -1,3 +1,4 @@
+package backend;
 
 public class Student extends Client{
 	public static final int RATE = 5;

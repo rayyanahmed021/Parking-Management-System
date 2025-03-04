@@ -1,3 +1,5 @@
+package backend;
+
 public class ParkingSpace {
     private int id;
     private ParkingLot parkingLot;

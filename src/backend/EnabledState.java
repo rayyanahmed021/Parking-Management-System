@@ -1,3 +1,4 @@
+package backend;
 class EnabledState implements ParkingLotState {
     @Override
     public void handle(ParkingLot lot) {

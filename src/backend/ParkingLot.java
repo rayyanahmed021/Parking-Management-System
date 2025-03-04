@@ -1,3 +1,5 @@
+package backend;
+
 public class ParkingLot {
     private String id;
     private String name;

@@ -1,3 +1,4 @@
+package backend;
 public class Car {
 	private String licensePlate;
     private String brand;

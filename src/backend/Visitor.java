@@ -1,3 +1,4 @@
+package backend;
 
 public class Visitor extends Client {
 	public static final int RATE = 15;

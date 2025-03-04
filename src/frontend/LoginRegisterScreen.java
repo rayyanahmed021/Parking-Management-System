@@ -1,3 +1,5 @@
+package frontend;
+import backend.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,7 +16,7 @@ public class LoginRegisterScreen {
 //        SwingUtilities.invokeLater(() -> startGUI());
     }
 
-    private static void startGUI() {
+    public static void startGUI() {
         JFrame frame = new JFrame("Client Portal");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 300);

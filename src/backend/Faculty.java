@@ -1,3 +1,4 @@
+package backend;
 
 public class Faculty extends Client{
 	public static final int RATE = 8;

@@ -1,3 +1,4 @@
+package backend;
 
 public class NonFaculty extends Client{
 	public static final int RATE = 10;

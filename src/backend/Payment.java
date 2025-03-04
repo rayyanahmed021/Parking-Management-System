@@ -1,3 +1,5 @@
+package backend;
+
 public class Payment {
 	static int nextPaymentId;
 	private int id;

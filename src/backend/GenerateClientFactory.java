@@ -1,3 +1,5 @@
+package backend;
+
 public class GenerateClientFactory {
 	public Client getClientInstance(String clientType, String email, String password) {
 		String givenType = clientType.toLowerCase();
