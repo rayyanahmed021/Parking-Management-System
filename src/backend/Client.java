@@ -1,4 +1,5 @@
 package backend;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -139,21 +140,31 @@ public abstract class Client {
 	
 	// Changed change string to LocalDateTime array for simplicity
 	public boolean updateParking(String changeType, LocalDateTime[] change, Booking booking) {
-		if (changeType.equals("Cancel")) {
+		if (changeType.toLowerCase().equals("cancel")) {
 			//cannot cancel at the current
 			//provide refund
+			// Check if current time is before the start time of the booking
+			if (LocalDateTime.now().isBefore(change[0])) {
+				booking.setTotalPrice(0);
+				booking.getPayment().setIsRefunded(true);
+			}
 			this.bookings.remove(booking);
 		}
-		else if (changeType.equals("Extend")) {
-			//recalcualte the total
+		else if (changeType.toLowerCase().equals("extend")) {
+			//Recalculate the total
+			long hoursDifference = Duration.between(booking.getEndTime(), change[1]).toHours();
+			// Add # of hrs extended * rate of client type
+			booking.setTotalPrice(booking.getTotalPrice() + (hoursDifference*this.calculateDepositClient()));
 			for (Booking bookings : this.bookings) {
 				if (bookings == booking) {
 					bookings.setEndTime(change[1]);
 				}
 			}
 		}
-		else if (changeType.equals("Edit")) {
+		else if (changeType.toLowerCase().equals("edit")) {
 			//update payment
+			long hoursDifference = Duration.between(change[0], change[1]).toHours();
+			booking.setTotalPrice(hoursDifference*this.calculateDepositClient());
 			for (Booking bookings : this.bookings) {
 				if (bookings == booking) {
 					bookings.setStartTime(change[0]);

@@ -2,6 +2,7 @@ package backend;
 import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -518,6 +519,41 @@ public class Database implements ParkingObserver{
 //			
 //			s.updateParking("Extend", null, s.bookings.get(0));
 //			System.out.println(s.bookings.size());
+			
+//			// Updating Booking (UpdateParking Method)
+			LocalDateTime startTime = LocalDateTime.of(2025, 3, 5, 10, 0);
+			LocalDateTime endTime = LocalDateTime.of(2025, 3, 5, 12, 0);
+			LocalDateTime[] change = new LocalDateTime[]{startTime, endTime};
+			Booking booking = new Booking();
+			Payment p = new Payment();
+			booking.setPayment(p);
+			booking.setStartTime(startTime);
+			booking.setEndTime(endTime);
+			newClient.bookings.add(booking);
+			long hoursDifference = Duration.between(change[0], change[1]).toHours();
+			
+			// Test Cancel Booking
+//			System.out.println(newClient.bookings);
+//			System.out.println(newClient.updateParking("Cancel", change, booking));
+//			System.out.println(newClient.bookings);
+			
+			// Test Extend Booking
+//			booking.setTotalPrice(hoursDifference*newClient.calculateDepositClient());
+//			System.out.println(booking.getEndTime() + " " + booking.getTotalPrice());
+//			endTime = LocalDateTime.of(2025, 3, 5, 18, 0);
+//			change[1] = endTime;
+//			System.out.println(newClient.updateParking("Extend", change, booking));
+//			System.out.println(booking.getEndTime() + " " + booking.getTotalPrice());
+			
+			// Test Edit Booking
+//			booking.setTotalPrice(hoursDifference*newClient.calculateDepositClient());
+//			System.out.println(booking.getStartTime() + " " + booking.getEndTime() + " " + booking.getTotalPrice());
+//			startTime = LocalDateTime.of(2025, 3, 5, 14, 0);
+//			endTime = LocalDateTime.of(2025, 3, 5, 20, 0);
+//			change[0] = startTime;
+//			change[1] = endTime;
+//			System.out.println(newClient.updateParking("Edit", change, booking));
+//			System.out.println(booking.getStartTime() + " " + booking.getEndTime() + " " + booking.getTotalPrice());
 			
 			//System.out.println(s.isValidLicensePlate("ABC-123"));
 //			System.out.println(s.bookings.get(0).getEndTime());
