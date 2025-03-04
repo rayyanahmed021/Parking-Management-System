@@ -126,8 +126,11 @@ public abstract class Client {
 						this.bookings.add(booking);
 						parkingSpace.setOccupied(true);
 //						payment.
-						// Booking Deposit
+						// Booking Deposit: **(Confused whether to assign deposit or full total)**
 						booking.setTotalPrice(booking.getTotalPrice() + this.calculateDepositClient());
+						// Full total:
+//						long hoursDifference = Duration.between(startTime, endTime).toHours();
+//						booking.setTotalPrice(booking.getTotalPrice() + (hoursDifference*this.calculateDepositClient()));
 					}
 					else {
 						return false;
