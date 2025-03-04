@@ -1,8 +1,6 @@
-<<<<<<< Updated upstream:src/Manager.java
-=======
+
 package backend;
 
->>>>>>> Stashed changes:src/backend/Manager.java
 public class Manager {
     protected String name;
     protected String password;

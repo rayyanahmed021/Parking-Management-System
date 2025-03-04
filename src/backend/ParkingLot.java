@@ -1,9 +1,8 @@
-<<<<<<< Updated upstream:src/backend/ParkingLot.java
+
 package backend;
-=======
+
 import java.util.Random;
 import java.util.UUID;
->>>>>>> Stashed changes:src/ParkingLot.java
 
 public class ParkingLot {
     private String id;

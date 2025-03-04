@@ -1,3 +1,4 @@
+package backend;
 public class AddParkingLotCommand implements ParkingCommand {
     private ParkingLot lot;
 

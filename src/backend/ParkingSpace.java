@@ -1,10 +1,8 @@
-<<<<<<< Updated upstream:src/backend/ParkingSpace.java
+
 package backend;
 
-public class ParkingSpace {
-=======
 public class ParkingSpace implements ParkingObserver{
->>>>>>> Stashed changes:src/ParkingSpace.java
+
     private int id;
     private ParkingLot parkingLot;
     private boolean isOccupied;

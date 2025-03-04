@@ -1,15 +1,14 @@
-public class UpdateParkingSpaceCommand implements ParkingCommand {
+package backend;
+public class UpdateParkingLotCommand implements ParkingCommand {
     private String actionType;
-    private ParkingSpace space;
     private ParkingLot lot;
-    
-    public UpdateParkingSpaceCommand(String actionType, int spaceId, String lotId) {
+
+    public UpdateParkingLotCommand(String actionType, String lotId) {
         this.actionType = actionType;
         Database db = Database.getInstance();
         for(ParkingLot lot: db.getAllParkingLots()) {
         	if(lot.getId().equals(lotId)) {
         		this.lot = lot;
-        		this.space = lot.getParkingSpaces()[spaceId];
         	}
         }
     }
@@ -17,11 +16,11 @@ public class UpdateParkingSpaceCommand implements ParkingCommand {
     @Override
     public void execute() {
         if (actionType.equalsIgnoreCase("enable")) {
-            space.setEnabled(true);
-           // System.out.println("enabled.");
+            lot.setState(new EnabledState());
+            //System.out.println("enabled.");
         } else if (actionType.equalsIgnoreCase("disable")) {
-        	space.setEnabled(false);
-            //System.out.println("disabled.");
+            lot.setState(new DisabledState());
+           // System.out.println("disabled.");
         }
     }
 }

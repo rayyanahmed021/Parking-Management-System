@@ -1,3 +1,4 @@
+package backend;
 public class SuperManager extends Manager {
     private static SuperManager singleSuperManagerInstance;
 
