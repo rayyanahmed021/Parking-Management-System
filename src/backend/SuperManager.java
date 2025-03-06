@@ -19,6 +19,25 @@ public class SuperManager extends Manager {
         return true;
     }
     
+    public static boolean authenticate(String name, String password) {
+
+		boolean isLoggedIn = false;
+		Database database = Database.getInstance();
+		
+		for (Manager manager : database.getAllManagers()) {
+			if (manager.getName().equals(name) && manager.getPassword().equals(password)) {
+				if (manager instanceof SuperManager) {
+					isLoggedIn = true;
+					return isLoggedIn;
+				}
+				else {
+					return false;
+				}
+			}
+		}
+		return isLoggedIn;
+	}
+    
     public static SuperManager getSuperManagerInstance(String name, String password) {
         if (singleSuperManagerInstance == null) {
             singleSuperManagerInstance = new SuperManager(name,password);
