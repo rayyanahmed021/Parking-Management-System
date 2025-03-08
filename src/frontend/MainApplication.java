@@ -2,7 +2,8 @@ package frontend;
 
 import javax.swing.*;
 import java.awt.*;
-import backend.Database;
+import backend.*;
+import java.util.*;
 
 public class MainApplication {
 
@@ -28,6 +29,15 @@ public class MainApplication {
         welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         managerFrame.add(welcomeLabel, BorderLayout.NORTH);
 
+        Database db = Database.getInstance();
+        ArrayList<Manager> managers = db.getAllManagers();
+        Manager managerLoggedIn = null;
+        for (Manager m : managers) {
+        	if (m.getName().equals(username)) {
+        		managerLoggedIn = m;
+        		break;
+        	}
+        }
         // Add other manager functionalities here
         // ...
 
@@ -43,6 +53,18 @@ public class MainApplication {
         JLabel welcomeLabel = new JLabel("Welcome, Super Manager " + username + "!");
         welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         superManagerFrame.add(welcomeLabel, BorderLayout.NORTH);
+        
+        Database db = Database.getInstance();
+        ArrayList<Manager> managers = db.getAllManagers();
+        Manager managerLoggedIn = null;
+        for (Manager m : managers) {
+        	if (m.getName().equals(username)) {
+        		managerLoggedIn = m;
+        		break;
+        	}
+        }
+        
+        SuperManager superManagerLoggedIn = (SuperManager) managerLoggedIn;
 
         // Add other super manager functionalities here
         // ...

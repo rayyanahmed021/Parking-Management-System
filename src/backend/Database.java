@@ -450,6 +450,7 @@ public class Database implements ParkingObserver{
 			csvOutput.write("email");
 			csvOutput.write("password");
 			csvOutput.write("type");
+			csvOutput.write("isApproved");
 			csvOutput.endRecord();
 
 			for (Client c : this.allClients) {
@@ -458,8 +459,13 @@ public class Database implements ParkingObserver{
 
 				if (c instanceof Student) {
 					csvOutput.write("student");
+					Student s = (Student) c;
+					csvOutput.write(String.valueOf(s.getAccountApproved()));
+					
 				} else if (c instanceof Faculty) {
 					csvOutput.write("faculty");
+					Faculty s = (Faculty) c;
+					csvOutput.write(String.valueOf(s.getAccountApproved()));
 				} else if (c instanceof NonFaculty) {
 					csvOutput.write("nonfaculty");
 				} else if (c instanceof Visitor) {
