@@ -145,37 +145,68 @@ public abstract class Client {
 	
 	// Changed change string to LocalDateTime array for simplicity
 	public boolean updateParking(String changeType, LocalDateTime[] change, Booking booking) {
+		Database db = Database.getInstance();
+		
 		if (changeType.toLowerCase().equals("cancel")) {
 			//cannot cancel at the current
 			//provide refund
-			// Check if current time is before the start time of the booking
-			if (LocalDateTime.now().isBefore(change[0])) {
-				booking.setTotalPrice(0);
-				booking.getPayment().setIsRefunded(true);
+			if (this.bookings.contains(booking)) {
+				// Check if current time is before the start time of the booking
+				if (LocalDateTime.now().isBefore(change[0])) {
+					booking.setTotalPrice(0);
+					booking.getPayment().setIsRefunded(true);
+				}
+				this.bookings.remove(booking);
+			}
+			else {
+				return false;
 			}
 			this.bookings.remove(booking);
 		}
 		else if (changeType.toLowerCase().equals("extend")) {
 			//Recalculate the total
 			long hoursDifference = Duration.between(booking.getEndTime(), change[1]).toHours();
-			// Add # of hrs extended * rate of client type
 			booking.setTotalPrice(booking.getTotalPrice() + (hoursDifference*this.calculateDepositClient()));
-			for (Booking bookings : this.bookings) {
-				if (bookings == booking) {
-					bookings.setEndTime(change[1]);
+			boolean overlap = false;
+			// Add # of hrs extended * rate of client type
+			for (Booking bookings : db.getAllBookings()) {
+				// If there is an overlap in time
+				if (booking.getStartTime().isBefore(bookings.getEndTime()) && bookings.getStartTime().isBefore(booking.getEndTime())) {
+					overlap = true;
 				}
 			}
+			if (!overlap) {
+				for (Booking bookings2 : this.bookings) {
+					if (bookings2 == booking) {
+						bookings2.setEndTime(change[1]);
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 		else if (changeType.toLowerCase().equals("edit")) {
 			//update payment
 			long hoursDifference = Duration.between(change[0], change[1]).toHours();
-			booking.setTotalPrice(hoursDifference*this.calculateDepositClient());
-			for (Booking bookings : this.bookings) {
-				if (bookings == booking) {
-					bookings.setStartTime(change[0]);
-					bookings.setEndTime(change[1]);
+			booking.setTotalPrice(booking.getTotalPrice() + (hoursDifference*this.calculateDepositClient()));
+			boolean overlap = false;
+			
+			for (Booking bookings : db.getAllBookings()) {
+				// If there is an overlap in time
+				if (booking.getStartTime().isBefore(bookings.getEndTime()) && bookings.getStartTime().isBefore(booking.getEndTime())) {
+					overlap = true;
 				}
 			}
+			if (!overlap) {
+				for (Booking bookings2 : this.bookings) {
+					if (bookings2 == booking) {
+						bookings2.setStartTime(change[0]);
+						bookings2.setEndTime(change[1]);
+						return true;
+					}
+				}
+			}
+			
 		}
 		else {
 			return false;
