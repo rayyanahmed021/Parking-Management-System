@@ -1,32 +1,28 @@
 package frontend;
 import javax.swing.*;
 
-import backend.AddParkingLotCommand;
 import backend.*;
 
 import java.awt.*;
 //import backend.Database;
 import java.util.ArrayList;
 
-public class ManagerFlow {
-	
-	public static Manager getManagerLoggedIn(String username) {
+public class SuperManagerFlow {
+	public static SuperManager getSuperManagerLoggedIn(String username) {
 		Database db = Database.getInstance();
 	    ArrayList<Manager> managers = db.getAllManagers();
-	    Manager managerLoggedIn = null;
+	    SuperManager managerLoggedIn = null;
 
 	    for (Manager m : managers) {
 	        if (m.getName().equals(username)) {
-	            managerLoggedIn = m;
+	            managerLoggedIn = (SuperManager) m;
 	            return managerLoggedIn;
 	        }
 	    }
 	    return managerLoggedIn;
 	}
 	
-	public static JPanel showManagerActions(String username) {
-	    Manager managerLoggedIn = getManagerLoggedIn(username);
-
+	public static JPanel showSuperManagerActions(String username) {
 	    JPanel adminPanel = new JPanel();
 	    adminPanel.setLayout(new GridBagLayout());
 
@@ -62,6 +58,12 @@ public class ManagerFlow {
 	    validateClientButton.setFont(new Font("Arial", Font.PLAIN, 14));
 	    validateClientButton.addActionListener(e -> showClientSelection(username));
 	    adminPanel.add(validateClientButton, gbc);
+	    
+	    gbc.gridy++;
+	    JButton createManagerButton = new JButton("Create Manager Account");
+	    createManagerButton.setFont(new Font("Arial", Font.PLAIN, 14));
+	    createManagerButton.addActionListener(e -> createManagerForm(username));
+	    adminPanel.add(createManagerButton, gbc);
 
 	    return adminPanel;
 	}
@@ -283,7 +285,7 @@ private static void showParkingSpacesSelection(ParkingLot lot) {
 	        ArrayList<Manager> managers = db.getAllManagers();
 	        final Manager[] managerLoggedIn = {null};
 
-	        managerLoggedIn[0] = getManagerLoggedIn(username);
+	        managerLoggedIn[0] = getSuperManagerLoggedIn(username);
 
 	        
 	        JFrame frame = new JFrame("Approve/Disapprove Client");
@@ -489,7 +491,7 @@ private static void showParkingSpacesSelection(ParkingLot lot) {
 	            JOptionPane.showMessageDialog(formFrame, "Please fill in all fields!", "Error", JOptionPane.ERROR_MESSAGE);
 	        } else {
 	        	Database db = Database.getInstance();
-	        	Manager managerLoggedIn = getManagerLoggedIn(username);
+	        	SuperManager managerLoggedIn = getSuperManagerLoggedIn(username);
 
 	    	    System.out.println(db.getAllParkingLots().size());
 	    	    managerLoggedIn.executeCommand(new AddParkingLotCommand(id,name));
@@ -505,5 +507,64 @@ private static void showParkingSpacesSelection(ParkingLot lot) {
 	    formFrame.add(formPanel);
 	    formFrame.setVisible(true);
 	}
+	
+	private static void createManagerForm(String username) {
+		SuperManager managerLoggedIn = getSuperManagerLoggedIn(username);
+        JFrame formFrame = new JFrame("Create Manager Account");
+        formFrame.setSize(400, 250);
+        formFrame.setLocationRelativeTo(null);
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new GridBagLayout());
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+        // Name Field
+        gbc.gridx = 0;
+        gbc.gridy++;
+        formPanel.add(new JLabel("Manager Name:"), gbc);
+        gbc.gridx = 1;
+        JTextField nameField = new JTextField(15);
+        formPanel.add(nameField, gbc);
+
+        // Password Field
+        gbc.gridx = 0;
+        gbc.gridy++;
+        formPanel.add(new JLabel("Password:"), gbc);
+        gbc.gridx = 1;
+        JPasswordField passwordField = new JPasswordField(15);
+        formPanel.add(passwordField, gbc);
+
+        // Submit Button
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
+        JButton submitButton = new JButton("Create Account");
+        submitButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        submitButton.addActionListener(e -> {
+        	String name = nameField.getText();
+            String password = new String(passwordField.getPassword());
+            
+	        if (name.isEmpty() || password.isEmpty()) {
+	            JOptionPane.showMessageDialog(formFrame, "Please fill in all fields!", "Error", JOptionPane.ERROR_MESSAGE);
+	        } 
+	        else {
+	        	boolean successful = managerLoggedIn.createManagerAccount(name, username);
+	        	if (successful == true){
+	        		JOptionPane.showMessageDialog(formFrame, "Manager account created successfully!");
+	                formFrame.dispose();
+	        	}
+	        	else {
+	        		JOptionPane.showMessageDialog(formFrame, "Manager account with username " + username + " already exists.", "Error", JOptionPane.ERROR_MESSAGE);
+	        	}
+	        }
+	    });
+        formPanel.add(submitButton, gbc);
+
+        formFrame.add(formPanel);
+        formFrame.setVisible(true);
+    }
 
 }
