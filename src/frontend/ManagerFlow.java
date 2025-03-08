@@ -1,55 +1,461 @@
 package frontend;
 import javax.swing.*;
+
+import backend.AddParkingLotCommand;
+import backend.*;
+
 import java.awt.*;
 //import backend.Database;
+import java.util.ArrayList;
 
 public class ManagerFlow {
-	public static void showManagerActions() {
-        JFrame adminFrame = new JFrame("Manager Actions");
-        adminFrame.setSize(400, 300);
-        adminFrame.setLocationRelativeTo(null);
-        JPanel adminPanel = new JPanel();
-        adminPanel.setLayout(new GridBagLayout());
+	
+	public static JPanel showManagerActions(String username) {
+	    Database db = Database.getInstance();
+	    ArrayList<Manager> managers = db.getAllManagers();
+	    Manager managerLoggedIn = null;
+
+	    for (Manager m : managers) {
+	        if (m.getName().equals(username)) {
+	            managerLoggedIn = m;
+	            break;
+	        }
+	    }
+
+	    JPanel adminPanel = new JPanel();
+	    adminPanel.setLayout(new GridBagLayout());
+
+	    GridBagConstraints gbc = new GridBagConstraints();
+	    gbc.insets = new Insets(10, 10, 10, 10);
+	    gbc.gridx = 0;
+	    gbc.gridy = 0;
+
+	    JLabel adminLabel = new JLabel("Manager Actions:");
+	    adminLabel.setFont(new Font("Arial", Font.BOLD, 16));
+	    adminPanel.add(adminLabel, gbc);
+
+	    gbc.gridy++;
+	    JButton addParkingLotButton = new JButton("Add Parking Lot");
+	    addParkingLotButton.setFont(new Font("Arial", Font.PLAIN, 14));
+	    addParkingLotButton.addActionListener(e -> addParkingLotForm(username));
+	    adminPanel.add(addParkingLotButton, gbc);
+
+	    gbc.gridy++;
+	    JButton updateParkingLotButton = new JButton("Update Parking Lot");
+	    updateParkingLotButton.setFont(new Font("Arial", Font.PLAIN, 14));
+	    updateParkingLotButton.addActionListener(e -> showParkingLotSelection());
+	    adminPanel.add(updateParkingLotButton, gbc);
+
+	    gbc.gridy++;
+	    JButton updateParkingSpaceButton = new JButton("Update Parking Space");
+	    updateParkingSpaceButton.setFont(new Font("Arial", Font.PLAIN, 14));
+	    updateParkingSpaceButton.addActionListener(e -> showParkingSpaceLotSelection());
+	    adminPanel.add(updateParkingSpaceButton, gbc);
+
+	    gbc.gridy++;
+	    JButton validateClientButton = new JButton("Validate Client Registration");
+	    validateClientButton.setFont(new Font("Arial", Font.PLAIN, 14));
+	    validateClientButton.addActionListener(e -> showClientSelection(username));
+	    adminPanel.add(validateClientButton, gbc);
+
+	    return adminPanel;
+	}
+	
+	private static void showParkingLotSelection() {
+		
+//		Database db = Database.getInstance();
+//	    ArrayList<ParkingLot> parkingLots = db.getAllParkingLots();
+
+//	    for (ParkingLot lot : parkingLots) {
+//	        if (m.getName().equals(username)) {
+//	            managerLoggedIn = m;
+//	            break;
+//	        }
+//	    }
+	    
+	    JFrame parkingFrame = new JFrame("Select a Parking Lot");
+        parkingFrame.setSize(400, 400);
+        parkingFrame.setLocationRelativeTo(null);
+
+        JPanel parkingPanel = new JPanel();
+        parkingPanel.setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-        JLabel adminLabel = new JLabel("Manager Actions:");
-        adminLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        adminPanel.add(adminLabel, gbc);
+        JLabel titleLabel = new JLabel("Select a Parking Lot:");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        parkingPanel.add(titleLabel, gbc);
+
+        Database db = Database.getInstance();
+        ArrayList<ParkingLot> parkingLots = db.getAllParkingLots();
+
+        ButtonGroup group = new ButtonGroup();
+        final ParkingLot[] selectedLot = {null};
+
+        for (ParkingLot lot : parkingLots) {
+            gbc.gridy++;
+            JRadioButton lotButton = new JRadioButton("Name: " + lot.getName() + " | State: " + (lot.getState().isEnabled() ? "Enabled" : "Disabled"));
+            lotButton.setFont(new Font("Arial", Font.PLAIN, 14));
+            group.add(lotButton);
+            parkingPanel.add(lotButton, gbc);
+
+            lotButton.addActionListener(e -> selectedLot[0] = lot);
+        }
 
         gbc.gridy++;
-        JButton addParkingLotButton = new JButton("Add Parking Lot");
-        addParkingLotButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        addParkingLotButton.addActionListener(e -> addParkingLotForm());
-        adminPanel.add(addParkingLotButton, gbc);
+        JButton submitButton = new JButton("Select");
+        submitButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        submitButton.addActionListener(e -> {
+            if (selectedLot[0] == null) {
+                JOptionPane.showMessageDialog(parkingFrame, "Please select a parking lot!", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+//                JOptionPane.showMessageDialog(parkingFrame, "You selected: " + selectedLot[0].getName(), "Success", JOptionPane.INFORMATION_MESSAGE);
+            	showUpdateParkingLot(selectedLot[0]);
+                parkingFrame.dispose();
+            }
+        });
 
-        gbc.gridy++;
-        JButton updateParkingLotButton = new JButton("Update Parking Lot");
-        updateParkingLotButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        updateParkingLotButton.addActionListener(e -> JOptionPane.showMessageDialog(adminFrame, "Update Parking Lot clicked!"));
-        adminPanel.add(updateParkingLotButton, gbc);
-
-        gbc.gridy++;
-        JButton updateParkingSpaceButton = new JButton("Update Parking Space");
-        updateParkingSpaceButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        updateParkingSpaceButton.addActionListener(e -> JOptionPane.showMessageDialog(adminFrame, "Update Parking Space clicked!"));
-        adminPanel.add(updateParkingSpaceButton, gbc);
-
-        gbc.gridy++;
-        JButton validateClientButton = new JButton("Validate Client Registration");
-        validateClientButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        validateClientButton.addActionListener(e -> JOptionPane.showMessageDialog(adminFrame, "Validate Client Registration clicked!"));
-        adminPanel.add(validateClientButton, gbc);
-
-        adminFrame.add(adminPanel);
-        adminFrame.setVisible(true);
-    }
+        parkingPanel.add(submitButton, gbc);
+        parkingFrame.add(parkingPanel);
+        parkingFrame.setVisible(true);
+//        return parkingPanel;
+	}
 	
-	private static void addParkingLotForm() {
-	    JFrame formFrame = new JFrame("User Details Form");
+private static void showParkingSpaceLotSelection() {
+	    
+	    JFrame parkingFrame = new JFrame("Select a Parking Lot");
+        parkingFrame.setSize(400, 400);
+        parkingFrame.setLocationRelativeTo(null);
+
+        JPanel parkingPanel = new JPanel();
+        parkingPanel.setLayout(new GridBagLayout());
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+        JLabel titleLabel = new JLabel("Select a Parking Lot:");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        parkingPanel.add(titleLabel, gbc);
+
+        Database db = Database.getInstance();
+        ArrayList<ParkingLot> parkingLots = db.getAllParkingLots();
+
+        ButtonGroup group = new ButtonGroup();
+        final ParkingLot[] selectedLot = {null};
+
+        for (ParkingLot lot : parkingLots) {
+            gbc.gridy++;
+            JRadioButton lotButton = new JRadioButton("Name: " + lot.getName() + " | State: " + (lot.getState().isEnabled() ? "Enabled" : "Disabled"));
+            lotButton.setFont(new Font("Arial", Font.PLAIN, 14));
+            group.add(lotButton);
+            parkingPanel.add(lotButton, gbc);
+
+            lotButton.addActionListener(e -> selectedLot[0] = lot);
+        }
+
+        gbc.gridy++;
+        JButton submitButton = new JButton("Select");
+        submitButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        submitButton.addActionListener(e -> {
+            if (selectedLot[0] == null) {
+                JOptionPane.showMessageDialog(parkingFrame, "Please select a parking lot!", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+//                JOptionPane.showMessageDialog(parkingFrame, "You selected: " + selectedLot[0].getName(), "Success", JOptionPane.INFORMATION_MESSAGE);
+            	showParkingSpacesSelection(selectedLot[0]);
+                parkingFrame.dispose();
+            }
+        });
+
+        parkingPanel.add(submitButton, gbc);
+        parkingFrame.add(parkingPanel);
+        parkingFrame.setVisible(true);
+//        return parkingPanel;
+	}
+
+private static void showParkingSpacesSelection(ParkingLot lot) {
+    JFrame frame = new JFrame("Parking Spaces in Lot " + lot.getName());
+    frame.setSize(400, 400);
+    frame.setLocationRelativeTo(null);
+
+    JPanel panel = new JPanel();
+    panel.setLayout(new GridBagLayout());
+
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets = new Insets(10, 10, 10, 10);
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+
+    JLabel titleLabel = new JLabel("Parking Spaces in " + lot.getName());
+    titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+    panel.add(titleLabel, gbc);
+
+    gbc.gridy++;
+    JLabel header = new JLabel("ID | Location | Status");
+    header.setFont(new Font("Arial", Font.BOLD, 14));
+    panel.add(header, gbc);
+
+    ButtonGroup group = new ButtonGroup();
+    final ParkingSpace[] selectedSpace = {null};
+
+    for (ParkingSpace space : lot.getParkingSpaces()) {
+        gbc.gridy++;
+        JRadioButton spaceButton = new JRadioButton(space.getId() + " | " + space.getLocation() + " | " + (space.isEnabled() ? "Enabled" : "Disabled"));
+        spaceButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        group.add(spaceButton);
+        panel.add(spaceButton, gbc);
+
+        spaceButton.addActionListener(e -> selectedSpace[0] = space);
+    }
+
+    gbc.gridy++;
+    JButton submitButton = new JButton("Select");
+    submitButton.setFont(new Font("Arial", Font.PLAIN, 14));
+    submitButton.addActionListener(e -> {
+        if (selectedSpace[0] == null) {
+            JOptionPane.showMessageDialog(frame, "Please select a parking space!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+        	showUpdateParkingSpace(lot, selectedSpace[0]);
+            frame.dispose();
+        }
+    });
+
+    panel.add(submitButton, gbc);
+    frame.add(panel);
+    frame.setVisible(true);
+}
+
+
+	 private static void showUpdateParkingLot(ParkingLot selectedLot) {
+	        JFrame frame = new JFrame("Enable/Disable Parking Lot");
+	        frame.setSize(400, 200);
+	        frame.setLocationRelativeTo(null);
+
+	        JPanel panel = new JPanel();
+	        panel.setLayout(new GridBagLayout());
+
+	        GridBagConstraints gbc = new GridBagConstraints();
+	        gbc.insets = new Insets(10, 10, 10, 10);
+	        gbc.gridx = 0;
+	        gbc.gridy = 0;
+
+	        JLabel label = new JLabel("Modify Parking Lot: " + selectedLot.getName());
+	        label.setFont(new Font("Arial", Font.BOLD, 16));
+	        panel.add(label, gbc);
+
+	        gbc.gridy++;
+	        JButton enableButton = new JButton("Enable");
+	        enableButton.setFont(new Font("Arial", Font.PLAIN, 14));
+	        enableButton.addActionListener(e -> {
+	            selectedLot.setState(new EnabledState());
+	            JOptionPane.showMessageDialog(frame, selectedLot.getName() + " is now Enabled", "Success", JOptionPane.INFORMATION_MESSAGE);
+	            frame.dispose();
+	        });
+	        panel.add(enableButton, gbc);
+
+	        gbc.gridy++;
+	        JButton disableButton = new JButton("Disable");
+	        disableButton.setFont(new Font("Arial", Font.PLAIN, 14));
+	        disableButton.addActionListener(e -> {
+	        	System.out.println(selectedLot.getState().isEnabled());
+	        	selectedLot.setState(new DisabledState());
+	            JOptionPane.showMessageDialog(frame, selectedLot.getName() + " is now Disabled", "Success", JOptionPane.INFORMATION_MESSAGE);
+	            System.out.println(selectedLot.getState().isEnabled());
+	            frame.dispose();
+	        });
+	        panel.add(disableButton, gbc);
+
+	        frame.add(panel);
+	        frame.setVisible(true);
+	    }
+	
+	 private static void showApproveClient(Client client, String username) {
+	        Database db = Database.getInstance();
+	        ArrayList<Manager> managers = db.getAllManagers();
+	        final Manager[] managerLoggedIn = {null};
+
+	        for (Manager m : managers) {
+	            if (m.getName().equals(username)) {
+	                managerLoggedIn[0] = m;
+	                break;
+	            }
+	        }
+	        
+	        JFrame frame = new JFrame("Approve/Disapprove Client");
+	        frame.setSize(400, 200);
+	        frame.setLocationRelativeTo(null);
+
+	        JPanel panel = new JPanel();
+	        panel.setLayout(new GridBagLayout());
+
+	        GridBagConstraints gbc = new GridBagConstraints();
+	        gbc.insets = new Insets(10, 10, 10, 10);
+	        gbc.gridx = 0;
+	        gbc.gridy = 0;
+
+	        JLabel label = new JLabel("Approve/Disapprove Client: " + client.getEmail());
+	        label.setFont(new Font("Arial", Font.BOLD, 16));
+	        panel.add(label, gbc);
+
+	        gbc.gridy++;
+	        JButton enableButton = new JButton("Approve");
+	        enableButton.setFont(new Font("Arial", Font.PLAIN, 14));
+	        enableButton.addActionListener(e -> {
+	            if (managerLoggedIn[0] != null) {
+	                managerLoggedIn[0].executeCommand(new ValidateClientRegistrationCommand(client.getEmail()));
+	                JOptionPane.showMessageDialog(frame, client.getEmail() + " is now approved", "Success", JOptionPane.INFORMATION_MESSAGE);
+	            }
+	            frame.dispose();
+	        });
+	        panel.add(enableButton, gbc);
+
+	        gbc.gridy++;
+	        JButton disableButton = new JButton("Disapprove");
+	        disableButton.setFont(new Font("Arial", Font.PLAIN, 14));
+	        disableButton.addActionListener(e -> {
+	            JOptionPane.showMessageDialog(frame, client.getEmail() + " is still disapproved", "Success", JOptionPane.INFORMATION_MESSAGE);
+	            frame.dispose();
+	        });
+	        panel.add(disableButton, gbc);
+
+	        frame.add(panel);
+	        frame.setVisible(true);
+	    }
+
+	 
+	 private static void showClientSelection(String username) {
+		    JFrame frame = new JFrame("Select a Client");
+		    frame.setSize(400, 400);
+		    frame.setLocationRelativeTo(null);
+
+		    JPanel panel = new JPanel();
+		    panel.setLayout(new GridBagLayout());
+
+		    GridBagConstraints gbc = new GridBagConstraints();
+		    gbc.insets = new Insets(10, 10, 10, 10);
+		    gbc.gridx = 0;
+		    gbc.gridy = 0;
+
+		    JLabel titleLabel = new JLabel("Select a Client:");
+		    titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+		    panel.add(titleLabel, gbc);
+
+		    gbc.gridy++;
+		    JLabel header = new JLabel("Email | Type");
+		    header.setFont(new Font("Arial", Font.BOLD, 14));
+		    panel.add(header, gbc);
+
+		    Database db = Database.getInstance();
+		    ArrayList<Client> clients = db.getAllClients();
+
+		    ButtonGroup group = new ButtonGroup();
+		    final Client[] selectedClient = {null};
+
+		    for (Client client : clients) {
+		    	if ((!client.getClientType().equals("visitor"))) {
+		    		if(client.getClientType().equals("student")) {
+		    			Student s = (Student) client;
+		    			if(!s.getAccountApproved()) {
+		    				gbc.gridy++;
+					        JRadioButton clientButton = new JRadioButton(s.getEmail() + "| " + s.getClientType() + " | "+ s.getAccountApproved());
+					        clientButton.setFont(new Font("Arial", Font.PLAIN, 14));
+					        group.add(clientButton);
+					        panel.add(clientButton, gbc);
+					        clientButton.addActionListener(e -> selectedClient[0] = client);
+		    			}
+		    			
+		    		} else if(client.getClientType().equals("nonfaculty")) {
+		    			NonFaculty nonFaculty = (NonFaculty) client;
+		    			if(!nonFaculty.getAccountApproved()) {
+			    			gbc.gridy++;
+					        JRadioButton clientButton = new JRadioButton(nonFaculty.getEmail() + "| " + nonFaculty.getClientType() + " | " + nonFaculty.getAccountApproved());
+					        clientButton.setFont(new Font("Arial", Font.PLAIN, 14));
+					        group.add(clientButton);
+					        panel.add(clientButton, gbc);
+					        clientButton.addActionListener(e -> selectedClient[0] = client);
+		    			}
+		    		}
+		    		else if(client.getClientType().equals("faculty")) {
+		    			Faculty faculty = (Faculty) client;
+		    			if(!faculty.getAccountApproved()) {
+			    			gbc.gridy++;
+					        JRadioButton clientButton = new JRadioButton(faculty.getEmail() + "| " + faculty.getClientType() + " | " + faculty.getAccountApproved());
+					        clientButton.setFont(new Font("Arial", Font.PLAIN, 14));
+					        group.add(clientButton);
+					        panel.add(clientButton, gbc);
+					        clientButton.addActionListener(e -> selectedClient[0] = client);
+		    			}
+		    		}
+		    		
+		    	}
+		    }
+
+		    gbc.gridy++;
+		    JButton submitButton = new JButton("Select");
+		    submitButton.setFont(new Font("Arial", Font.PLAIN, 14));
+		    submitButton.addActionListener(e -> {
+		        if (selectedClient[0] == null) {
+		            JOptionPane.showMessageDialog(frame, "Please select a client!", "Error", JOptionPane.ERROR_MESSAGE);
+		        } else {
+		            showApproveClient(selectedClient[0],username);
+		            frame.dispose();
+		        }
+		    });
+
+		    panel.add(submitButton, gbc);
+		    frame.add(panel);
+		    frame.setVisible(true);
+		}
+
+	 
+	 private static void showUpdateParkingSpace(ParkingLot lot, ParkingSpace parkingSpace) {
+	        JFrame frame = new JFrame("Enable/Disable Parking Space");
+	        frame.setSize(400, 200);
+	        frame.setLocationRelativeTo(null);
+
+	        JPanel panel = new JPanel();
+	        panel.setLayout(new GridBagLayout());
+
+	        GridBagConstraints gbc = new GridBagConstraints();
+	        gbc.insets = new Insets(10, 10, 10, 10);
+	        gbc.gridx = 0;
+	        gbc.gridy = 0;
+
+	        JLabel label = new JLabel("Modify Parking Space: " + parkingSpace.getId() + " in Lot: " + lot.getName());
+	        label.setFont(new Font("Arial", Font.BOLD, 16));
+	        panel.add(label, gbc);
+
+	        gbc.gridy++;
+	        JButton enableButton = new JButton("Enable");
+	        enableButton.setFont(new Font("Arial", Font.PLAIN, 14));
+	        enableButton.addActionListener(e -> {
+	        	parkingSpace.setEnabled(true);
+	            JOptionPane.showMessageDialog(frame, "Parking Space " + parkingSpace.getId() + " is now Enabled", "Success", JOptionPane.INFORMATION_MESSAGE);
+	            frame.dispose();
+	        });
+	        panel.add(enableButton, gbc);
+
+	        gbc.gridy++;
+	        JButton disableButton = new JButton("Disable");
+	        disableButton.setFont(new Font("Arial", Font.PLAIN, 14));
+	        disableButton.addActionListener(e -> {
+	        	parkingSpace.setEnabled(false);
+	            JOptionPane.showMessageDialog(frame, "Parking Space " + parkingSpace.getId() + " is now Disabled", "Success", JOptionPane.INFORMATION_MESSAGE);
+	            frame.dispose();
+	        });
+	        panel.add(disableButton, gbc);
+
+	        frame.add(panel);
+	        frame.setVisible(true);
+	    }
+	 
+	 
+	private static void addParkingLotForm(String username) {
+	    JFrame formFrame = new JFrame("Parking Lot Details Form");
 	    formFrame.setSize(400, 250);
 	    formFrame.setLocationRelativeTo(null);
 	    JPanel formPanel = new JPanel();
@@ -60,27 +466,13 @@ public class ManagerFlow {
 	    gbc.gridx = 0;
 	    gbc.gridy = 0;
 
-	    // ID Field
-	    formPanel.add(new JLabel("ID:"), gbc);
-	    gbc.gridx = 1;
-	    JTextField idField = new JTextField(15);
-	    formPanel.add(idField, gbc);
-
 	    // Name Field
 	    gbc.gridx = 0;
 	    gbc.gridy++;
-	    formPanel.add(new JLabel("Name:"), gbc);
+	    formPanel.add(new JLabel("Parking Lot Name:"), gbc);
 	    gbc.gridx = 1;
 	    JTextField nameField = new JTextField(15);
 	    formPanel.add(nameField, gbc);
-
-	    // State Field
-	    gbc.gridx = 0;
-	    gbc.gridy++;
-	    formPanel.add(new JLabel("State:"), gbc);
-	    gbc.gridx = 1;
-	    JTextField stateField = new JTextField(15);
-	    formPanel.add(stateField, gbc);
 
 	    // Submit Button
 	    gbc.gridx = 0;
@@ -89,14 +481,28 @@ public class ManagerFlow {
 	    JButton submitButton = new JButton("Submit");
 	    submitButton.setFont(new Font("Arial", Font.PLAIN, 14));
 	    submitButton.addActionListener(e -> {
-	        String id = idField.getText();
+	        String id = ParkingLot.randomIdGenerator();
 	        String name = nameField.getText();
-	        String state = stateField.getText();
-
-	        if (id.isEmpty() || name.isEmpty() || state.isEmpty()) {
+	        
+	        if (id.isEmpty() || name.isEmpty()) {
 	            JOptionPane.showMessageDialog(formFrame, "Please fill in all fields!", "Error", JOptionPane.ERROR_MESSAGE);
 	        } else {
+	        	Database db = Database.getInstance();
+	    	    ArrayList<Manager> managers = db.getAllManagers();
+	    	    Manager managerLoggedIn = null;
+
+	    	    for (Manager m : managers) {
+	    	        if (m.getName().equals(username)) {
+	    	            managerLoggedIn = m;
+	    	            break;
+	    	        }
+	    	    }
+	    	    System.out.println(db.getAllParkingLots().size());
+	    	    managerLoggedIn.executeCommand(new AddParkingLotCommand(id,name));
+	    	    System.out.println(db.getAllParkingLots().size());
 	            JOptionPane.showMessageDialog(formFrame, "Parking Lot Details Submitted");
+	            
+	            
 	            formFrame.dispose(); // Close the form after submission
 	        }
 	    });

@@ -507,7 +507,7 @@ public class Database implements ParkingObserver{
 //			superM.executeCommand(new UpdateParkingSpaceCommand("disable",3,"1"));
 			
 			System.out.println(db.getAllParkingLots().get(0).getParkingSpaces()[3].isEnabled());
-			superM.executeCommand(new AddParkingLotCommand(ParkingLot.randomIdGenerator(),"Jordan"));
+			superM.executeCommand(new AddParkingLotCommand(ParkingLot.randomIdGenerator(),"60"));
 			System.out.println("asdada");
 //			System.out.println(db.getAllParkingLots().get(0));
 			System.out.println(db.getAllParkingLots().get(3).getName());
