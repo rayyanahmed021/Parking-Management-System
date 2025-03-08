@@ -300,9 +300,11 @@ public class LoginRegisterScreen {
                     JOptionPane.showMessageDialog(loginFrame, (isSuperManager ? "Super" : "") +"Manager Login Successful!");
                     // Open Manager/Super Manager's main page
                     if(isSuperManager){
-                        MainApplication.openSuperManagerPage(username);
+//                        MainApplication.openSuperManagerPage(username);
+                    	ManagerFlow.showManagerActions();
                     } else{
-                        MainApplication.openManagerPage(username);
+//                        MainApplication.openManagerPage(username);
+                    	ManagerFlow.showManagerActions();
                     }
 
                 } else {
