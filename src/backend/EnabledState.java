@@ -4,4 +4,11 @@ class EnabledState implements ParkingLotState {
     public void handle(ParkingLot lot) {
         System.out.println("Parking Lot " + lot.getName() + " is ENABLED.");
     }
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+    
+    
 }
