@@ -20,6 +20,11 @@ public class Student extends Client{
 	public double calculateDepositClient() {
 		return Student.RATE;
 	}
+
+	@Override
+	public String getClientType() {
+		return "student";
+	}
 	
 	
 }

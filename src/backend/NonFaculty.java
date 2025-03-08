@@ -20,4 +20,9 @@ public class NonFaculty extends Client{
 	public double calculateDepositClient() {
 		return NonFaculty.RATE;
 	}
+
+	@Override
+	public String getClientType() {
+		return "nonfaculty";
+	}
 }

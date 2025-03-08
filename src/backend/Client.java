@@ -57,6 +57,8 @@ public abstract class Client {
 
 	    return registeredClient;
 	}
+	
+	public abstract String getClientType();
 
 	// Email validation function
 	private static boolean isValidEmail(String email) {

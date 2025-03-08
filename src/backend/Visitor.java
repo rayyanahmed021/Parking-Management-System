@@ -12,4 +12,9 @@ public class Visitor extends Client {
 		// TODO Auto-generated method stub
 		return Visitor.RATE;
 	}
+
+	@Override
+	public String getClientType() {
+		return "visitor";
+	}
 }
