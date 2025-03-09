@@ -60,16 +60,34 @@ public class OptionsScreen {
 
         // Button actions
         viewBookingsBtn.addActionListener(e -> openScreen("ViewBookingScreen"));
-        newBookingBtn.addActionListener(e -> openScreen("NewBookingScreen"));
-        editBookingBtn.addActionListener(e -> openScreen("EditBookingScreen"));
-        cancelBookingBtn.addActionListener(e -> openScreen("CancelBookingScreen"));
+        newBookingBtn.addActionListener(e -> openScreen("NewBookingFlow"));
+        editBookingBtn.addActionListener(e -> openScreen("EditBookingFlow"));
+        cancelBookingBtn.addActionListener(e -> openScreen("CancelBookingFlow"));
         exitBtn.addActionListener(e -> handleExit());
 
         frame.setVisible(true);
     }
 
     private void openScreen(String screenName) {
-        JOptionPane.showMessageDialog(frame, "Redirecting to " + screenName);
+    	frame.dispose(); // Close the current window
+
+        switch (screenName) {
+            case "ViewBookingScreen":
+//                new ViewBookingScreen(client);
+                break;
+            case "NewBookingFlow":
+//                new NewBookingFlow(client);
+                break;
+            case "EditBookingFlow":
+                new EditBookingFlow(client);
+                break;
+            case "CancelBookingFlow":
+//                new CancelBookingFlow(client);
+                break;
+            default:
+                JOptionPane.showMessageDialog(null, "Invalid screen: " + screenName);
+                break;
+        }
     }
 
     private void handleExit() {

@@ -13,6 +13,14 @@ public class MainApplication {
         } catch (Exception e) {
             e.printStackTrace();
         }
+//        try {
+//    		Database db = Database.getInstance();
+//    		Client c = db.getAllClients().get(0);
+//    		OptionsScreen o = new OptionsScreen(c);
+//    	}
+//        finally {
+//        	
+//        }
         SwingUtilities.invokeLater(() -> {
             LoginRegisterScreen loginRegister = new LoginRegisterScreen();
             loginRegister.startGUI();
