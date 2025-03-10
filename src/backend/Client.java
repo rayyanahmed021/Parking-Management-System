@@ -16,6 +16,16 @@ public abstract class Client {
 		this.password = password;
 		this.bookings = new ArrayList<Booking>();
 	}
+	public static Client getClientByEmail(String email) {
+	    Database db = Database.getInstance();
+	    for (Client c : db.getAllClients()) {
+	        if (c.getEmail().equals(email)) {
+	            return c;
+	        }
+	    }
+	    return null; // Return null if client not found
+	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}

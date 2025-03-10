@@ -139,14 +139,16 @@ public class LoginRegisterScreen {
             }
             else { // Removed Manager role check
             	try {
-					Client.registerUser(role, usernameOrEmail, password);
-					JOptionPane.showMessageDialog(formFrame, "Successfully registered!", "Success", JOptionPane.INFORMATION_MESSAGE);
-					formFrame.dispose();
-					//lead to the logged in landing page with all the bookings
-				} catch (Exception e1) {
-					//e1.printStackTrace();
-					JOptionPane.showMessageDialog(formFrame, "Failed to register", "Error", JOptionPane.INFORMATION_MESSAGE);
-				}
+            	    Client newClient = Client.registerUser(role, usernameOrEmail, password);
+            	    JOptionPane.showMessageDialog(formFrame, "Successfully registered!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            	    formFrame.dispose(); // Close registration window
+
+            	    // Redirect to OptionsScreen after successful registration
+            	    new OptionsScreen(newClient);
+            	} catch (Exception e1) {
+            	    JOptionPane.showMessageDialog(formFrame, "Failed to register", "Error", JOptionPane.INFORMATION_MESSAGE);
+            	}
+
             }
         });
         formPanel.add(submitButton, gbc);
@@ -221,22 +223,21 @@ public class LoginRegisterScreen {
             if (username.isEmpty() || password.isEmpty() || selectedRole[0].isEmpty()) {
                 JOptionPane.showMessageDialog(loginFrame, "Please enter all details!", "Error", JOptionPane.ERROR_MESSAGE);
             } 
-            else if(!selectedRole[0].equals("Manager")) {
-            	boolean isAuthorized = Client.authenticate(username, password);
-        		if (isAuthorized) {
-        			loginFrame.dispose();
-        			//lead to the logged in landing page with all the bookings
-        			JOptionPane.showMessageDialog(loginFrame, "Logged in as " + username + " with role " + selectedRole[0], "Success", JOptionPane.INFORMATION_MESSAGE);
-        		} else {
-        			JOptionPane.showMessageDialog(loginFrame, "Login Failed. Please try again.");
-        		}
-                
-                //page with all the client's bookings
-            }
-            else {
-            	//manager login
+            else if (!selectedRole[0].equals("Manager")) { // Ensure only clients are handled
+                boolean isAuthorized = Client.authenticate(username, password);
+                if (isAuthorized) {
+                    loginFrame.dispose();  // Close login window
+                    Client loggedInClient = Client.getClientByEmail(username);  // Fetch client instance
+                    JOptionPane.showMessageDialog(loginFrame, "Logged in successfully as " + username);
+                    new OptionsScreen(loggedInClient); // Redirect to OptionsScreen
+                } else {
+                    JOptionPane.showMessageDialog(loginFrame, "Login Failed. Please try again.");
+                }
+            } else {
+                // Handle Manager Login (if needed)
             }
         });
+
         loginPanel.add(submitButton, gbc);
 
         loginFrame.add(loginPanel);

@@ -27,6 +27,12 @@ public class Booking {
         this.parkingSpace = parkingSpace;
         this.parkingLot = parkingLot;
     }
+    @Override
+    public String toString() {
+        return "Booking ID: " + this.id + " | License Plate: " + this.licensePlate + 
+               " | Start: " + this.startTime + " | End: " + this.endTime;
+    }
+
     public Booking() {
     	
     }

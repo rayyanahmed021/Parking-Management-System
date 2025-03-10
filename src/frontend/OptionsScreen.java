@@ -22,6 +22,9 @@ public class OptionsScreen {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
+        // Center the window on the screen
+        //frame.setLocationRelativeTo(null);
+
         JLabel titleLabel = new JLabel("Please Choose an Option:", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10)); // Top padding added
@@ -60,45 +63,67 @@ public class OptionsScreen {
 
         // Button actions
         viewBookingsBtn.addActionListener(e -> openScreen("ViewBookingScreen"));
-        newBookingBtn.addActionListener(e -> openScreen("NewBookingFlow"));
-        editBookingBtn.addActionListener(e -> openScreen("EditBookingFlow"));
-        cancelBookingBtn.addActionListener(e -> openScreen("CancelBookingFlow"));
+        newBookingBtn.addActionListener(e -> openScreen("NewBookingScreen"));
+        editBookingBtn.addActionListener(e -> openScreen("EditBookingScreen"));
+        cancelBookingBtn.addActionListener(e -> {
+            new CancelBookingFlow(client); // Open CancelBookingFlow in a new window
+        });
+
+
         exitBtn.addActionListener(e -> handleExit());
 
         frame.setVisible(true);
     }
 
     private void openScreen(String screenName) {
-    	frame.dispose(); // Close the current window
+        frame.dispose(); // Close current screen before opening new one
 
         switch (screenName) {
             case "ViewBookingScreen":
-//                new ViewBookingScreen(client);
+                new ViewBookingScreen(client);
                 break;
-            case "NewBookingFlow":
-//                new NewBookingFlow(client);
-                break;
-            case "EditBookingFlow":
+            case "EditBookingScreen":
                 new EditBookingFlow(client);
                 break;
-            case "CancelBookingFlow":
-//                new CancelBookingFlow(client);
+            case "CancelBookingScreen":
+                new CancelBookingFlow(client); // Fix: Now opens CancelBookingFlow
                 break;
             default:
-                JOptionPane.showMessageDialog(null, "Invalid screen: " + screenName);
+                JOptionPane.showMessageDialog(frame, "Feature not implemented yet.");
                 break;
         }
     }
 
+
     private void handleExit() {
         if (hasOutstandingBalance()) {
-            JOptionPane.showMessageDialog(frame, "You have an outstanding balance. Redirecting to Payment Screen.");
-//            PaymentScreen.startGUI(client);
+            int confirm = JOptionPane.showConfirmDialog(
+                frame,
+                "You have an outstanding balance. Do you want to proceed to payment?",
+                "Outstanding Balance",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                frame.dispose();
+                new PaymentScreen(client); // Redirect to payment
+            }
         } else {
-            JOptionPane.showMessageDialog(frame, "Exiting application.");
-            System.exit(0);
+            int confirmExit = JOptionPane.showConfirmDialog(
+                frame,
+                "Are you sure you want to exit?",
+                "Confirm Exit",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirmExit == JOptionPane.YES_OPTION) {
+                JOptionPane.showMessageDialog(frame, "Thank you! Exiting application.");
+                System.exit(0); // Exit application only after confirmation
+            }
         }
     }
+
+
 
     private boolean hasOutstandingBalance() {
         for (Booking booking : client.getBookings()) {
