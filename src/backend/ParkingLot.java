@@ -11,11 +11,11 @@ public class ParkingLot {
     private ParkingLotState state;
 
 //    public ParkingLot(String id, String name, ParkingLotState state) {
-    public ParkingLot(String id, String name, ParkingSpace[] parkingSpaces) {
+    public ParkingLot(String id, String name,ParkingLotState state, ParkingSpace[] parkingSpaces) {
         this.id = id;
         this.name = name;
         this.parkingSpaces = parkingSpaces;
-        this.state = new EnabledState(); // Default state
+        this.state = state;
     }
     
     public static String randomIdGenerator() {

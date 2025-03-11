@@ -1,19 +1,201 @@
 id,lot,occupied,location,isEnabled
-0,1,false,Toronto,true
-1,1,false,Toronto,true
-2,1,true,Montreal,true
-3,1,false,Wuebec,true
-4,1,true,Toronto,true
-5,1,true,Montreal,true
-0,2,false,Toronto,true
-1,2,false,Toronto,true
-2,2,true,Montreal,true
-3,2,false,Wuebec,true
-4,2,true,Toronto,true
-5,2,true,Montreal,true
-0,3,true,Montreal,true
-1,3,false,Toronto,true
-2,3,true,Montreal,true
-3,3,false,Wuebec,true
-4,3,true,Toronto,true
-5,3,true,Montreal,true
+0,b25a3,false,Quebec City,false
+1,b25a3,false,Quebec City,true
+2,b25a3,false,Victoria,false
+3,b25a3,true,Quebec City,true
+4,b25a3,false,Montreal,true
+5,b25a3,true,Ottawa,true
+6,b25a3,true,Edmonton,true
+7,b25a3,false,Victoria,false
+8,b25a3,true,Quebec City,false
+9,b25a3,true,Halifax,false
+10,b25a3,true,Montreal,false
+11,b25a3,true,Halifax,false
+12,b25a3,false,Montreal,true
+13,b25a3,false,Victoria,false
+14,b25a3,true,Victoria,false
+15,b25a3,true,Halifax,true
+16,b25a3,true,Calgary,true
+17,b25a3,false,Vancouver,false
+18,b25a3,true,Quebec City,false
+19,b25a3,true,Halifax,true
+20,b25a3,false,Winnipeg,true
+21,b25a3,false,Vancouver,false
+22,b25a3,false,Montreal,false
+23,b25a3,true,Victoria,false
+24,b25a3,true,Edmonton,false
+25,b25a3,false,Calgary,true
+26,b25a3,true,Ottawa,true
+27,b25a3,false,Toronto,false
+28,b25a3,true,Victoria,false
+29,b25a3,true,Halifax,true
+30,b25a3,true,Montreal,false
+31,b25a3,true,Quebec City,true
+32,b25a3,true,Victoria,true
+33,b25a3,false,Ottawa,false
+34,b25a3,true,Winnipeg,false
+35,b25a3,true,Winnipeg,false
+36,b25a3,true,Toronto,false
+37,b25a3,false,Halifax,true
+38,b25a3,false,Edmonton,false
+39,b25a3,true,Halifax,true
+40,b25a3,true,Vancouver,true
+41,b25a3,true,Victoria,true
+42,b25a3,false,Montreal,true
+43,b25a3,true,Victoria,true
+44,b25a3,true,Quebec City,true
+45,b25a3,true,Ottawa,true
+46,b25a3,true,Edmonton,true
+47,b25a3,true,Edmonton,false
+48,b25a3,false,Calgary,true
+49,b25a3,true,Calgary,true
+50,b25a3,false,Victoria,false
+51,b25a3,false,Montreal,false
+52,b25a3,true,Victoria,true
+53,b25a3,true,Vancouver,true
+54,b25a3,true,Vancouver,true
+55,b25a3,true,Montreal,false
+56,b25a3,true,Montreal,false
+57,b25a3,false,Ottawa,false
+58,b25a3,false,Toronto,true
+59,b25a3,false,Calgary,true
+60,b25a3,true,Calgary,true
+61,b25a3,false,Vancouver,false
+62,b25a3,false,Edmonton,false
+63,b25a3,false,Victoria,false
+64,b25a3,false,Edmonton,false
+65,b25a3,false,Calgary,true
+66,b25a3,false,Halifax,false
+67,b25a3,false,Vancouver,true
+68,b25a3,false,Vancouver,false
+69,b25a3,true,Montreal,false
+70,b25a3,true,Edmonton,true
+71,b25a3,true,Calgary,false
+72,b25a3,false,Edmonton,false
+73,b25a3,true,Victoria,true
+74,b25a3,false,Ottawa,true
+75,b25a3,false,Edmonton,true
+76,b25a3,true,Calgary,false
+77,b25a3,false,Vancouver,true
+78,b25a3,true,Toronto,false
+79,b25a3,false,Montreal,true
+80,b25a3,false,Winnipeg,false
+81,b25a3,true,Edmonton,true
+82,b25a3,true,Vancouver,false
+83,b25a3,false,Quebec City,false
+84,b25a3,false,Vancouver,false
+85,b25a3,false,Quebec City,true
+86,b25a3,true,Toronto,true
+87,b25a3,true,Quebec City,false
+88,b25a3,false,Winnipeg,true
+89,b25a3,true,Calgary,false
+90,b25a3,true,Edmonton,true
+91,b25a3,true,Quebec City,false
+92,b25a3,false,Quebec City,false
+93,b25a3,true,Calgary,true
+94,b25a3,true,Toronto,true
+95,b25a3,false,Victoria,true
+96,b25a3,false,Victoria,false
+97,b25a3,false,Ottawa,false
+98,b25a3,true,Ottawa,true
+99,b25a3,false,Edmonton,true
+0,b25a5,false,Quebec City,false
+1,b25a5,false,Quebec City,true
+2,b25a5,false,Victoria,false
+3,b25a5,true,Quebec City,true
+4,b25a5,false,Montreal,true
+5,b25a5,true,Ottawa,true
+6,b25a5,true,Edmonton,true
+7,b25a5,false,Victoria,false
+8,b25a5,true,Quebec City,false
+9,b25a5,true,Halifax,false
+10,b25a5,true,Montreal,false
+11,b25a5,true,Halifax,false
+12,b25a5,false,Montreal,true
+13,b25a5,false,Victoria,false
+14,b25a5,true,Victoria,false
+15,b25a5,true,Halifax,true
+16,b25a5,true,Calgary,true
+17,b25a5,false,Vancouver,false
+18,b25a5,true,Quebec City,false
+19,b25a5,true,Halifax,true
+20,b25a5,false,Winnipeg,true
+21,b25a5,false,Vancouver,false
+22,b25a5,false,Montreal,false
+23,b25a5,true,Victoria,false
+24,b25a5,true,Edmonton,false
+25,b25a5,false,Calgary,true
+26,b25a5,true,Ottawa,true
+27,b25a5,false,Toronto,false
+28,b25a5,true,Victoria,false
+29,b25a5,true,Halifax,true
+30,b25a5,true,Montreal,false
+31,b25a5,true,Quebec City,true
+32,b25a5,true,Victoria,true
+33,b25a5,false,Ottawa,false
+34,b25a5,true,Winnipeg,false
+35,b25a5,true,Winnipeg,false
+36,b25a5,true,Toronto,false
+37,b25a5,false,Halifax,true
+38,b25a5,false,Edmonton,false
+39,b25a5,true,Halifax,true
+40,b25a5,true,Vancouver,true
+41,b25a5,true,Victoria,true
+42,b25a5,false,Montreal,true
+43,b25a5,true,Victoria,true
+44,b25a5,true,Quebec City,true
+45,b25a5,true,Ottawa,true
+46,b25a5,true,Edmonton,true
+47,b25a5,true,Edmonton,false
+48,b25a5,false,Calgary,true
+49,b25a5,true,Calgary,true
+50,b25a5,false,Victoria,false
+51,b25a5,false,Montreal,false
+52,b25a5,true,Victoria,true
+53,b25a5,true,Vancouver,true
+54,b25a5,true,Vancouver,true
+55,b25a5,true,Montreal,false
+56,b25a5,true,Montreal,false
+57,b25a5,false,Ottawa,false
+58,b25a5,false,Toronto,true
+59,b25a5,false,Calgary,true
+60,b25a5,true,Calgary,true
+61,b25a5,false,Vancouver,false
+62,b25a5,false,Edmonton,false
+63,b25a5,false,Victoria,false
+64,b25a5,false,Edmonton,false
+65,b25a5,false,Calgary,true
+66,b25a5,false,Halifax,false
+67,b25a5,false,Vancouver,true
+68,b25a5,false,Vancouver,false
+69,b25a5,true,Montreal,false
+70,b25a5,true,Edmonton,true
+71,b25a5,true,Calgary,false
+72,b25a5,false,Edmonton,false
+73,b25a5,true,Victoria,true
+74,b25a5,false,Ottawa,true
+75,b25a5,false,Edmonton,true
+76,b25a5,true,Calgary,false
+77,b25a5,false,Vancouver,true
+78,b25a5,true,Toronto,false
+79,b25a5,false,Montreal,true
+80,b25a5,false,Winnipeg,false
+81,b25a5,true,Edmonton,true
+82,b25a5,true,Vancouver,false
+83,b25a5,false,Quebec City,false
+84,b25a5,false,Vancouver,false
+85,b25a5,false,Quebec City,true
+86,b25a5,true,Toronto,true
+87,b25a5,true,Quebec City,false
+88,b25a5,false,Winnipeg,true
+89,b25a5,true,Calgary,false
+90,b25a5,true,Edmonton,true
+91,b25a5,true,Quebec City,false
+92,b25a5,false,Quebec City,false
+93,b25a5,true,Calgary,true
+94,b25a5,true,Toronto,true
+95,b25a5,false,Victoria,true
+96,b25a5,false,Victoria,false
+97,b25a5,false,Ottawa,false
+98,b25a5,true,Ottawa,true
+99,b25a5,false,Edmonton,true

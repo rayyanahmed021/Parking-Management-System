@@ -170,12 +170,7 @@ public class Database implements ParkingObserver{
         reader.readHeaders();
 
         while (reader.readRecord()) {
-//            ParkingLot parkingLot = new ParkingLot(
-//                reader.get("id"),
-//                reader.get("name"),
-//                ParkingLotState.valueOf(reader.get("state")) // Assuming ParkingLotState is an enum
-//            );
-        	ParkingLot parkingLot = new ParkingLot(reader.get("id"),reader.get("name"),new ParkingSpace[6]);
+        	ParkingLot parkingLot = new ParkingLot(reader.get("id"),reader.get("name"), reader.get("state").equals("enabled") ? new EnabledState(): new DisabledState(), new ParkingSpace[100]);
             this.allParkingLots.add(parkingLot);
         }
         reader.close();
@@ -292,14 +287,16 @@ public class Database implements ParkingObserver{
         writer.write("lot");
         writer.write("occupied");
         writer.write("location");
+        writer.write("isEnabled");
         writer.endRecord();
+        
 
         for (ParkingSpace space : this.allParkingSpaces) {
             writer.write(String.valueOf(space.getId()));
-//            writer.write(String.valueOf(space.getParkingLot().getId())); // make changes here
-            writer.write(String.valueOf(space.getId()));
+            writer.write(String.valueOf(space.getParkingLot().getId()));
             writer.write(String.valueOf(space.isOccupied()));
             writer.write(space.getLocation());
+            writer.write(String.valueOf(space.isEnabled()));
             writer.endRecord();
         }
         writer.close();
@@ -342,9 +339,9 @@ public class Database implements ParkingObserver{
         writer.endRecord();
 
         for (Manager manager : this.allManagers) {
-//            writer.write(manager.getName());
-//            writer.write(manager.getPassword());
-//            writer.write(String.valueOf(manager.isSuperManager()));
+            writer.write(manager.getName());
+            writer.write(manager.getPassword());
+            writer.write(manager instanceof SuperManager? "true":"false" );
             writer.endRecord();
         }
         writer.close();
@@ -361,8 +358,7 @@ public class Database implements ParkingObserver{
         for (ParkingLot lot : this.allParkingLots) {
             writer.write(String.valueOf(lot.getId()));
             writer.write(String.valueOf(lot.getName()));
-//            writer.write(String.valueOf(lot.getState));
-            writer.write("enabled");
+            writer.write(lot.getState() instanceof EnabledState ? "enabled":"disabled");
             writer.endRecord();
         }
         writer.close();
@@ -468,8 +464,11 @@ public class Database implements ParkingObserver{
 					csvOutput.write(String.valueOf(s.getAccountApproved()));
 				} else if (c instanceof NonFaculty) {
 					csvOutput.write("nonfaculty");
+					NonFaculty s = (NonFaculty) c;
+					csvOutput.write(String.valueOf(s.getAccountApproved()));
 				} else if (c instanceof Visitor) {
 					csvOutput.write("visitor");
+					csvOutput.write("");
 				}
 
 				csvOutput.endRecord(); // Ends the row properly
@@ -479,7 +478,22 @@ public class Database implements ParkingObserver{
 			e.printStackTrace();
 		}
 	}
-
+	public static void updateEverything() throws Exception {
+		String clientDataPath = Paths.get("src", "clientData.csv").toString();
+		String managerDataPath = Paths.get("src", "managerData.csv").toString();
+		String bookingDataPath = Paths.get("src", "bookingData.csv").toString();
+		String paymentDataPath = Paths.get("src", "paymentData.csv").toString();
+		String parkingSpaceDataPath = Paths.get("src", "parkingSpaceData.csv").toString();
+		String parkingLotDataPath = Paths.get("src", "parkinglotData.csv").toString();
+		Database db = Database.getInstance();
+		
+		db.updateClients(clientDataPath);
+		db.updateManagers(managerDataPath);
+		db.updatePayments(paymentDataPath);
+		db.updateParkingLot(parkingLotDataPath);
+		db.updateParkingSpaces(parkingSpaceDataPath);
+		db.updateBookings(bookingDataPath);
+	}
 	public static void loadEverything() throws Exception {
 		String clientDataPath = Paths.get("src", "clientData.csv").toString();
 		String managerDataPath = Paths.get("src", "managerData.csv").toString();
@@ -499,33 +513,35 @@ public class Database implements ParkingObserver{
 			db.loadParkingSpaces(parkingSpaceDataPath);
 			db.loadBookings(bookingDataPath);
 			
-			NonFaculty n = (NonFaculty) db.allClients.get(0);
-			System.out.println(n.getAccountApproved());
-			Student newClient = (Student) Client.registerUser("Student", "test@gmail.com", "321");
-			System.out.println(newClient.getAccountApproved());
-			SuperManager superM = SuperManager.getSuperManagerInstance("admin", "admin");
-//			superM.executeCommand(new UpdateParkingSpaceCommand("disable",3,"1"));
-			
-			System.out.println(db.getAllParkingLots().get(0).getParkingSpaces()[3].isEnabled());
-			superM.executeCommand(new AddParkingLotCommand(ParkingLot.randomIdGenerator(),"60"));
-			System.out.println("asdada");
 //			System.out.println(db.getAllParkingLots().get(0));
-			System.out.println(db.getAllParkingLots().get(3).getName());
-//			System.out.println(SuperManager.getSuperManagerInstance("", "").getSuperManagerData());
-			
-//			System.out.println(Manager.authenticate("justin", "67823123"));
-//			Student s = new Student("jordan","123");
-			LocalDateTime startTime = LocalDateTime.of(2025, 3, 1, 10, 0);
-			LocalDateTime endTime = LocalDateTime.of(2025, 3, 1, 12, 0);
-			Payment p = new Payment();
-//			p.setPaymentMethod(new PayPalStrategy("email", "password"));
-//			p.payAmount(35.0);
-			
-			// Test selectSpace booking deposit
+
+//			NonFaculty n = (NonFaculty) db.allClients.get(0);
+//			System.out.println(n.getAccountApproved());
+//			Student newClient = (Student) Client.registerUser("Student", "test@gmail.com", "321");
+//			System.out.println(newClient.getAccountApproved());
+//			SuperManager superM = SuperManager.getSuperManagerInstance("admin", "admin");
+////			superM.executeCommand(new UpdateParkingSpaceCommand("disable",3,"1"));
+//			
+//			System.out.println(db.getAllParkingLots().get(0).getParkingSpaces()[3].isEnabled());
+//			superM.executeCommand(new AddParkingLotCommand(ParkingLot.randomIdGenerator(),"60"));
+//			System.out.println("asdada");
+////			System.out.println(db.getAllParkingLots().get(0));
+//			System.out.println(db.getAllParkingLots().get(3).getName());
+////			System.out.println(SuperManager.getSuperManagerInstance("", "").getSuperManagerData());
+//			
+////			System.out.println(Manager.authenticate("justin", "67823123"));
+////			Student s = new Student("jordan","123");
+//			LocalDateTime startTime = LocalDateTime.of(2025, 3, 1, 10, 0);
+//			LocalDateTime endTime = LocalDateTime.of(2025, 3, 1, 12, 0);
+//			Payment p = new Payment();
+////			p.setPaymentMethod(new PayPalStrategy("email", "password"));
+////			p.payAmount(35.0);
+//			
+//			// Test selectSpace booking deposit
 //			System.out.println(newClient.getBookings());
 //			System.out.println(newClient.selectSpace("1", 3, "ABC-123", 100, 0,startTime, endTime, p));
 //			System.out.println(newClient.getBookings().get(0).getTotalPrice());
-//			
+////			
 //			s.updateParking("Extend", null, s.bookings.get(0));
 //			System.out.println(s.bookings.size());
 			

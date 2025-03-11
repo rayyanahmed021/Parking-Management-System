@@ -1,5 +1,5 @@
-email,password,type, isApproved
-rah@gmail.com,1234,nonfaculty, true
-rayyy@gmail.com,12345,faculty, false
-jordanyan@gmail.com,12,student, false
+email,password,type,isApproved
+rah@gmail.com,1234,nonfaculty,true
+rayyy@gmail.com,12345,faculty,false
+jordanyan@gmail.com,12,student,false
 ugly@gmail.com,123,visitor,

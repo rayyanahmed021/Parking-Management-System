@@ -2,11 +2,31 @@ package frontend;
 import backend.*;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class LoginRegisterScreen {
 
     public static void startGUI() {
+//    	JFrame mainFrame = new JFrame("Client Portal");
+//        mainFrame.setSize(400, 300);
+//        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Prevent immediate exit
+
+        // Attach Window Closing Event
+        
         JFrame frame = new JFrame("Client Portal");
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	try {
+					Database.updateEverything();
+				} catch (Exception exception) {
+					exception.printStackTrace();
+				}
+                frame.dispose();
+                System.exit(0);
+            }
+        });
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 300);
         frame.setLocationRelativeTo(null);

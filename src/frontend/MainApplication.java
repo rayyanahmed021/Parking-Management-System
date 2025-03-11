@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import backend.*;
 import java.util.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class MainApplication {
 
@@ -20,8 +22,19 @@ public class MainApplication {
     }
 
     public static void openManagerPage(String username) {
-        // Create and show the Manager's main page
         JFrame managerFrame = new JFrame("Manager Page");
+        managerFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try {
+					Database.updateEverything();
+				} catch (Exception exception) {
+					exception.printStackTrace();
+				}
+                managerFrame.dispose();
+                System.exit(0);
+            }
+        });
         managerFrame.setSize(600, 400);
         managerFrame.setLayout(new BorderLayout());
 
@@ -29,30 +42,45 @@ public class MainApplication {
         welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         managerFrame.add(welcomeLabel, BorderLayout.NORTH);
 
-        // Creating the Manager Actions Panel
         JPanel actionsPanel = ManagerFlow.showManagerActions(username);
-
-        // Adding it to the main frame
         managerFrame.add(actionsPanel, BorderLayout.CENTER);
+
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        logoutButton.addActionListener(e -> {
+            managerFrame.dispose();
+            LoginRegisterScreen loginRegister = new LoginRegisterScreen();
+            loginRegister.startGUI();
+        });
+        managerFrame.add(logoutButton, BorderLayout.SOUTH);
 
         managerFrame.setVisible(true);
     }
 
-
     public static void openSuperManagerPage(String username) {
-        // Create and show the Super Manager's main page
         JFrame superManagerFrame = new JFrame("Super Manager Page");
+        superManagerFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.out.println("im exiting");
+                superManagerFrame.dispose();
+                System.exit(0);
+            }
+        });
         superManagerFrame.setSize(800, 600);
         superManagerFrame.setLayout(new BorderLayout());
 
         JLabel welcomeLabel = new JLabel("Welcome, Super Manager " + username + "!");
         welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         superManagerFrame.add(welcomeLabel, BorderLayout.NORTH);
-        
-        JPanel actionsPanel = SuperManagerFlow.showSuperManagerActions(username);
-        
-        superManagerFrame.add(actionsPanel, BorderLayout.CENTER);
-
-        superManagerFrame.setVisible(true);
+//<<<<<<< Updated upstream
+//        
+//        JPanel actionsPanel = SuperManagerFlow.showSuperManagerActions(username);
+//        
+//        superManagerFrame.add(actionsPanel, BorderLayout.CENTER);
+//=======
+//>>>>>>> Stashed changes
+//
+//        superManagerFrame.setVisible(true);
     }
 }
