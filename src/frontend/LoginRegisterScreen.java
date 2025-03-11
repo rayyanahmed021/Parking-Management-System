@@ -254,11 +254,21 @@ public class LoginRegisterScreen {
                         
                         if (!actualRole.equals(selectedRoleLower)) {
                             JOptionPane.showMessageDialog(loginFrame, "Incorrect role selected. Select proper role", "Error", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            loginFrame.dispose(); // Close login window
-                            JOptionPane.showMessageDialog(loginFrame, "Logged in successfully as " + username);
-                            new OptionsScreen(loggedInClient); // Redirect to OptionsScreen
-                        }
+						} else {
+							if (loggedInClient instanceof Student student && !student.getAccountApproved()
+									|| loggedInClient instanceof Faculty faculty && !faculty.getAccountApproved()
+									|| loggedInClient instanceof NonFaculty nonFaculty
+											&& !nonFaculty.getAccountApproved()) {
+
+								JOptionPane.showMessageDialog(loginFrame,
+										"Account approval is pending. You will be able to login once approved.",
+										"Error", JOptionPane.ERROR_MESSAGE);
+							} else {
+								loginFrame.dispose(); // Close login window
+								JOptionPane.showMessageDialog(loginFrame, "Logged in successfully as " + username);
+								new OptionsScreen(loggedInClient); // Redirect to OptionsScreen
+							}
+						}
                     } else {
                         JOptionPane.showMessageDialog(loginFrame, "Error retrieving client information.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
