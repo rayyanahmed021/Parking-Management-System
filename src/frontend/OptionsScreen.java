@@ -121,7 +121,9 @@ public class OptionsScreen {
 
             if (confirmExit == JOptionPane.YES_OPTION) {
                 JOptionPane.showMessageDialog(frame, "Thank you! Exiting application.");
-                System.exit(0); // Exit application only after confirmation
+                frame.dispose();
+                LoginRegisterScreen loginRegister = new LoginRegisterScreen();
+                loginRegister.startGUI();
             }
         }
     }
