@@ -82,6 +82,9 @@ public class OptionsScreen {
             case "ViewBookingScreen":
                 new ViewBookingScreen(client);
                 break;
+            case "NewBookingScreen":
+            	new NewBookingFlow(client);
+            	break;
             case "EditBookingScreen":
                 new EditBookingFlow(client);
                 break;

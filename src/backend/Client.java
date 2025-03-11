@@ -103,48 +103,44 @@ public abstract class Client {
 
 	public abstract double calculateDepositClient();
 
-	// Assume payment is being passed from the front end
-	public boolean selectSpace(String lot, int space, String licensePlate, int id, 
-		double totalPrice, LocalDateTime startTime, LocalDateTime endTime,
-		Payment payment) {
-		
-		Database db = Database.getInstance();
-		ParkingLot parkingLot = null;
-		ParkingSpace parkingSpace;
-		
-		// Check if licensePlate is valid
-		if (isValidLicensePlate(licensePlate)) {
-			// Check if lot state is enabled
-			for (ParkingLot lots : db.getAllParkingLots()) {
-				if (lots.getId().equals(lot)) {
-					parkingLot = lots;
-					if (!(lots.getState() instanceof EnabledState)) {
-						return false;
-					}
-					else {
-						break;
+	public boolean selectSpace(Booking booking) {
+			
+			Database db = Database.getInstance();
+			ParkingLot parkingLot = null;
+			ParkingSpace parkingSpace;
+			
+			// Check if licensePlate is valid
+			if (isValidLicensePlate(booking.getLicensePlate())) {
+				// Check if lot state is enabled
+				for (ParkingLot lots : db.getAllParkingLots()) {
+					if (lots.getId().equals(booking.getParkingLot().getId())) {
+						parkingLot = lots;
+						if (!(lots.getState() instanceof EnabledState)) {
+							return false;
+						}
+						else {
+							break;
+						}
 					}
 				}
-			}
-			
-			// Check if space state is enabled and not occupied
-				if (parkingLot != null && parkingLot.getParkingSpaces()[space] != null) {
-					parkingSpace = parkingLot.getParkingSpaces()[space];
+				
+				// Check if space state is enabled and not occupied
+				if (parkingLot != null && parkingLot.getParkingSpaces()[booking.getParkingSpace().getId()] != null) {
+					parkingSpace = parkingLot.getParkingSpaces()[booking.getParkingSpace().getId()];
 					// W.I.P: Understand how parking space states are handled
 					if (parkingSpace.isEnabled() && !parkingSpace.isOccupied()) {
-						// TODO: Add all booking parameters to selectSpace method as well
-						Booking booking = new Booking(id, this, totalPrice, licensePlate,
-						startTime, endTime, payment, parkingSpace, parkingLot);
-						this.bookings.add(booking);
-						parkingSpace.setOccupied(true);
-//						payment.
+						booking.getParkingSpace().setOccupied(true);
 						// Booking Deposit: **(Confused whether to assign deposit or full total)**
-						booking.setTotalPrice(booking.getTotalPrice() + this.calculateDepositClient());
+//							this.bookings.setTotalPrice(booking.getTotalPrice() + this.calculateDepositClient());
 						// Full total:
-//						long hoursDifference = Duration.between(startTime, endTime).toHours();
-//						booking.setTotalPrice(booking.getTotalPrice() + (hoursDifference*this.calculateDepositClient()));
+						// System.out.println(booking.getTotalPrice()); Test Case DO NOT REMOVE
+						long hoursDifference = Duration.between(booking.getStartTime(), booking.getEndTime()).toHours();
+						booking.setTotalPrice(booking.getTotalPrice() + (hoursDifference*this.calculateDepositClient()));
+						this.bookings.add(booking);
+						// System.out.println(booking.getTotalPrice()); Test Case DO NOT REMOVE
 					}
 					else {
+						System.out.println("bad!");
 						return false;
 					}
 				}
@@ -154,7 +150,7 @@ public abstract class Client {
 		}
 		return true;
 	}
-	
+
 	// Changed change string to LocalDateTime array for simplicity
 	public boolean updateParking(String changeType, LocalDateTime[] change, Booking booking) {
 		Database db = Database.getInstance();

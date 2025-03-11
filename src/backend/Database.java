@@ -522,9 +522,9 @@ public class Database implements ParkingObserver{
 //			p.payAmount(35.0);
 			
 			// Test selectSpace booking deposit
-			System.out.println(newClient.getBookings());
-			System.out.println(newClient.selectSpace("1", 3, "ABC-123", 100, 0,startTime, endTime, p));
-			System.out.println(newClient.getBookings().get(0).getTotalPrice());
+//			System.out.println(newClient.getBookings());
+//			System.out.println(newClient.selectSpace("1", 3, "ABC-123", 100, 0,startTime, endTime, p));
+//			System.out.println(newClient.getBookings().get(0).getTotalPrice());
 //			
 //			s.updateParking("Extend", null, s.bookings.get(0));
 //			System.out.println(s.bookings.size());

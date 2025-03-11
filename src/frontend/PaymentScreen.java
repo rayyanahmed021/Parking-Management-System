@@ -38,10 +38,13 @@ public class PaymentScreen {
     private void displayPendingPayments() {
         paymentPanel.removeAll();
         ArrayList<Booking> bookings = client.getBookings();
+        
 
         boolean hasPayments = false;
         for (Booking booking : bookings) {
             Payment payment = booking.getPayment();
+            // System.out.println(booking.getTotalPrice()); // Test Case DO NOT REMOVE
+            // System.out.println(payment);
             if (payment != null && !payment.getIsRefunded() && payment.getTotal() > 0) {
                 hasPayments = true;
 
