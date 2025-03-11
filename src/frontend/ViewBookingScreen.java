@@ -1,13 +1,9 @@
 package frontend;
 
-import backend.Client;
-import backend.ParkingLot;
-import backend.ParkingSpace;
-import backend.Booking;
-
+import backend.*;
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 public class ViewBookingScreen {
     private JFrame frame;
@@ -59,7 +55,9 @@ public class ViewBookingScreen {
 
             JLabel bookingLabel = new JLabel("Booking " + booking.getID() +
                     " | Lot: " + lotId + " | Space: " + spaceId +
-                    " | Amount: $" + booking.getTotalPrice());
+                    " | Amount: $" + booking.getTotalPrice() + 
+                    " | Start Time: " + booking.getStartTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + 
+                    " | End Time: " + booking.getEndTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 
             bookingPanel.add(bookingLabel);
         }

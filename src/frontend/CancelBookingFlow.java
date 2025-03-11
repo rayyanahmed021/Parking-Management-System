@@ -1,10 +1,6 @@
 package frontend;
 
-import backend.Client;
-import backend.Booking;
-import backend.Database;
-import backend.Payment;
-
+import backend.*; 
 import javax.swing.*;
 import java.awt.*;
 
@@ -91,7 +87,7 @@ public class CancelBookingFlow {
 
             // Proceed with cancellation
             client.getBookings().remove(selectedBooking);
-            JOptionPane.showMessageDialog(frame, "Booking canceled. No refund issued.");
+            JOptionPane.showMessageDialog(frame, "Booking canceled. Refund issued to original payment method.");
 
             try {
                 Database.getInstance().updateBookings("src/bookingData.csv");

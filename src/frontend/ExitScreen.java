@@ -1,9 +1,6 @@
 package frontend;
 
-import backend.Client;
-import backend.Payment;
-import backend.Booking;
-
+import backend.*;
 import javax.swing.*;
 import java.awt.*;
 

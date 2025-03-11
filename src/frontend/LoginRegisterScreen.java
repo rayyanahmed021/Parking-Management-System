@@ -81,7 +81,7 @@ public class LoginRegisterScreen {
         registerLabel.setFont(new Font("Arial", Font.BOLD, 16));
         registerPanel.add(registerLabel, gbc);
 
-        String[] roles = {"Student", "Faculty", "Non-Faculty", "Visitor"}; // Removed "Manager"
+        String[] roles = {"Student", "Faculty", "NonFaculty", "Visitor"}; // Removed "Manager"
         for (String role : roles) {
             gbc.gridy++;
             JButton roleButton = new JButton(role);
@@ -196,7 +196,7 @@ public class LoginRegisterScreen {
         roleLabel.setFont(new Font("Arial", Font.BOLD, 14));
         loginPanel.add(roleLabel, gbc);
 
-        String[] roles = {"Manager", "Student", "Faculty", "Non-Faculty", "Visitor"};
+        String[] roles = {"Student", "Faculty", "NonFaculty", "Visitor"};
         JPanel rolePanel = new JPanel();
         rolePanel.setLayout(new FlowLayout());
         ButtonGroup roleGroup = new ButtonGroup();
@@ -226,10 +226,22 @@ public class LoginRegisterScreen {
             else if (!selectedRole[0].equals("Manager")) { // Ensure only clients are handled
                 boolean isAuthorized = Client.authenticate(username, password);
                 if (isAuthorized) {
-                    loginFrame.dispose();  // Close login window
-                    Client loggedInClient = Client.getClientByEmail(username);  // Fetch client instance
-                    JOptionPane.showMessageDialog(loginFrame, "Logged in successfully as " + username);
-                    new OptionsScreen(loggedInClient); // Redirect to OptionsScreen
+                    Client loggedInClient = Client.getClientByEmail(username);
+                    
+                    if (loggedInClient != null) {
+                        String actualRole = loggedInClient.getClientType().toLowerCase();
+                        String selectedRoleLower = selectedRole[0].toLowerCase();
+                        
+                        if (!actualRole.equals(selectedRoleLower)) {
+                            JOptionPane.showMessageDialog(loginFrame, "Incorrect role selected. Select proper role", "Error", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            loginFrame.dispose(); // Close login window
+                            JOptionPane.showMessageDialog(loginFrame, "Logged in successfully as " + username);
+                            new OptionsScreen(loggedInClient); // Redirect to OptionsScreen
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(loginFrame, "Error retrieving client information.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 } else {
                     JOptionPane.showMessageDialog(loginFrame, "Login Failed. Please try again.");
                 }

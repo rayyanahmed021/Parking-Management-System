@@ -48,9 +48,10 @@ public class MainApplication {
         JLabel welcomeLabel = new JLabel("Welcome, Super Manager " + username + "!");
         welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         superManagerFrame.add(welcomeLabel, BorderLayout.NORTH);
-
-        // Add other super manager functionalities here
-        // ...
+        
+        JPanel actionsPanel = SuperManagerFlow.showSuperManagerActions(username);
+        
+        superManagerFrame.add(actionsPanel, BorderLayout.CENTER);
 
         superManagerFrame.setVisible(true);
     }
