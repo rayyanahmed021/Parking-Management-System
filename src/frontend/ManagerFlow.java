@@ -67,16 +67,6 @@ public class ManagerFlow {
 	}
 	
 	private static void showParkingLotSelection() {
-		
-//		Database db = Database.getInstance();
-//	    ArrayList<ParkingLot> parkingLots = db.getAllParkingLots();
-
-//	    for (ParkingLot lot : parkingLots) {
-//	        if (m.getName().equals(username)) {
-//	            managerLoggedIn = m;
-//	            break;
-//	        }
-//	    }
 	    
 	    JFrame parkingFrame = new JFrame("Select a Parking Lot");
         parkingFrame.setSize(400, 400);

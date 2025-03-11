@@ -2,3 +2,4 @@ id,name,state,location
 b25a3,south,enabled,toronto
 b25a5,north,enabled,quebec
 44551,east,disabled,vancouver
+fbfac,A-1,disabled,east
