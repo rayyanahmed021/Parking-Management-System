@@ -160,11 +160,19 @@ public class LoginRegisterScreen {
             else { // Removed Manager role check
             	try {
             	    Client newClient = Client.registerUser(role, usernameOrEmail, password);
-            	    JOptionPane.showMessageDialog(formFrame, "Successfully registered!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            	    formFrame.dispose(); // Close registration window
 
+            	    if (!role.toLowerCase().equals("visitor")) {
+            	    	JOptionPane.showMessageDialog(formFrame, "Pending Approval", "Error!", JOptionPane.INFORMATION_MESSAGE);
+            	    	formFrame.dispose();
+            	    	startGUI();
+            	    }
+            	    else {
+            	    	JOptionPane.showMessageDialog(formFrame, "Successfully registered!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            	    	formFrame.dispose();
+            	    	new OptionsScreen(newClient);
+            	    }
+            	   
             	    // Redirect to OptionsScreen after successful registration
-            	    new OptionsScreen(newClient);
             	} catch (Exception e1) {
             	    JOptionPane.showMessageDialog(formFrame, "Failed to register", "Error", JOptionPane.INFORMATION_MESSAGE);
             	}
