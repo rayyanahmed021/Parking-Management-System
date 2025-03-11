@@ -514,7 +514,6 @@ public class Database implements ParkingObserver{
 			db.loadBookings(bookingDataPath);
 			
 //			System.out.println(db.getAllParkingLots().get(0));
-
 //			NonFaculty n = (NonFaculty) db.allClients.get(0);
 //			System.out.println(n.getAccountApproved());
 //			Student newClient = (Student) Client.registerUser("Student", "test@gmail.com", "321");
