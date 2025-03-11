@@ -1,8 +1,10 @@
 package frontend;
 
-import backend.*; 
+import backend.*;
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CancelBookingFlow {
     private JFrame frame;
@@ -16,31 +18,40 @@ public class CancelBookingFlow {
 
     private void initialize() {
         frame = new JFrame("Cancel Booking");
-        frame.setSize(500, 300); // Increased width for better spacing
+        frame.setSize(500, 300);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-        frame.setLocationRelativeTo(null); // Centers the frame on screen
+        frame.setLocationRelativeTo(null);
 
-        // Title Label (Centered and Styled)
         JLabel titleLabel = new JLabel("Select a Booking to Cancel:", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         frame.add(titleLabel, BorderLayout.NORTH);
 
-        // Dropdown Panel (Centered)
-        JPanel centerPanel = new JPanel(new GridBagLayout()); // Better alignment
+        JPanel centerPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-        bookingDropdown = new JComboBox<>(client.getBookings().toArray(new Booking[0]));
-        bookingDropdown.setPreferredSize(new Dimension(350, 30)); // Increased size
+        // **Filter only bookings that are NOT refunded**
+        List<Booking> eligibleBookings = client.getBookings().stream()
+                .filter(booking -> booking.getPayment() != null && !booking.getPayment().getIsRefunded())
+                .collect(Collectors.toList());
+
+        if (eligibleBookings.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "No bookings available for cancellation.", "Info", JOptionPane.INFORMATION_MESSAGE);
+            frame.dispose();
+            new OptionsScreen(client);
+            return;
+        }
+
+        bookingDropdown = new JComboBox<>(eligibleBookings.toArray(new Booking[0]));
+        bookingDropdown.setPreferredSize(new Dimension(350, 30));
         centerPanel.add(bookingDropdown, gbc);
 
         frame.add(centerPanel, BorderLayout.CENTER);
 
-        // Buttons Panel (Aligned at Bottom and Centered)
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
@@ -76,18 +87,19 @@ public class CancelBookingFlow {
                 "Confirm Cancellation", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            Payment payment = selectedBooking.getPayment();
+            double refundAmount = selectedBooking.checkRefund();
 
-            if (payment != null && !payment.getIsRefunded() && payment.getTotal() > 0) {
-                JOptionPane.showMessageDialog(frame, "You are eligle for a refund. Redirecting to Refund Screen...");
-                frame.dispose(); // Close CancelBookingFlow window
-                new RefundScreen(client, selectedBooking, this); // Redirect to RefundScreen
+            if (refundAmount > 0) {
+                JOptionPane.showMessageDialog(frame, "You are eligible for a refund of $" + refundAmount +
+                        ". Redirecting to Refund Screen...");
+                frame.dispose();
+                new RefundScreen(client, selectedBooking, this);
                 return;
             }
 
-            // Proceed with cancellation
+            // No refund case
             client.getBookings().remove(selectedBooking);
-            JOptionPane.showMessageDialog(frame, "Booking canceled. Refund issued to original payment method.");
+            JOptionPane.showMessageDialog(frame, "Booking canceled. No refund issued.");
 
             try {
                 Database.getInstance().updateBookings("src/bookingData.csv");
@@ -95,9 +107,13 @@ public class CancelBookingFlow {
                 e.printStackTrace();
             }
 
-            frame.dispose(); // Close the CancelBookingFlow window after cancellation
+            frame.dispose();
         }
     }
+
+    /**
+     * Completes the cancellation of the booking after refund processing.
+     */
     public void completeCancellation(Booking selectedBooking, boolean refundProcessed) {
         client.getBookings().remove(selectedBooking);
 
@@ -105,18 +121,12 @@ public class CancelBookingFlow {
 //                ? "Booking canceled and refund processed."
 //                : "Booking canceled. No refund issued.");
 
-        // Update bookings CSV
         try {
             Database.getInstance().updateBookings("src/bookingData.csv");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        frame.dispose();
-       // new OptionsScreen(client); // After refund or cancel, return to OptionsScreen
-    }
 
-    /**
-     * Completes the cancellation of the booking after refund processing.
-     */
-   
+        frame.dispose();
+    }
 }
