@@ -102,7 +102,7 @@ public class ManagerFlow {
 
         for (ParkingLot lot : parkingLots) {
             gbc.gridy++;
-            JRadioButton lotButton = new JRadioButton("Name: " + lot.getName() + " | State: " + (lot.getState().isEnabled() ? "Enabled" : "Disabled"));
+            JRadioButton lotButton = new JRadioButton("Name: " + lot.getName() + " | Location: " +lot.getLocation()+ " | State: " + (lot.getState().isEnabled() ? "Enabled" : "Disabled"));
             lotButton.setFont(new Font("Arial", Font.PLAIN, 14));
             group.add(lotButton);
             parkingPanel.add(lotButton, gbc);
@@ -155,7 +155,7 @@ private static void showParkingSpaceLotSelection() {
 
         for (ParkingLot lot : parkingLots) {
             gbc.gridy++;
-            JRadioButton lotButton = new JRadioButton("Name: " + lot.getName() + " | State: " + (lot.getState().isEnabled() ? "Enabled" : "Disabled"));
+            JRadioButton lotButton = new JRadioButton("Name: " + lot.getName() + " | Location: " +lot.getLocation()+ " | State: " + (lot.getState().isEnabled() ? "Enabled" : "Disabled"));
             lotButton.setFont(new Font("Arial", Font.PLAIN, 14));
             group.add(lotButton);
             parkingPanel.add(lotButton, gbc);
@@ -182,58 +182,6 @@ private static void showParkingSpaceLotSelection() {
 //        return parkingPanel;
 	}
 
-//private static void showParkingSpacesSelection(ParkingLot lot) {
-//    JFrame frame = new JFrame("Parking Spaces in Lot " + lot.getName());
-//    frame.setSize(400, 400);
-//    frame.setLocationRelativeTo(null);
-//
-//    JPanel panel = new JPanel();
-//    panel.setLayout(new GridBagLayout());
-//
-//    GridBagConstraints gbc = new GridBagConstraints();
-//    gbc.insets = new Insets(10, 10, 10, 10);
-//    gbc.gridx = 0;
-//    gbc.gridy = 0;
-//
-//    JLabel titleLabel = new JLabel("Parking Spaces in Lot " + lot.getName());
-//    titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
-//    panel.add(titleLabel, gbc);
-//
-//    gbc.gridy++;
-////    JLabel header = new JLabel("Parking Space ID | Location | Status");
-//    JLabel header = new JLabel("Parking Space ID | Status");
-//    header.setFont(new Font("Arial", Font.BOLD, 14));
-//    panel.add(header, gbc);
-//
-//    ButtonGroup group = new ButtonGroup();
-//    final ParkingSpace[] selectedSpace = {null};
-//
-//    for (ParkingSpace space : lot.getParkingSpaces()) {
-//        gbc.gridy++;
-//        JRadioButton spaceButton = new JRadioButton("Parking Space "+ space.getId() + " | " + (space.isEnabled() ? "Enabled" : "Disabled"));
-//        spaceButton.setFont(new Font("Arial", Font.PLAIN, 14));
-//        group.add(spaceButton);
-//        panel.add(spaceButton, gbc);
-//
-//        spaceButton.addActionListener(e -> selectedSpace[0] = space);
-//    }
-//
-//    gbc.gridy++;
-//    JButton submitButton = new JButton("Select");
-//    submitButton.setFont(new Font("Arial", Font.PLAIN, 14));
-//    submitButton.addActionListener(e -> {
-//        if (selectedSpace[0] == null) {
-//            JOptionPane.showMessageDialog(frame, "Please select a parking space!", "Error", JOptionPane.ERROR_MESSAGE);
-//        } else {
-//        	showUpdateParkingSpace(lot, selectedSpace[0]);
-//            frame.dispose();
-//        }
-//    });
-//
-//    panel.add(submitButton, gbc);
-//    frame.add(panel);
-//    frame.setVisible(true);
-//}
 private static void showParkingSpacesSelection(ParkingLot lot) {
     JFrame frame = new JFrame("Parking Spaces in Lot " + lot.getName());
     frame.setSize(400, 400);
@@ -532,55 +480,63 @@ private static void showParkingSpacesSelection(ParkingLot lot) {
 	    }
 	 
 	 
-	private static void addParkingLotForm(String username) {
-	    JFrame formFrame = new JFrame("Parking Lot Details Form");
-	    formFrame.setSize(400, 250);
-	    formFrame.setLocationRelativeTo(null);
-	    JPanel formPanel = new JPanel();
-	    formPanel.setLayout(new GridBagLayout());
+	 private static void addParkingLotForm(String username) {
+		    JFrame formFrame = new JFrame("Parking Lot Details Form");
+		    formFrame.setSize(400, 300);
+		    formFrame.setLocationRelativeTo(null);
+		    JPanel formPanel = new JPanel();
+		    formPanel.setLayout(new GridBagLayout());
 
-	    GridBagConstraints gbc = new GridBagConstraints();
-	    gbc.insets = new Insets(10, 10, 10, 10);
-	    gbc.gridx = 0;
-	    gbc.gridy = 0;
+		    GridBagConstraints gbc = new GridBagConstraints();
+		    gbc.insets = new Insets(10, 10, 10, 10);
+		    gbc.gridx = 0;
+		    gbc.gridy = 0;
+		    gbc.anchor = GridBagConstraints.WEST;
 
-	    // Name Field
-	    gbc.gridx = 0;
-	    gbc.gridy++;
-	    formPanel.add(new JLabel("Parking Lot Name:"), gbc);
-	    gbc.gridx = 1;
-	    JTextField nameField = new JTextField(15);
-	    formPanel.add(nameField, gbc);
+		    // Parking Lot Name Field
+		    formPanel.add(new JLabel("Parking Lot Name:"), gbc);
+		    gbc.gridx = 1;
+		    JTextField nameField = new JTextField(15);
+		    formPanel.add(nameField, gbc);
 
-	    // Submit Button
-	    gbc.gridx = 0;
-	    gbc.gridy++;
-	    gbc.gridwidth = 2;
-	    JButton submitButton = new JButton("Submit");
-	    submitButton.setFont(new Font("Arial", Font.PLAIN, 14));
-	    submitButton.addActionListener(e -> {
-	        String id = ParkingLot.randomIdGenerator();
-	        String name = nameField.getText();
-	        
-	        if (id.isEmpty() || name.isEmpty()) {
-	            JOptionPane.showMessageDialog(formFrame, "Please fill in all fields!", "Error", JOptionPane.ERROR_MESSAGE);
-	        } else {
-	        	Database db = Database.getInstance();
-	        	Manager managerLoggedIn = getManagerLoggedIn(username);
+		    // Parking Lot Location Field
+		    gbc.gridx = 0;
+		    gbc.gridy++;
+		    formPanel.add(new JLabel("Parking Lot Location:"), gbc);
+		    gbc.gridx = 1;
+		    JTextField locationField = new JTextField(15);
+		    formPanel.add(locationField, gbc);
 
-	    	    System.out.println(db.getAllParkingLots().size());
-	    	    managerLoggedIn.executeCommand(new AddParkingLotCommand(id,name));
-	    	    System.out.println(db.getAllParkingLots().size());
-	            JOptionPane.showMessageDialog(formFrame, "Parking Lot Details Submitted");
-	            
-	            
-	            formFrame.dispose(); // Close the form after submission
-	        }
-	    });
-	    formPanel.add(submitButton, gbc);
+		    // Submit Button
+		    gbc.gridx = 0;
+		    gbc.gridy++;
+		    gbc.gridwidth = 2;
+		    JButton submitButton = new JButton("Submit");
+		    submitButton.setFont(new Font("Arial", Font.PLAIN, 14));
+		    submitButton.addActionListener(e -> {
+		        String id = ParkingLot.randomIdGenerator();
+		        String name = nameField.getText().trim();
+		        String location = locationField.getText().trim();
 
-	    formFrame.add(formPanel);
-	    formFrame.setVisible(true);
-	}
+		        if (name.isEmpty() || location.isEmpty()) {
+		            JOptionPane.showMessageDialog(formFrame, "Please fill in all fields!", "Error", JOptionPane.ERROR_MESSAGE);
+		        } else {
+		            Database db = Database.getInstance();
+		            Manager managerLoggedIn = getManagerLoggedIn(username);
+
+		            System.out.println("Before Adding: " + db.getAllParkingLots().size());
+		            managerLoggedIn.executeCommand(new AddParkingLotCommand(id, name, location));
+		            System.out.println("After Adding: " + db.getAllParkingLots().size());
+
+		            JOptionPane.showMessageDialog(formFrame, "Parking Lot Details Submitted", "Success", JOptionPane.INFORMATION_MESSAGE);
+		            formFrame.dispose(); // Close the form after submission
+		        }
+		    });
+
+		    formPanel.add(submitButton, gbc);
+		    formFrame.add(formPanel);
+		    formFrame.setVisible(true);
+		}
+
 
 }

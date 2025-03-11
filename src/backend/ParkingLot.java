@@ -7,15 +7,25 @@ import java.util.UUID;
 public class ParkingLot {
     private String id;
     private String name;
-    private ParkingSpace[] parkingSpaces = new ParkingSpace[6];
+    private ParkingSpace[] parkingSpaces = new ParkingSpace[100];
     private ParkingLotState state;
+    private String location;
 
-//    public ParkingLot(String id, String name, ParkingLotState state) {
-    public ParkingLot(String id, String name,ParkingLotState state, ParkingSpace[] parkingSpaces) {
+    public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	//    public ParkingLot(String id, String name, ParkingLotState state) {
+    public ParkingLot(String id, String name,ParkingLotState state, ParkingSpace[] parkingSpaces, String location) {
         this.id = id;
         this.name = name;
         this.parkingSpaces = parkingSpaces;
         this.state = state;
+        this.location = location;
     }
     
     public static String randomIdGenerator() {

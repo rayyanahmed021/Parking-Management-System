@@ -158,7 +158,6 @@ public class Database implements ParkingObserver{
             }
 //            parkingSpace.setParkingLot(new ParkingLot());
             parkingSpace.setOccupied(Boolean.parseBoolean(reader.get("occupied")));
-            parkingSpace.setLocation(reader.get("location"));
             parkingSpace.setEnabled(Boolean.parseBoolean(reader.get("isEnabled")));
             this.allParkingSpaces.add(parkingSpace);
         }
@@ -170,7 +169,7 @@ public class Database implements ParkingObserver{
         reader.readHeaders();
 
         while (reader.readRecord()) {
-        	ParkingLot parkingLot = new ParkingLot(reader.get("id"),reader.get("name"), reader.get("state").equals("enabled") ? new EnabledState(): new DisabledState(), new ParkingSpace[100]);
+        	ParkingLot parkingLot = new ParkingLot(reader.get("id"),reader.get("name"), reader.get("state").equals("enabled") ? new EnabledState(): new DisabledState(), new ParkingSpace[100], reader.get("location"));
             this.allParkingLots.add(parkingLot);
         }
         reader.close();
@@ -286,7 +285,6 @@ public class Database implements ParkingObserver{
         writer.write("id");
         writer.write("lot");
         writer.write("occupied");
-        writer.write("location");
         writer.write("isEnabled");
         writer.endRecord();
         
@@ -295,7 +293,6 @@ public class Database implements ParkingObserver{
             writer.write(String.valueOf(space.getId()));
             writer.write(String.valueOf(space.getParkingLot().getId()));
             writer.write(String.valueOf(space.isOccupied()));
-            writer.write(space.getLocation());
             writer.write(String.valueOf(space.isEnabled()));
             writer.endRecord();
         }
@@ -353,12 +350,14 @@ public class Database implements ParkingObserver{
         writer.write("id");
         writer.write("name");
         writer.write("state");
+        writer.write("location");
         writer.endRecord();
 
         for (ParkingLot lot : this.allParkingLots) {
             writer.write(String.valueOf(lot.getId()));
             writer.write(String.valueOf(lot.getName()));
             writer.write(lot.getState() instanceof EnabledState ? "enabled":"disabled");
+            writer.write(String.valueOf(lot.getLocation()));
             writer.endRecord();
         }
         writer.close();

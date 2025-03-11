@@ -184,40 +184,61 @@ private static void showParkingSpaceLotSelection() {
 //        return parkingPanel;
 	}
 
+
 private static void showParkingSpacesSelection(ParkingLot lot) {
     JFrame frame = new JFrame("Parking Spaces in Lot " + lot.getName());
     frame.setSize(400, 400);
     frame.setLocationRelativeTo(null);
 
-    JPanel panel = new JPanel();
-    panel.setLayout(new GridBagLayout());
+    JPanel mainPanel = new JPanel();
+    mainPanel.setLayout(new BorderLayout());
+
+    JPanel contentPanel = new JPanel();
+    contentPanel.setLayout(new GridBagLayout());
 
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.insets = new Insets(10, 10, 10, 10);
     gbc.gridx = 0;
     gbc.gridy = 0;
 
-    JLabel titleLabel = new JLabel("Parking Spaces in " + lot.getName());
+    JLabel titleLabel = new JLabel("Parking Spaces in Lot " + lot.getName());
     titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
-    panel.add(titleLabel, gbc);
+    contentPanel.add(titleLabel, gbc);
 
     gbc.gridy++;
-    JLabel header = new JLabel("ID | Location | Status");
+    JLabel header = new JLabel("Parking Space ID | Status");
     header.setFont(new Font("Arial", Font.BOLD, 14));
-    panel.add(header, gbc);
+    contentPanel.add(header, gbc);
 
     ButtonGroup group = new ButtonGroup();
     final ParkingSpace[] selectedSpace = {null};
 
+    JPanel scrollablePanel = new JPanel();
+    scrollablePanel.setLayout(new GridBagLayout());
+    
+    GridBagConstraints scrollGbc = new GridBagConstraints();
+    scrollGbc.insets = new Insets(5, 10, 5, 10);
+    scrollGbc.gridx = 0;
+    scrollGbc.gridy = 0;
+
     for (ParkingSpace space : lot.getParkingSpaces()) {
-        gbc.gridy++;
-        JRadioButton spaceButton = new JRadioButton(space.getId() + " | " + space.getLocation() + " | " + (space.isEnabled() ? "Enabled" : "Disabled"));
+        JRadioButton spaceButton = new JRadioButton(
+            "Parking Space " + space.getId() + " | " + (space.isEnabled() ? "Enabled" : "Disabled")
+        );
         spaceButton.setFont(new Font("Arial", Font.PLAIN, 14));
         group.add(spaceButton);
-        panel.add(spaceButton, gbc);
+        scrollablePanel.add(spaceButton, scrollGbc);
+        scrollGbc.gridy++;
 
         spaceButton.addActionListener(e -> selectedSpace[0] = space);
     }
+
+    JScrollPane scrollPane = new JScrollPane(scrollablePanel);
+    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setPreferredSize(new Dimension(350, 200));
+
+    gbc.gridy++;
+    contentPanel.add(scrollPane, gbc);
 
     gbc.gridy++;
     JButton submitButton = new JButton("Select");
@@ -226,15 +247,18 @@ private static void showParkingSpacesSelection(ParkingLot lot) {
         if (selectedSpace[0] == null) {
             JOptionPane.showMessageDialog(frame, "Please select a parking space!", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-        	showUpdateParkingSpace(lot, selectedSpace[0]);
+            showUpdateParkingSpace(lot, selectedSpace[0]);
             frame.dispose();
         }
     });
 
-    panel.add(submitButton, gbc);
-    frame.add(panel);
+    contentPanel.add(submitButton, gbc);
+    mainPanel.add(contentPanel, BorderLayout.CENTER);
+    
+    frame.add(mainPanel);
     frame.setVisible(true);
 }
+
 
 
 	 private static void showUpdateParkingLot(ParkingLot selectedLot) {
@@ -557,7 +581,7 @@ private static void showParkingSpacesSelection(ParkingLot lot) {
 	                formFrame.dispose();
 	        	}
 	        	else {
-	        		JOptionPane.showMessageDialog(formFrame, "Manager account with username " + username + " already exists.", "Error", JOptionPane.ERROR_MESSAGE);
+	        		JOptionPane.showMessageDialog(formFrame, "Manager account with username " + name + " already exists.", "Error", JOptionPane.ERROR_MESSAGE);
 	        	}
 	        }
 	    });

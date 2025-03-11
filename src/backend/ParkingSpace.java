@@ -6,7 +6,6 @@ public class ParkingSpace implements ParkingObserver{
     private int id;
     private ParkingLot parkingLot;
     private boolean isOccupied;
-    private String location;
     private ParkingSensor parkingSensor;
     private boolean isEnabled;
 
@@ -18,11 +17,10 @@ public class ParkingSpace implements ParkingObserver{
 		this.isEnabled = isEnabled;
 	}
 
-	public ParkingSpace(int id, ParkingLot parkingLot, String location, boolean isEnabled) {
+	public ParkingSpace(int id, ParkingLot parkingLot, boolean isEnabled) {
         this.id = id;
         this.parkingLot = parkingLot;
         this.isOccupied = false;
-        this.location = location;
         this.parkingSensor = new ParkingSensor(this);
         this.isEnabled = isEnabled;
     }
@@ -56,13 +54,6 @@ public class ParkingSpace implements ParkingObserver{
         parkingSensor.notifyObservers();
     }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
     public ParkingSensor getParkingSensor() {
         return parkingSensor;
     }

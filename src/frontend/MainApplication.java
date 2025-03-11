@@ -62,7 +62,11 @@ public class MainApplication {
         superManagerFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                System.out.println("im exiting");
+                try {
+                    Database.updateEverything();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
                 superManagerFrame.dispose();
                 System.exit(0);
             }
@@ -73,14 +77,19 @@ public class MainApplication {
         JLabel welcomeLabel = new JLabel("Welcome, Super Manager " + username + "!");
         welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         superManagerFrame.add(welcomeLabel, BorderLayout.NORTH);
-//<<<<<<< Updated upstream
-//        
-//        JPanel actionsPanel = SuperManagerFlow.showSuperManagerActions(username);
-//        
-//        superManagerFrame.add(actionsPanel, BorderLayout.CENTER);
-//=======
-//>>>>>>> Stashed changes
-//
-//        superManagerFrame.setVisible(true);
+        
+        JPanel actionsPanel = SuperManagerFlow.showSuperManagerActions(username);
+        superManagerFrame.add(actionsPanel, BorderLayout.CENTER);
+        
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        logoutButton.addActionListener(e -> {
+            superManagerFrame.dispose();
+            LoginRegisterScreen loginRegister = new LoginRegisterScreen();
+            loginRegister.startGUI();
+        });
+        superManagerFrame.add(logoutButton, BorderLayout.SOUTH);
+        
+        superManagerFrame.setVisible(true);
     }
 }
