@@ -1,5 +1,7 @@
 package backend;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.time.Duration;
 
 public class Booking {
 	static int nextBookingId = 0;
@@ -111,5 +113,32 @@ public class Booking {
     
     public void setParkingLot(ParkingLot parkingLot) {
         this.parkingLot = parkingLot;
+    }
+    
+    public double checkRefund() {
+    	Duration duration = Duration.between(this.startTime, LocalDateTime.now());
+    	long hours = duration.toHours();
+    	if (hours >= 1) {
+    		return - 1;
+    	}
+    	else {
+    		return this.totalPrice;
+    	}
+    }
+    
+    public double calculateCheckout() {
+    	Duration d = Duration.between(this.startTime, this.endTime);
+    	long hrs = d.toHours();
+    	return (hrs - 1) * this.client.calculateDepositClient();
+    }
+    
+    public ArrayList<Booking> activeBookings() {
+    	ArrayList<Booking> active = new ArrayList<Booking>();
+    	for (Booking b : this.client.getBookings()) {
+    		if (LocalDateTime.now().isBefore(b.endTime) && b.getPayment() != null && !(b.getPayment().getIsRefunded())) {
+    			active.add(b);
+    		}
+    	}
+    	return active;
     }
 }

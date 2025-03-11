@@ -131,11 +131,11 @@ public abstract class Client {
 					if (parkingSpace.isEnabled() && !parkingSpace.isOccupied()) {
 						booking.getParkingSpace().setOccupied(true);
 						// Booking Deposit: **(Confused whether to assign deposit or full total)**
-//							this.bookings.setTotalPrice(booking.getTotalPrice() + this.calculateDepositClient());
+						booking.setTotalPrice(this.calculateDepositClient());
 						// Full total:
 						// System.out.println(booking.getTotalPrice()); Test Case DO NOT REMOVE
-						long hoursDifference = Duration.between(booking.getStartTime(), booking.getEndTime()).toHours();
-						booking.setTotalPrice(booking.getTotalPrice() + (hoursDifference*this.calculateDepositClient()));
+//						long hoursDifference = Duration.between(booking.getStartTime(), booking.getEndTime()).toHours();
+//						booking.setTotalPrice(booking.getTotalPrice() + (hoursDifference*this.calculateDepositClient()));
 						this.bookings.add(booking);
 						// System.out.println(booking.getTotalPrice()); Test Case DO NOT REMOVE
 					}
