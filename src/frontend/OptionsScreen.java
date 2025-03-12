@@ -1,11 +1,14 @@
 package frontend;
 
 import backend.Client;
+import backend.Database;
 import backend.Booking;
 import backend.Payment;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class OptionsScreen {
     private JFrame frame;
@@ -24,6 +27,19 @@ public class OptionsScreen {
 
         // Center the window on the screen
         //frame.setLocationRelativeTo(null);
+        
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	try {
+					Database.updateEverything();
+				} catch (Exception exception) {
+					exception.printStackTrace();
+				}
+                frame.dispose();
+                System.exit(0);
+            }
+        });
 
         JLabel titleLabel = new JLabel("Please Choose an Option:", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));

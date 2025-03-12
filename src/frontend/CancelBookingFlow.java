@@ -3,6 +3,8 @@ package frontend;
 import backend.*; 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +25,19 @@ public class CancelBookingFlow {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         frame.setLocationRelativeTo(null);
+        
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	try {
+					Database.updateEverything();
+				} catch (Exception exception) {
+					exception.printStackTrace();
+				}
+                frame.dispose();
+                System.exit(0);
+            }
+        });
 
         JLabel titleLabel = new JLabel("Select a Booking to Cancel:", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
@@ -40,7 +55,6 @@ public class CancelBookingFlow {
         if (eligibleBookings.isEmpty()) {
             JOptionPane.showMessageDialog(frame, "No bookings available for cancellation.", "Info", JOptionPane.INFORMATION_MESSAGE);
             frame.dispose();
-            new OptionsScreen(client);
             return;
         }
 //        System.out.println(client.getBookings().get(0).activeBookings().size());
@@ -97,8 +111,6 @@ public class CancelBookingFlow {
             // No refund case
             client.getBookings().remove(selectedBooking);
             JOptionPane.showMessageDialog(frame, "Booking canceled. No refund issued.");
-
-
             frame.dispose();
         }
     }
@@ -108,16 +120,13 @@ public class CancelBookingFlow {
      */
     public void completeCancellation(Booking selectedBooking, boolean refundProcessed) {
         client.getBookings().remove(selectedBooking);
-
-//        JOptionPane.showMessageDialog(null, refundProcessed
-//                ? "Booking canceled and refund processed."
-//                : "Booking canceled. No refund issued.");
-
-        try {
-            Database.getInstance().updateBookings("src/bookingData.csv");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        
+        Database db = Database.getInstance();
+        ArrayList<Booking> bookings = db.getAllBookings();
+        bookings.remove(selectedBooking);
+        
+        ArrayList<Payment> payments = db.getAllPayments();
+        payments.remove(selectedBooking.getPayment());
 
         frame.dispose();
     }
