@@ -132,13 +132,4 @@ public class Booking {
     	return (hrs - 1) * this.client.calculateDepositClient();
     }
     
-    public ArrayList<Booking> activeBookings(Client client) {
-    	ArrayList<Booking> active = new ArrayList<Booking>();
-    	for (Booking b : client.getBookings()) {
-    		if (LocalDateTime.now().isBefore(b.endTime) && b.getPayment() != null && !(b.getPayment().getIsRefunded())) {
-    			active.add(b);
-    		}
-    	}
-    	return active;
-    }
 }

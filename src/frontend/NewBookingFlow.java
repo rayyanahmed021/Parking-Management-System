@@ -158,24 +158,34 @@ public class NewBookingFlow {
         frame.getContentPane().removeAll();
         frame.setTitle("Select a Parking Space");
 
+        JPanel mainPanel = new JPanel(new BorderLayout());
+
         JPanel spacePanel = new JPanel();
         spacePanel.setLayout(new BoxLayout(spacePanel, BoxLayout.Y_AXIS));
 
-        List<ParkingSpace> availableSpaces = new ArrayList<>();
-        ParkingSpace[] allSpaces = selectedLot.getParkingSpaces(); // Assuming this returns an array
+        ArrayList<ParkingSpace> availableSpaces = new ArrayList<>();
 
+        ParkingSpace[] allSpaces = selectedLot.getParkingSpaces();
         for (ParkingSpace space : allSpaces) {
-        	if (space.isEnabled()) {
-        		for (Booking bookings : db.getAllBookings()) {
-        			if (bookings.getParkingSpace() == space) {
-        				if (!(newBooking.getStartTime().isBefore(bookings.getEndTime()) && bookings.getStartTime().isBefore(newBooking.getEndTime()))) {
-        					availableSpaces.add(space);
-        				}
-        			}
-        		}
-        	}
+            if (space.isEnabled()) {
+                boolean isConflict = false;
+                for (Booking b : db.getAllBookings()) {
+                    if (b.getParkingSpace() != null && b.getParkingSpace().getId() == space.getId() && b.getParkingLot().getId().equals(space.getParkingLot().getId())) {
+                        if (newBooking.getStartTime().isBefore(b.getEndTime()) 
+                            && b.getStartTime().isBefore(newBooking.getEndTime())) 
+                        {
+                            isConflict = true;
+                            break;
+                        }
+                    }
+                }
+                if (!isConflict) {
+                    availableSpaces.add(space);
+                }
+            }
         }
 
+        // Create a radio button for each available space
         ButtonGroup group = new ButtonGroup();
         for (ParkingSpace space : availableSpaces) {
             JRadioButton radioButton = new JRadioButton("Space: " + space.getId());
@@ -184,27 +194,28 @@ public class NewBookingFlow {
             radioButton.addActionListener(e -> newBooking.setParkingSpace(space));
         }
 
+        // Wrap spacePanel in a scroll pane for large lists
         JScrollPane scrollPane = new JScrollPane(spacePanel);
-        frame.add(scrollPane, BorderLayout.CENTER);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
 
+        // Confirm button
         JButton confirmButton = new JButton("Confirm and Proceed to Payment");
         confirmButton.addActionListener(e -> {
             if (newBooking.getParkingSpace() != null) {
-            	// Test Cases DO NOT REMOVE
-            	// System.out.println(newBooking.getTotalPrice());
-            	// System.out.println(client.selectSpace(newBooking));
-            	client.selectSpace(newBooking);
-            	// System.out.println(newBooking.getTotalPrice());
+                // Link the selected space to the new booking
+                client.selectSpace(newBooking);
+                // Close the frame and show payment screen
                 frame.dispose();
                 new PaymentScreen(client);
             } else {
                 JOptionPane.showMessageDialog(frame, "Please select a parking space.");
             }
         });
-        frame.add(confirmButton, BorderLayout.SOUTH);
+        mainPanel.add(confirmButton, BorderLayout.SOUTH);
 
+        frame.add(mainPanel);
         frame.revalidate();
         frame.repaint();
-        
     }
 }

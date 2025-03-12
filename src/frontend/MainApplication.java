@@ -12,6 +12,11 @@ public class MainApplication {
     public static void main(String[] args) {
         try {
             Database.loadEverything();
+//            System.out.println("asdad");
+//            System.out.println(Database.getInstance().getAllClients().get(0).getEmail());
+//            System.out.println(Database.getInstance().getAllClients().get(0).getBookings().size());
+//            System.out.println(Database.getInstance().getAllClients().get(0).activeBookings().size());
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -151,6 +151,19 @@ public abstract class Client {
 		}
 		return true;
 	}
+	 public ArrayList<Booking> activeBookings() {
+	    	ArrayList<Booking> active = new ArrayList<Booking>();
+	    	
+	    	for (Booking b : this.bookings) {
+	    		if (b.getEndTime().isAfter(LocalDateTime.now()) && b.getStartTime().isAfter(LocalDateTime.now())) {
+	    			if(b.getPayment() != null && !(b.getPayment().getIsRefunded())) {
+	    				active.add(b);
+	    			}
+	    			
+	    		}
+	    	}
+	    	return active;
+	    }
 
 	// Changed change string to LocalDateTime array for simplicity
 	public boolean updateParking(String changeType, LocalDateTime[] change, Booking booking) {

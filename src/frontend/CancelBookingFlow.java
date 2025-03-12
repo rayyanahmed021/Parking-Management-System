@@ -35,7 +35,7 @@ public class CancelBookingFlow {
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-        List<Booking> eligibleBookings = new ArrayList<>(new Booking().activeBookings(client));
+        List<Booking> eligibleBookings = new ArrayList<>(client.activeBookings());
 
         if (eligibleBookings.isEmpty()) {
             JOptionPane.showMessageDialog(frame, "No bookings available for cancellation.", "Info", JOptionPane.INFORMATION_MESSAGE);
@@ -43,7 +43,7 @@ public class CancelBookingFlow {
             new OptionsScreen(client);
             return;
         }
-
+//        System.out.println(client.getBookings().get(0).activeBookings().size());
         bookingDropdown = new JComboBox<>(eligibleBookings.toArray(new Booking[0]));
         bookingDropdown.setPreferredSize(new Dimension(350, 30));
         centerPanel.add(bookingDropdown, gbc);
