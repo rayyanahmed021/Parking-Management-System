@@ -39,14 +39,14 @@ public class OptionsScreen {
         JButton newBookingBtn = new JButton("Make a New Booking");
         JButton editBookingBtn = new JButton("Modify an Existing Booking");
         JButton cancelBookingBtn = new JButton("Cancel a Booking");
-        JButton exitBtn = new JButton("Exit");
+        JButton logoutBtn = new JButton("Logout");
 
         // Set button alignment for a cleaner UI
         viewBookingsBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         newBookingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         editBookingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         cancelBookingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-        exitBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        logoutBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Add buttons with spacing
         buttonPanel.add(viewBookingsBtn);
@@ -57,7 +57,7 @@ public class OptionsScreen {
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         buttonPanel.add(cancelBookingBtn);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        buttonPanel.add(exitBtn);
+        buttonPanel.add(logoutBtn);
 
         frame.add(buttonPanel, BorderLayout.CENTER);
 
@@ -70,7 +70,11 @@ public class OptionsScreen {
         });
 
 
-        exitBtn.addActionListener(e -> handleExit());
+        logoutBtn.addActionListener(e -> {
+            frame.dispose();
+            LoginRegisterScreen loginRegister = new LoginRegisterScreen();
+            loginRegister.startGUI();
+        });
 
         frame.setVisible(true);
     }
@@ -95,48 +99,5 @@ public class OptionsScreen {
                 JOptionPane.showMessageDialog(frame, "Feature not implemented yet.");
                 break;
         }
-    }
-
-
-    private void handleExit() {
-        if (hasOutstandingBalance()) {
-            int confirm = JOptionPane.showConfirmDialog(
-                frame,
-                "You have an outstanding balance. Do you want to proceed to payment?",
-                "Outstanding Balance",
-                JOptionPane.YES_NO_OPTION
-            );
-
-            if (confirm == JOptionPane.YES_OPTION) {
-                frame.dispose();
-                new PaymentScreen(client); // Redirect to payment
-            }
-        } else {
-            int confirmExit = JOptionPane.showConfirmDialog(
-                frame,
-                "Are you sure you want to exit?",
-                "Confirm Exit",
-                JOptionPane.YES_NO_OPTION
-            );
-
-            if (confirmExit == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(frame, "Thank you! Exiting application.");
-                frame.dispose();
-                LoginRegisterScreen loginRegister = new LoginRegisterScreen();
-                loginRegister.startGUI();
-            }
-        }
-    }
-
-
-
-    private boolean hasOutstandingBalance() {
-        for (Booking booking : client.getBookings()) {
-            Payment payment = booking.getPayment();
-            if (payment != null && !payment.getIsRefunded() && payment.getTotal() > 0) {
-                return true;
-            }
-        }
-        return false;
     }
 }

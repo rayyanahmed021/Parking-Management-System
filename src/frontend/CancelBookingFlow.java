@@ -1,8 +1,9 @@
 package frontend;
 
-import backend.*;
+import backend.*; 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,10 +35,7 @@ public class CancelBookingFlow {
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-        // **Filter only bookings that are NOT refunded**
-        List<Booking> eligibleBookings = client.getBookings().stream()
-                .filter(booking -> booking.getPayment() != null && !booking.getPayment().getIsRefunded())
-                .collect(Collectors.toList());
+        List<Booking> eligibleBookings = new ArrayList<>(new Booking().activeBookings(client));
 
         if (eligibleBookings.isEmpty()) {
             JOptionPane.showMessageDialog(frame, "No bookings available for cancellation.", "Info", JOptionPane.INFORMATION_MESSAGE);
@@ -66,7 +64,6 @@ public class CancelBookingFlow {
         backButton.setFont(new Font("Arial", Font.BOLD, 14));
         backButton.addActionListener(e -> {
             frame.dispose();
-            new OptionsScreen(client);
         });
 
         buttonPanel.add(cancelButton);
