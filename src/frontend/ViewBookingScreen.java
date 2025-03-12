@@ -49,7 +49,7 @@ public class ViewBookingScreen {
 
     private void displayBookings() {
         bookingPanel.removeAll(); 
-        for (Booking booking : client.getBookings()) {
+        for (Booking booking : new Booking().activeBookings(client)) {
             // Check if the booking is refunded
             Payment payment = booking.getPayment();
             if (payment != null && payment.getIsRefunded()) {
