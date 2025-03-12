@@ -16,6 +16,7 @@ public abstract class Client {
 		this.password = password;
 		this.bookings = new ArrayList<Booking>();
 	}
+	
 	public static Client getClientByEmail(String email) {
 	    Database db = Database.getInstance();
 	    for (Client c : db.getAllClients()) {
@@ -71,7 +72,7 @@ public abstract class Client {
 	public abstract String getClientType();
 
 	// Email validation function
-	private static boolean isValidEmail(String email) {
+	public static boolean isValidEmail(String email) {
 	    String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 	    Pattern pattern = Pattern.compile(emailRegex);
 	    Matcher matcher = pattern.matcher(email);
@@ -79,12 +80,12 @@ public abstract class Client {
 	}
 	
 	// License plate validation function
-		public static boolean isValidLicensePlate(String licensePlate) {
-			String plateRegex = "^[A-Z0-9]{1,3}-?[A-Z0-9]{1,4}$";
-		    Pattern pattern = Pattern.compile(plateRegex);
-		    Matcher matcher = pattern.matcher(licensePlate);
-		    return matcher.matches();
-		}
+	public static boolean isValidLicensePlate(String licensePlate) {
+		String plateRegex = "^[A-Z0-9]{1,3}-?[A-Z0-9]{1,4}$";
+		Pattern pattern = Pattern.compile(plateRegex);
+		Matcher matcher = pattern.matcher(licensePlate);
+		return matcher.matches();
+	}
 	
 	public static boolean authenticate(String email, String password) {
 

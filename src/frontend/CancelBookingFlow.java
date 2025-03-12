@@ -101,11 +101,6 @@ public class CancelBookingFlow {
             client.getBookings().remove(selectedBooking);
             JOptionPane.showMessageDialog(frame, "Booking canceled. No refund issued.");
 
-            try {
-                Database.getInstance().updateBookings("src/bookingData.csv");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
             frame.dispose();
         }
