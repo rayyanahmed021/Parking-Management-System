@@ -47,13 +47,6 @@ public class RefundScreen {
         if (payment != null && !payment.getIsRefunded()) {
             payment.setIsRefunded(true);
 
-            // Update payments CSV to reflect refund
-            try {
-                Database.getInstance().updatePayments("src/paymentData.csv");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
             JOptionPane.showMessageDialog(frame, "Refund has been successfully processed to your original booking method.");
         }
 

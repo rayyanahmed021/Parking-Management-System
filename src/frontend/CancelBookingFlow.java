@@ -108,9 +108,6 @@ public class CancelBookingFlow {
                 return;
             }
 
-            // No refund case
-            client.getBookings().remove(selectedBooking);
-            JOptionPane.showMessageDialog(frame, "Booking canceled. No refund issued.");
             frame.dispose();
         }
     }
