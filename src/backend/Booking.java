@@ -19,7 +19,7 @@ public class Booking {
     public Booking(int id, Client client, double totalPrice, String licensePlate, 
                    LocalDateTime startTime, LocalDateTime endTime, 
                    Payment payment, ParkingSpace parkingSpace, ParkingLot parkingLot) {
-        this.id = id;
+        this.id = nextBookingId++;
         this.client = client;
         this.totalPrice = totalPrice;
         this.licensePlate = licensePlate;
@@ -36,7 +36,7 @@ public class Booking {
     }
 
     public Booking() {
-    	
+    	this.id = nextBookingId++;
     }
 
     // Getters
@@ -79,6 +79,9 @@ public class Booking {
     // Setters
     public void setID(int id) {
         this.id = id;
+        if (id >= nextBookingId) {
+            nextBookingId = id + 1;
+        }
     }
 
     public void setClient(Client client) {

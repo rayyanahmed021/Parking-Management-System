@@ -205,15 +205,21 @@ public class NewBookingFlow {
             if (newBooking.getParkingSpace() != null) {
                 // Link the selected space to the new booking
                 client.selectSpace(newBooking);
+                
+                double depositAmount = client.calculateDepositClient();
+                newBooking.setTotalPrice(depositAmount);
+                
+                ArrayList<Booking> bookings = db.getAllBookings();
+                bookings.add(newBooking);
                 // Close the frame and show payment screen
                 frame.dispose();
-                new PaymentScreen(client);
+                new PaymentScreen(client, newBooking, depositAmount);
             } else {
                 JOptionPane.showMessageDialog(frame, "Please select a parking space.");
             }
         });
         mainPanel.add(confirmButton, BorderLayout.SOUTH);
-
+        
         frame.add(mainPanel);
         frame.revalidate();
         frame.repaint();

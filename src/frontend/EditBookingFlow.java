@@ -101,7 +101,8 @@ public class EditBookingFlow {
             
             if (updateSuccess) {
                 JOptionPane.showMessageDialog(frame, "Booking updated successfully.");
-                PaymentScreen p = new PaymentScreen(client);
+                double depositAmount = client.calculateDepositClient();
+                PaymentScreen p = new PaymentScreen(client, selectedBooking, depositAmount);
                 frame.dispose();
             } else {
                 JOptionPane.showMessageDialog(frame, "Selected time slot is unavailable. Try a different time.");

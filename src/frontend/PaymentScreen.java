@@ -4,115 +4,179 @@ import backend.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.*;
 
 public class PaymentScreen {
     private JFrame frame;
     private Client client;
-    private JPanel paymentPanel;
+    private Booking booking;
+    private double amount;
+    private JComboBox<String> paymentMethodDropdown;
+    private JPanel inputPanel;
+    private JTextField cardNumberField, cardHolderField, cvvField, expiryField, emailField, passwordField, mobileNumberField, providerField;
 
-    public PaymentScreen(Client client) {
+    public PaymentScreen(Client client, Booking booking, double amount) {
         this.client = client;
+        this.booking = booking;
+        this.amount = amount;
         initialize();
     }
 
     private void initialize() {
-        frame = new JFrame("Payment Screen");
+        frame = new JFrame("Payment");
         frame.setSize(500, 400);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
-        JLabel titleLabel = new JLabel("Pending Payments", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("Select Payment Method:", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
         frame.add(titleLabel, BorderLayout.NORTH);
 
-        paymentPanel = new JPanel();
-        paymentPanel.setLayout(new BoxLayout(paymentPanel, BoxLayout.Y_AXIS));
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
-        displayPendingPayments();
+        // Dropdown for selecting payment method
+        String[] paymentMethods = {"Credit Card", "Debit Card", "PayPal", "Mobile"};
+        paymentMethodDropdown = new JComboBox<>(paymentMethods);
+        paymentMethodDropdown.addActionListener(e -> updateInputFields());
 
-        frame.add(new JScrollPane(paymentPanel), BorderLayout.CENTER);
+        JPanel dropdownPanel = new JPanel();
+        dropdownPanel.add(new JLabel("Payment Method:"));
+        dropdownPanel.add(paymentMethodDropdown);
+        centerPanel.add(dropdownPanel);
+
+        // Dynamic input panel
+        inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(5, 2, 5, 5));
+        centerPanel.add(inputPanel);
+
+        updateInputFields();
+
+        frame.add(centerPanel, BorderLayout.CENTER);
+
+        // Buttons
+        JPanel buttonPanel = new JPanel();
+        JButton payButton = new JButton("Confirm Payment");
+        payButton.addActionListener(e -> processPayment());
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(e -> frame.dispose());
+
+        buttonPanel.add(payButton);
+        buttonPanel.add(cancelButton);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
+
         frame.setVisible(true);
     }
 
-    private void displayPendingPayments() {
-        paymentPanel.removeAll();
-        ArrayList<Booking> bookings = client.getBookings();
+    private void updateInputFields() {
+        inputPanel.removeAll();
+        String selectedMethod = (String) paymentMethodDropdown.getSelectedItem();
+
+        if ("Credit Card".equals(selectedMethod) || "Debit Card".equals(selectedMethod)) {
+            inputPanel.add(new JLabel("Card Number:"));
+            cardNumberField = new JTextField();
+            inputPanel.add(cardNumberField);
+
+            inputPanel.add(new JLabel("Card Holder Name:"));
+            cardHolderField = new JTextField();
+            inputPanel.add(cardHolderField);
+
+            inputPanel.add(new JLabel("CVV:"));
+            cvvField = new JTextField();
+            inputPanel.add(cvvField);
+
+            inputPanel.add(new JLabel("Expiry Date (MM/YY):"));
+            expiryField = new JTextField();
+            inputPanel.add(expiryField);
+        } else if ("PayPal".equals(selectedMethod)) {
+            inputPanel.add(new JLabel("PayPal Email:"));
+            emailField = new JTextField();
+            inputPanel.add(emailField);
+            
+            inputPanel.add(new JLabel("PayPal Password:"));
+            passwordField = new JTextField();
+            inputPanel.add(passwordField);
+            
+        } else if ("Mobile".equals(selectedMethod)) {
+            inputPanel.add(new JLabel("Mobile Number:"));
+            mobileNumberField = new JTextField();
+            inputPanel.add(mobileNumberField);
+
+            inputPanel.add(new JLabel("Provider:"));
+            providerField = new JTextField();
+            inputPanel.add(providerField);
+        }
+
+        inputPanel.revalidate();
+        inputPanel.repaint();
+    }
+
+    private void processPayment() {
+        String selectedMethod = (String) paymentMethodDropdown.getSelectedItem();
+        PaymentStrategy paymentStrategy = null;
+
+        if ("Credit Card".equals(selectedMethod) || "Debit Card".equals(selectedMethod)) {
+            try {
+                long cardNumber = Long.parseLong(cardNumberField.getText());
+                String cardHolder = cardHolderField.getText();
+                String cvv = cvvField.getText();
+                String expiry = expiryField.getText();
+
+                if (cardHolder.isEmpty() || cvv.length() != 3 || expiry.length() != 5) {
+                    JOptionPane.showMessageDialog(frame, "Invalid card details!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                paymentStrategy = "Credit Card".equals(selectedMethod)
+                        ? new CreditCardStrategy(cardNumber, cardHolder, cvv, expiry)
+                        : new DebitCardStrategy(cardNumber, cardHolder, cvv, expiry);
+
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(frame, "Invalid card number!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } else if ("PayPal".equals(selectedMethod)) {
+            String email = emailField.getText();
+            String password = passwordField.getText();
+            if (!email.contains("@")) {
+                JOptionPane.showMessageDialog(frame, "Invalid email format!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            paymentStrategy = new PayPalStrategy(email, password); // Simulating password input
+        } else if ("Mobile".equals(selectedMethod)) {
+            String mobileNumber = mobileNumberField.getText();
+            String provider = providerField.getText();
+            if (mobileNumber.length() != 10 || provider.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Invalid mobile payment details!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            paymentStrategy = new MobilePaymentStrategy(mobileNumber, provider);
+        }
+
+        if (paymentStrategy != null) {
+//            Payment payment = paymentStrategy.processPayment(amount);
+//            booking.setPayment(payment);
+        	
+        	Database db = Database.getInstance();
+            int newPaymentId = db.getAllPayments().size() + 1; // Generate new Payment ID
+
+            Payment processedPayment = new Payment(newPaymentId, amount, false, paymentStrategy);
+            db.getAllPayments().add(processedPayment); // Store the payment in database
+
+            // **Link payment to booking before saving booking to database**
+            booking.setPayment(processedPayment);
+
+            JOptionPane.showMessageDialog(frame, "Payment successful! Amount: $" + amount);
+            frame.dispose();
+            new OptionsScreen(client);
+        }
         
-
-        boolean hasPayments = false;
-        for (Booking booking : bookings) {
-            Payment payment = booking.getPayment();
-            // System.out.println(booking.getTotalPrice()); // Test Case DO NOT REMOVE
-            // System.out.println(payment);
-            if (payment != null && !payment.getIsRefunded() && payment.getTotal() > 0) {
-                hasPayments = true;
-
-                JPanel paymentItem = new JPanel(new FlowLayout());
-                paymentItem.setBorder(BorderFactory.createTitledBorder("Booking ID: " + booking.getID()));
-                
-                JLabel paymentLabel = new JLabel(
-                        "Total: $" + payment.getTotal() + " | Method: " + payment.getPaymentMethod()
-                );
-
-                JButton payBtn = new JButton("Pay");
-                JButton refundBtn = new JButton("Refund");
-
-                payBtn.addActionListener(e -> processPayment(payment));
-                refundBtn.addActionListener(e -> processRefund(payment));
-
-                paymentItem.add(paymentLabel);
-                paymentItem.add(payBtn);
-                paymentItem.add(refundBtn);
-                paymentPanel.add(paymentItem);
-            }
-        }
-
-        if (!hasPayments) {
-            paymentPanel.add(new JLabel("No pending payments."));
-            JButton backButton = new JButton("Back");
-            backButton.addActionListener(e -> {
-                frame.dispose();
-                new OptionsScreen(client);
-            });
-            paymentPanel.add(backButton);
-        }
-
-        paymentPanel.revalidate();
-        paymentPanel.repaint();
-    }
-
-    private void processPayment(Payment payment) {
-        int confirm = JOptionPane.showConfirmDialog(frame, "Confirm payment of $" + payment.getTotal() + "?");
-        if (confirm == JOptionPane.YES_OPTION) {
-            payment.setIsRefunded(true);
-            JOptionPane.showMessageDialog(frame, "Payment processed successfully.");
-            
-            try {
-                Database.getInstance().updatePayments("src/paymentData.csv");  // Save updated payment status
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            frame.dispose();
-            new PaymentScreen(client); // Refresh the screen
-        }
-    }
-
-    private void processRefund(Payment payment) {
-        int confirm = JOptionPane.showConfirmDialog(frame, "Are you sure you want to request a refund?");
-        if (confirm == JOptionPane.YES_OPTION) {
-            payment.setIsRefunded(true);
-            JOptionPane.showMessageDialog(frame, "Refund request processed successfully.");
-            
-            try {
-                Database.getInstance().updatePayments("src/paymentData.csv");  // Save refund status
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            frame.dispose();
-            new PaymentScreen(client); // Refresh the screen
-        }
+//        Payment processedPayment = paymentStrategy.processPayment(amount);
+//        Database db = Database.getInstance();
+//        ArrayList <Payment> payments = db.getAllPayments();
+//        payments.add(processedPayment);
     }
 }
