@@ -209,24 +209,26 @@ public abstract class Client {
 		}
 		else if (changeType.toLowerCase().equals("edit")) {
 			//update payment
-			long hoursDifference = Duration.between(change[0], change[1]).toHours();
-			booking.setTotalPrice(booking.getTotalPrice() + (hoursDifference*this.calculateDepositClient()));
+			//long hoursDifference = Duration.between(change[0], change[1]).toHours();
+			//booking.setTotalPrice(booking.getTotalPrice() + (hoursDifference*this.calculateDepositClient()));
 			boolean overlap = false;
 			
-			for (Booking bookings : db.getAllBookings()) {
-				// If there is an overlap in time
-				if (booking.getStartTime().isBefore(bookings.getEndTime()) && bookings.getStartTime().isBefore(booking.getEndTime())) {
-					overlap = true;
-				}
-			}
+	        for (Booking existingBooking : db.getAllBookings()) {
+	            if (booking.getParkingLot().equals(existingBooking.getParkingLot())) {
+	                if (!(change[1].isBefore(existingBooking.getStartTime()) ||
+	                      existingBooking.getEndTime().isBefore(change[0]))) {
+	                    overlap = true;
+	                    break;
+	                }
+	            }
+	        }
+			
 			if (!overlap) {
-				for (Booking bookings2 : this.bookings) {
-					if (bookings2 == booking) {
-						bookings2.setStartTime(change[0]);
-						bookings2.setEndTime(change[1]);
-						return true;
-					}
-				}
+				booking.setStartTime(change[0]);
+				booking.setEndTime(change[1]);
+			}
+			else {
+				return false;
 			}
 			
 		}
