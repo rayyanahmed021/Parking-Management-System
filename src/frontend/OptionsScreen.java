@@ -24,9 +24,10 @@ public class OptionsScreen {
 
     private void initialize() {
         frame = new JFrame("Client Options");
-        frame.setSize(400, 325);
+        frame.setSize(400, 375);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
+        frame.getContentPane().setBackground(new Color(173, 216, 230));
 
         // Center the window on the screen
         //frame.setLocationRelativeTo(null);
@@ -57,6 +58,7 @@ public class OptionsScreen {
         JButton viewBookingsBtn = new JButton("View Bookings");
         JButton newBookingBtn = new JButton("Make a New Booking");
         JButton editBookingBtn = new JButton("Modify an Existing Booking");
+        JButton extendBookingBtn = new JButton("Extend an Existing Booking");
         JButton cancelBookingBtn = new JButton("Cancel a Booking");
         JButton checkOutBtn = new JButton("Checkout");
         JButton logoutBtn = new JButton("Logout");
@@ -65,6 +67,7 @@ public class OptionsScreen {
         viewBookingsBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         newBookingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         editBookingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        extendBookingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         cancelBookingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         checkOutBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         logoutBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -75,6 +78,8 @@ public class OptionsScreen {
         buttonPanel.add(newBookingBtn);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         buttonPanel.add(editBookingBtn);
+        buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        buttonPanel.add(extendBookingBtn);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         buttonPanel.add(cancelBookingBtn);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -88,6 +93,7 @@ public class OptionsScreen {
         viewBookingsBtn.addActionListener(e -> openScreen("ViewBookingScreen"));
         newBookingBtn.addActionListener(e -> openScreen("NewBookingScreen"));
         editBookingBtn.addActionListener(e -> openScreen("EditBookingScreen"));
+        extendBookingBtn.addActionListener(e -> openScreen("EditBookingScreen"));
         cancelBookingBtn.addActionListener(e -> {
             new CancelBookingFlow(client); // Open CancelBookingFlow in a new window
         });
