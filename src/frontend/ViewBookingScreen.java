@@ -55,7 +55,7 @@ public class ViewBookingScreen {
             String lotId = (booking.getParkingLot() != null) ? booking.getParkingLot().getId() : "N/A";
 
             JLabel bookingLabel = new JLabel("Booking " + booking.getID() +
-                    " | Lot: " + lotId + " | Space: " + spaceId +
+                    " | Lot: " + lotId + " |Location: " + booking.getParkingLot().getLocation() + " | Space: " + spaceId +
                     " | Amount: $" + booking.getTotalPrice() + 
                     " | Start Time: " + booking.getStartTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + 
                     " | End Time: " + booking.getEndTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
