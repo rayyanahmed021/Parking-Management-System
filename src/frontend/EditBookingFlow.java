@@ -27,7 +27,7 @@ public class EditBookingFlow {
 
     private void initialize() {
         frame = new JFrame("Edit Booking");
-        frame.setSize(450, 350);
+        frame.setSize(550, 350);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 

@@ -32,7 +32,7 @@ public class NewBookingFlow {
 
     private void showParkingLotSelection() {
         frame = new JFrame("Select a Parking Lot");
-        frame.setSize(400, 300);
+        frame.setSize(550, 300);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
@@ -63,7 +63,13 @@ public class NewBookingFlow {
 
         JScrollPane scrollPane = new JScrollPane(lotPanel);
         frame.add(scrollPane, BorderLayout.CENTER);
-
+        
+        JPanel buttonPanel = new JPanel();
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> {
+            frame.dispose();
+            new OptionsScreen(client);
+        });
         JButton selectButton = new JButton("Next");
         selectButton.addActionListener(e -> {
             if (selectedLot != null) {
@@ -74,19 +80,19 @@ public class NewBookingFlow {
         });
         frame.add(selectButton, BorderLayout.SOUTH);
         
-        JButton backButton = new JButton("Back");
-        backButton.addActionListener(e -> {
-            frame.dispose();
-            new OptionsScreen(client);
-        });
-        lotPanel.add(backButton);
-
+        buttonPanel.add(selectButton);
+        buttonPanel.add(backButton);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
     }
 
     private void showLicenseAndTimeInput() {
         frame.getContentPane().removeAll();
         frame.setTitle("Enter Booking Details");
+        
+        JLabel titleLabel = new JLabel("Provide Booking Information", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        frame.add(titleLabel, BorderLayout.NORTH);
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(3, 2, 10, 10));
@@ -106,6 +112,9 @@ public class NewBookingFlow {
         panel.add(endLabel);
         panel.add(endField);
 
+        JPanel buttonPanel = new JPanel();
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> showParkingLotSelection());
         JButton nextButton = new JButton("Next");
         nextButton.addActionListener(e -> {
             try {
@@ -142,8 +151,11 @@ public class NewBookingFlow {
             }
         });
 
-        frame.getContentPane().add(panel, BorderLayout.CENTER);
-        frame.getContentPane().add(nextButton, BorderLayout.SOUTH);
+        buttonPanel.add(nextButton);
+        buttonPanel.add(backButton);
+        
+        frame.add(panel, BorderLayout.CENTER);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
         frame.revalidate();
         frame.repaint();
         
@@ -157,6 +169,10 @@ public class NewBookingFlow {
     private void showParkingSpaceSelection() {
         frame.getContentPane().removeAll();
         frame.setTitle("Select a Parking Space");
+        
+        JLabel titleLabel = new JLabel("Select a Parking Space", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        frame.add(titleLabel, BorderLayout.NORTH);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
