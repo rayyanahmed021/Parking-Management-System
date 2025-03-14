@@ -50,11 +50,6 @@ public class ViewBookingScreen {
     private void displayBookings() {
         bookingPanel.removeAll(); 
         for (Booking booking : client.getBookings()) {
-            // Check if the booking is refunded
-            Payment payment = booking.getPayment();
-            if (payment != null && payment.getIsRefunded()) {
-                continue; // Skip refunded bookings
-            }
 
             String spaceId = (booking.getParkingSpace() != null) ? String.valueOf(booking.getParkingSpace().getId()) : "N/A";
             String lotId = (booking.getParkingLot() != null) ? booking.getParkingLot().getId() : "N/A";

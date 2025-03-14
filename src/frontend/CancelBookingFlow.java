@@ -57,7 +57,7 @@ public class CancelBookingFlow {
             frame.dispose();
             return;
         }
-//        System.out.println(client.getBookings().get(0).activeBookings().size());
+
         bookingDropdown = new JComboBox<>(eligibleBookings.toArray(new Booking[0]));
         bookingDropdown.setPreferredSize(new Dimension(350, 30));
         centerPanel.add(bookingDropdown, gbc);
@@ -112,9 +112,6 @@ public class CancelBookingFlow {
         }
     }
 
-    /**
-     * Completes the cancellation of the booking after refund processing.
-     */
     public void completeCancellation(Booking selectedBooking, boolean refundProcessed) {
         client.getBookings().remove(selectedBooking);
         

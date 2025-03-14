@@ -1,7 +1,7 @@
 package backend;
 
 public class Payment {
-	static int nextPaymentId;
+	static int nextPaymentId = 0;
 	private int id;
     private double total;
     private boolean isRefunded;
@@ -15,6 +15,17 @@ public class Payment {
     // Constructor
     public Payment(int id, double total, boolean isRefunded, PaymentStrategy strategy) {
         this.id = id;
+        this.total = total;
+        this.isRefunded = isRefunded;
+        this.strategy = strategy;
+        
+        if (id >= nextPaymentId) {
+            nextPaymentId = id + 1;
+        }
+    }
+    
+    public Payment(double total, boolean isRefunded, PaymentStrategy strategy) {
+        this.id = nextPaymentId++; // Increment the ID automatically
         this.total = total;
         this.isRefunded = isRefunded;
         this.strategy = strategy;

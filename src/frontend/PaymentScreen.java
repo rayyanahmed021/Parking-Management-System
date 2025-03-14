@@ -37,7 +37,6 @@ public class PaymentScreen {
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
-        // Dropdown for selecting payment method
         String[] paymentMethods = {"Credit Card", "Debit Card", "PayPal", "Mobile"};
         paymentMethodDropdown = new JComboBox<>(paymentMethods);
         paymentMethodDropdown.addActionListener(e -> updateInputFields());
@@ -47,7 +46,6 @@ public class PaymentScreen {
         dropdownPanel.add(paymentMethodDropdown);
         centerPanel.add(dropdownPanel);
 
-        // Dynamic input panel
         inputPanel = new JPanel();
         inputPanel.setLayout(new GridLayout(5, 2, 5, 5));
         centerPanel.add(inputPanel);
@@ -56,7 +54,6 @@ public class PaymentScreen {
 
         frame.add(centerPanel, BorderLayout.CENTER);
 
-        // Buttons
         JPanel buttonPanel = new JPanel();
         JButton payButton = new JButton("Confirm Payment");
         payButton.addActionListener(e -> processPayment());
@@ -97,7 +94,7 @@ public class PaymentScreen {
             inputPanel.add(emailField);
             
             inputPanel.add(new JLabel("PayPal Password:"));
-            passwordField = new JTextField();
+            passwordField = new JPasswordField();
             inputPanel.add(passwordField);
             
         } else if ("Mobile".equals(selectedMethod)) {
@@ -145,11 +142,11 @@ public class PaymentScreen {
                 JOptionPane.showMessageDialog(frame, "Invalid email format!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            paymentStrategy = new PayPalStrategy(email, password); // Simulating password input
+            paymentStrategy = new PayPalStrategy(email, password);
         } else if ("Mobile".equals(selectedMethod)) {
             String mobileNumber = mobileNumberField.getText();
             String provider = providerField.getText();
-            if (mobileNumber.length() != 10 || provider.isEmpty()) {
+            if (!mobileNumber.matches("\\d{10}") || provider.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Invalid mobile payment details!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -157,26 +154,16 @@ public class PaymentScreen {
         }
 
         if (paymentStrategy != null) {
-//            Payment payment = paymentStrategy.processPayment(amount);
-//            booking.setPayment(payment);
-        	
         	Database db = Database.getInstance();
-            int newPaymentId = db.getAllPayments().size() + 1; // Generate new Payment ID
 
-            Payment processedPayment = new Payment(newPaymentId, amount, false, paymentStrategy);
-            db.getAllPayments().add(processedPayment); // Store the payment in database
-
-            // **Link payment to booking before saving booking to database**
+            Payment processedPayment = new Payment(amount, false, paymentStrategy);
+            db.getAllPayments().add(processedPayment); 
+            
             booking.setPayment(processedPayment);
 
             JOptionPane.showMessageDialog(frame, "Payment successful!");
             frame.dispose();
             new OptionsScreen(client);
         }
-        
-//        Payment processedPayment = paymentStrategy.processPayment(amount);
-//        Database db = Database.getInstance();
-//        ArrayList <Payment> payments = db.getAllPayments();
-//        payments.add(processedPayment);
     }
 }
