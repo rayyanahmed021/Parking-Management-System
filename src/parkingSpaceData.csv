@@ -11,7 +11,7 @@ id,lot,occupied,isEnabled
 9,b25a3,true,false
 10,b25a3,true,false
 11,b25a3,true,false
-12,b25a3,false,true
+12,b25a3,true,true
 13,b25a3,false,false
 14,b25a3,true,false
 15,b25a3,true,true
@@ -103,7 +103,7 @@ id,lot,occupied,isEnabled
 1,b25a5,true,true
 2,b25a5,false,false
 3,b25a5,true,true
-4,b25a5,false,true
+4,b25a5,true,true
 5,b25a5,true,true
 6,b25a5,true,true
 7,b25a5,false,false
