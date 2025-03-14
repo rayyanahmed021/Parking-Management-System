@@ -157,6 +157,9 @@ public class LoginRegisterScreen {
             if (usernameOrEmail.isEmpty() || password.isEmpty()) {
                 JOptionPane.showMessageDialog(formFrame, "Please fill in all fields!", "Error", JOptionPane.ERROR_MESSAGE);
             }
+            else if (Client.isStrongPassword(password) == false) {
+            	JOptionPane.showMessageDialog(formFrame, "Please use a strong password (i.e., a combination of uppercase letters, lowercase letters, numbers, and symbols).", "Error", JOptionPane.ERROR_MESSAGE);
+            }
             else { // Removed Manager role check
             	try {
             	    Client newClient = Client.registerUser(role, usernameOrEmail, password);
