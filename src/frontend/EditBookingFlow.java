@@ -102,6 +102,8 @@ public class EditBookingFlow {
             if (updateSuccess) {
                 JOptionPane.showMessageDialog(frame, "Booking updated successfully.");
                 //double depositAmount = client.calculateDepositClient();
+                double depositAmount = client.calculateDepositClient();
+
                 //PaymentScreen p = new PaymentScreen(client, selectedBooking, depositAmount);
                 new OptionsScreen(client);
                 frame.dispose();

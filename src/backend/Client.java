@@ -238,4 +238,27 @@ public abstract class Client {
 		return true;
 	}
 	
+	public static boolean isStrongPassword(String password) {
+		String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	    String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
+	    String NUMBERS = "0123456789";
+	    String SYMBOLS = "!@#$%^&*()-_+=<>?/";
+	    
+	    boolean hasUpper = false, hasLower = false, hasNumber = false, hasSymbol = false;
+	    
+	    for (int i = 0; i < UPPERCASE.length();	i++) {
+	    	if (password.contains(UPPERCASE.charAt(i)+"")) hasUpper = true;
+	    }
+	    for (int i = 0; i < LOWERCASE.length();	i++) {
+	    	if (password.contains(LOWERCASE.charAt(i)+"")) hasLower = true;
+	    }
+	    for (int i = 0; i < NUMBERS.length();	i++) {
+	    	if (password.contains(NUMBERS.charAt(i)+"")) hasNumber = true;
+	    }
+	    for (int i = 0; i < SYMBOLS.length();	i++) {
+	    	if (password.contains(SYMBOLS.charAt(i)+"")) hasSymbol = true;
+	    }
+	    return hasUpper && hasLower && hasNumber && hasSymbol;
+	}
+	
 }
