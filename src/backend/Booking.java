@@ -132,7 +132,7 @@ public class Booking {
     public double calculateCheckout() {
     	Duration d = Duration.between(this.startTime, this.endTime);
     	long hrs = d.toHours();
-    	return (hrs - 1) * this.client.calculateDepositClient();
+    	return (hrs) * this.client.calculateDepositClient();
     }
     
 }

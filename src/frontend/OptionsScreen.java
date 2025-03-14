@@ -9,6 +9,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class OptionsScreen {
     private JFrame frame;
@@ -21,7 +24,7 @@ public class OptionsScreen {
 
     private void initialize() {
         frame = new JFrame("Client Options");
-        frame.setSize(400, 350);
+        frame.setSize(400, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
@@ -54,16 +57,16 @@ public class OptionsScreen {
         JButton viewBookingsBtn = new JButton("View Bookings");
         JButton newBookingBtn = new JButton("Make a New Booking");
         JButton editBookingBtn = new JButton("Modify an Existing Booking");
-        JButton extendBookingBtn = new JButton("Extend an Existing Booking");
         JButton cancelBookingBtn = new JButton("Cancel a Booking");
+        JButton checkOutBtn = new JButton("Checkout");
         JButton logoutBtn = new JButton("Logout");
 
         // Set button alignment for a cleaner UI
         viewBookingsBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         newBookingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         editBookingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-        extendBookingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         cancelBookingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        checkOutBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         logoutBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Add buttons with spacing
@@ -73,9 +76,9 @@ public class OptionsScreen {
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         buttonPanel.add(editBookingBtn);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        buttonPanel.add(extendBookingBtn);
-        buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         buttonPanel.add(cancelBookingBtn);
+        buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        buttonPanel.add(checkOutBtn);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         buttonPanel.add(logoutBtn);
 
@@ -85,12 +88,12 @@ public class OptionsScreen {
         viewBookingsBtn.addActionListener(e -> openScreen("ViewBookingScreen"));
         newBookingBtn.addActionListener(e -> openScreen("NewBookingScreen"));
         editBookingBtn.addActionListener(e -> openScreen("EditBookingScreen"));
-        extendBookingBtn.addActionListener(e -> openScreen("EditBookingScreen"));
         cancelBookingBtn.addActionListener(e -> {
             new CancelBookingFlow(client); // Open CancelBookingFlow in a new window
         });
+        checkOutBtn.addActionListener(e -> handleCheckOut());
 
-
+        
         logoutBtn.addActionListener(e -> {
             frame.dispose();
             LoginRegisterScreen loginRegister = new LoginRegisterScreen();
@@ -120,5 +123,38 @@ public class OptionsScreen {
                 JOptionPane.showMessageDialog(frame, "Feature not implemented yet.");
                 break;
         }
+    }
+    
+    private void handleCheckOut() {
+        ArrayList<Booking> bookings = client.getBookings();
+        
+        Booking bookingToCheckout = bookings.stream()
+        		.filter(b -> b.getEndTime().isBefore(LocalDateTime.now())) 
+        		.findFirst()
+                .orElse(null);
+        
+        if (bookingToCheckout == null) {
+            JOptionPane.showMessageDialog(frame, "No active bookings available for checkout.", "Info", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        int id = bookingToCheckout.getID();
+        double depositAmount = client.calculateDepositClient();
+        double checkoutAmount = bookingToCheckout.calculateCheckout();
+        double finalAmountToPay = checkoutAmount - depositAmount;
+        double paymentTotalInCsv = bookingToCheckout.getPayment().getTotal();
+
+        if (paymentTotalInCsv >= checkoutAmount) {
+       	 JOptionPane.showMessageDialog(frame, "Checkout complete! No additional payment required.", "Info", JOptionPane.INFORMATION_MESSAGE);
+       	 //bookingToCheckout.setTotalPrice(checkoutAmount);
+       	 return;
+        }
+       
+        JOptionPane.showMessageDialog(frame, "CheckOut booking ID: "+id+" Redirecting to payment. Amount: $" + finalAmountToPay);
+        // Redirect to PaymentScreen with checkout amount
+        frame.dispose();
+        new PaymentScreen(client, bookingToCheckout, checkoutAmount);
+//        Database db = Database.getInstance();
+//        ArrayList<Payment> payments = db.getAllPayments();
+//        payments.remove(bookingToCheckout.getPayment());
     }
 }

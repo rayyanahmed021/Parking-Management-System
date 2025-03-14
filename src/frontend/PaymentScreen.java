@@ -169,7 +169,7 @@ public class PaymentScreen {
             // **Link payment to booking before saving booking to database**
             booking.setPayment(processedPayment);
 
-            JOptionPane.showMessageDialog(frame, "Payment successful! Amount: $" + amount);
+            JOptionPane.showMessageDialog(frame, "Payment successful!");
             frame.dispose();
             new OptionsScreen(client);
         }
