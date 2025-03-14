@@ -545,18 +545,18 @@ private static void showParkingSpacesSelection(ParkingLot lot) {
         // Name Field
         gbc.gridx = 0;
         gbc.gridy++;
-        formPanel.add(new JLabel("Manager Name:"), gbc);
+        formPanel.add(new JLabel("First Name:"), gbc);
         gbc.gridx = 1;
         JTextField nameField = new JTextField(15);
         formPanel.add(nameField, gbc);
 
-        // Password Field
+     // Name Field
         gbc.gridx = 0;
         gbc.gridy++;
-        formPanel.add(new JLabel("Password:"), gbc);
+        formPanel.add(new JLabel("Last Name:"), gbc);
         gbc.gridx = 1;
-        JPasswordField passwordField = new JPasswordField(15);
-        formPanel.add(passwordField, gbc);
+        JTextField lastNameField = new JTextField(15);
+        formPanel.add(lastNameField, gbc);
 
         // Submit Button
         gbc.gridx = 0;
@@ -565,20 +565,21 @@ private static void showParkingSpacesSelection(ParkingLot lot) {
         JButton submitButton = new JButton("Create Account");
         submitButton.setFont(new Font("Arial", Font.PLAIN, 14));
         submitButton.addActionListener(e -> {
-        	String name = nameField.getText();
-            String password = new String(passwordField.getPassword());
+        	String firstname = nameField.getText();
+            String lastname = lastNameField.getText();
             
-	        if (name.isEmpty() || password.isEmpty()) {
+	        if (firstname.isEmpty() || lastname.isEmpty()) {
 	            JOptionPane.showMessageDialog(formFrame, "Please fill in all fields!", "Error", JOptionPane.ERROR_MESSAGE);
 	        } 
 	        else {
-	        	boolean successful = managerLoggedIn.createManagerAccount(name, password);
-	        	if (successful == true){
-	        		JOptionPane.showMessageDialog(formFrame, "Manager account created successfully!");
+	        	String[] result = managerLoggedIn.createManagerAccount(firstname, lastname);
+	        	String name = result[0], password = result[1];
+	        	if (name != null){
+	        		JOptionPane.showMessageDialog(formFrame, "Manager account created successfully! Username: " + name + " | Password: " + password);
 	                formFrame.dispose();
 	        	}
 	        	else {
-	        		JOptionPane.showMessageDialog(formFrame, "Manager account with username " + name + " already exists.", "Error", JOptionPane.ERROR_MESSAGE);
+	        		JOptionPane.showMessageDialog(formFrame, "Something went wrong with creating an account!", "Error", JOptionPane.ERROR_MESSAGE);
 	        	}
 	        }
 	    });
