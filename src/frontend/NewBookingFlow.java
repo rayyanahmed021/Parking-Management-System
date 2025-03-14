@@ -232,6 +232,7 @@ public class NewBookingFlow {
                 newBooking.setTotalPrice(depositAmount);
                 
                 ArrayList<Booking> bookings = db.getAllBookings();
+                client.getBookings().add(newBooking);
                 bookings.add(newBooking);
                 // Close the frame and show payment screen
                 frame.dispose();
