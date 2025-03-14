@@ -24,7 +24,7 @@ public class OptionsScreen {
 
     private void initialize() {
         frame = new JFrame("Client Options");
-        frame.setSize(400, 300);
+        frame.setSize(400, 325);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
