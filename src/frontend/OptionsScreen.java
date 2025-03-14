@@ -29,9 +29,6 @@ public class OptionsScreen {
         frame.setLayout(new BorderLayout());
         frame.getContentPane().setBackground(new Color(173, 216, 230));
 
-        // Center the window on the screen
-        //frame.setLocationRelativeTo(null);
-        
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -47,10 +44,9 @@ public class OptionsScreen {
 
         JLabel titleLabel = new JLabel("Please Choose an Option:", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10)); // Top padding added
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         frame.add(titleLabel, BorderLayout.NORTH);
 
-        // Panel for buttons
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 50, 20, 50));
@@ -63,7 +59,6 @@ public class OptionsScreen {
         JButton checkOutBtn = new JButton("Checkout");
         JButton logoutBtn = new JButton("Logout");
 
-        // Set button alignment for a cleaner UI
         viewBookingsBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         newBookingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         editBookingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -72,7 +67,6 @@ public class OptionsScreen {
         checkOutBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         logoutBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Add buttons with spacing
         buttonPanel.add(viewBookingsBtn);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         buttonPanel.add(newBookingBtn);
@@ -89,13 +83,12 @@ public class OptionsScreen {
 
         frame.add(buttonPanel, BorderLayout.CENTER);
 
-        // Button actions
         viewBookingsBtn.addActionListener(e -> openScreen("ViewBookingScreen"));
         newBookingBtn.addActionListener(e -> openScreen("NewBookingScreen"));
         editBookingBtn.addActionListener(e -> openScreen("EditBookingScreen"));
         extendBookingBtn.addActionListener(e -> openScreen("EditBookingScreen"));
         cancelBookingBtn.addActionListener(e -> {
-            new CancelBookingFlow(client); // Open CancelBookingFlow in a new window
+            new CancelBookingFlow(client);
         });
         checkOutBtn.addActionListener(e -> handleCheckOut());
 
@@ -110,7 +103,7 @@ public class OptionsScreen {
     }
 
     private void openScreen(String screenName) {
-        frame.dispose(); // Close current screen before opening new one
+        frame.dispose();
 
         switch (screenName) {
             case "ViewBookingScreen":
@@ -123,7 +116,7 @@ public class OptionsScreen {
                 new EditBookingFlow(client);
                 break;
             case "CancelBookingScreen":
-                new CancelBookingFlow(client); // Fix: Now opens CancelBookingFlow
+                new CancelBookingFlow(client);
                 break;
             default:
                 JOptionPane.showMessageDialog(frame, "Feature not implemented yet.");
@@ -151,16 +144,15 @@ public class OptionsScreen {
 
         if (paymentTotalInCsv >= checkoutAmount) {
        	 JOptionPane.showMessageDialog(frame, "Checkout complete! No additional payment required.", "Info", JOptionPane.INFORMATION_MESSAGE);
-       	 //bookingToCheckout.setTotalPrice(checkoutAmount);
        	 return;
         }
        
         JOptionPane.showMessageDialog(frame, "CheckOut booking ID: "+id+" Redirecting to payment. Amount: $" + finalAmountToPay);
-        // Redirect to PaymentScreen with checkout amount
+        bookingToCheckout.setTotalPrice(checkoutAmount);
         frame.dispose();
         new PaymentScreen(client, bookingToCheckout, checkoutAmount);
-//        Database db = Database.getInstance();
-//        ArrayList<Payment> payments = db.getAllPayments();
-//        payments.remove(bookingToCheckout.getPayment());
+        Database db = Database.getInstance();
+        ArrayList<Payment> payments = db.getAllPayments();
+        payments.remove(bookingToCheckout.getPayment());
     }
 }
