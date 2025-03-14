@@ -169,6 +169,11 @@ public abstract class Client {
 	public boolean updateParking(String changeType, LocalDateTime[] change, Booking booking) {
 		Database db = Database.getInstance();
 		
+		if (change[0].isBefore(LocalDateTime.now()) || change[1].isBefore(LocalDateTime.now())
+				|| (change[1].isBefore(change[0]))) {
+			return false;
+		}
+		
 		if (changeType.toLowerCase().equals("cancel")) {
 			//cannot cancel at the current
 			//provide refund

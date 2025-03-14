@@ -129,6 +129,12 @@ public class NewBookingFlow {
                     return;
                 }
                 
+                if (startTime.isBefore(LocalDateTime.now()) || endTime.isBefore(LocalDateTime.now())
+        				|| (endTime.isBefore(startTime))) {
+                	JOptionPane.showMessageDialog(frame, "Time input is not valid");
+        			return;
+        		}
+                
                 Duration duration = Duration.between(startTime, endTime);
                 long hours = duration.toHours();
                 if (hours < 1) {
