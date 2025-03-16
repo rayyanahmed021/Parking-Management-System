@@ -5,7 +5,6 @@ import backend.AddParkingLotCommand;
 import backend.*;
 
 import java.awt.*;
-//import backend.Database;
 import java.util.ArrayList;
 
 public class ManagerFlow {
@@ -107,7 +106,6 @@ public class ManagerFlow {
             if (selectedLot[0] == null) {
                 JOptionPane.showMessageDialog(parkingFrame, "Please select a parking lot!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-//                JOptionPane.showMessageDialog(parkingFrame, "You selected: " + selectedLot[0].getName(), "Success", JOptionPane.INFORMATION_MESSAGE);
             	showUpdateParkingLot(selectedLot[0]);
                 parkingFrame.dispose();
             }
@@ -116,7 +114,6 @@ public class ManagerFlow {
         parkingPanel.add(submitButton, gbc);
         parkingFrame.add(parkingPanel);
         parkingFrame.setVisible(true);
-//        return parkingPanel;
 	}
 	
 private static void showParkingSpaceLotSelection() {
@@ -160,7 +157,6 @@ private static void showParkingSpaceLotSelection() {
             if (selectedLot[0] == null) {
                 JOptionPane.showMessageDialog(parkingFrame, "Please select a parking lot!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-//                JOptionPane.showMessageDialog(parkingFrame, "You selected: " + selectedLot[0].getName(), "Success", JOptionPane.INFORMATION_MESSAGE);
             	showParkingSpacesSelection(selectedLot[0]);
                 parkingFrame.dispose();
             }
@@ -169,7 +165,6 @@ private static void showParkingSpaceLotSelection() {
         parkingPanel.add(submitButton, gbc);
         parkingFrame.add(parkingPanel);
         parkingFrame.setVisible(true);
-//        return parkingPanel;
 	}
 
 private static void showParkingSpacesSelection(ParkingLot lot) {
@@ -483,13 +478,11 @@ private static void showParkingSpacesSelection(ParkingLot lot) {
 		    gbc.gridy = 0;
 		    gbc.anchor = GridBagConstraints.WEST;
 
-		    // Parking Lot Name Field
 		    formPanel.add(new JLabel("Parking Lot Name:"), gbc);
 		    gbc.gridx = 1;
 		    JTextField nameField = new JTextField(15);
 		    formPanel.add(nameField, gbc);
 
-		    // Parking Lot Location Field
 		    gbc.gridx = 0;
 		    gbc.gridy++;
 		    formPanel.add(new JLabel("Parking Lot Location:"), gbc);
@@ -497,7 +490,6 @@ private static void showParkingSpacesSelection(ParkingLot lot) {
 		    JTextField locationField = new JTextField(15);
 		    formPanel.add(locationField, gbc);
 
-		    // Submit Button
 		    gbc.gridx = 0;
 		    gbc.gridy++;
 		    gbc.gridwidth = 2;
@@ -519,7 +511,7 @@ private static void showParkingSpacesSelection(ParkingLot lot) {
 		            System.out.println("After Adding: " + db.getAllParkingLots().size());
 
 		            JOptionPane.showMessageDialog(formFrame, "Parking Lot Details Submitted", "Success", JOptionPane.INFORMATION_MESSAGE);
-		            formFrame.dispose(); // Close the form after submission
+		            formFrame.dispose();
 		        }
 		    });
 

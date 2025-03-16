@@ -19,10 +19,8 @@ public class UpdateParkingSpaceCommand implements ParkingCommand {
     public void execute() {
         if (actionType.equalsIgnoreCase("enable")) {
             space.setEnabled(true);
-           // System.out.println("enabled.");
         } else if (actionType.equalsIgnoreCase("disable")) {
         	space.setEnabled(false);
-            //System.out.println("disabled.");
         }
     }
 }

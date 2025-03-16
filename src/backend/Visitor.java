@@ -9,7 +9,6 @@ public class Visitor extends Client {
 
 	@Override
 	public double calculateDepositClient() {
-		// TODO Auto-generated method stub
 		return Visitor.RATE;
 	}
 

@@ -24,7 +24,7 @@ public abstract class Client {
 	            return c;
 	        }
 	    }
-	    return null; // Return null if client not found
+	    return null;
 	}
 
 	public void setEmail(String email) {
@@ -49,19 +49,16 @@ public abstract class Client {
 	public static Client registerUser(String clientType, String email, String password) throws Exception {
 	    Database database = Database.getInstance();
 
-	    // Validate email format
 	    if (!isValidEmail(email)) {
 	        throw new Exception("Invalid email format.");
 	    }
 
-	    // Check if email is already registered
 	    for (Client client : database.getAllClients()) {
 	        if (client.getEmail().equals(email)) {
 	            throw new Exception("Email is already registered.");
 	        }
 	    }
 
-	    // Create client using Factory pattern
 	    GenerateClientFactory factory = new GenerateClientFactory();
 	    Client registeredClient = factory.getClientInstance(clientType, email, password);
 	    database.getAllClients().add(registeredClient);
@@ -71,7 +68,6 @@ public abstract class Client {
 	
 	public abstract String getClientType();
 
-	// Email validation function
 	public static boolean isValidEmail(String email) {
 	    String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 	    Pattern pattern = Pattern.compile(emailRegex);
@@ -79,7 +75,6 @@ public abstract class Client {
 	    return matcher.matches();
 	}
 	
-	// License plate validation function
 	public static boolean isValidLicensePlate(String licensePlate) {
 		String plateRegex = "^[A-Z0-9]{1,3}-?[A-Z0-9]{1,4}$";
 		Pattern pattern = Pattern.compile(plateRegex);
@@ -110,9 +105,7 @@ public abstract class Client {
 			ParkingLot parkingLot = null;
 			ParkingSpace parkingSpace;
 			
-			// Check if licensePlate is valid
 			if (isValidLicensePlate(booking.getLicensePlate())) {
-				// Check if lot state is enabled
 				for (ParkingLot lots : db.getAllParkingLots()) {
 					if (lots.getId().equals(booking.getParkingLot().getId())) {
 						parkingLot = lots;
@@ -125,20 +118,12 @@ public abstract class Client {
 					}
 				}
 				
-				// Check if space state is enabled and not occupied
 				if (parkingLot != null && parkingLot.getParkingSpaces()[booking.getParkingSpace().getId()] != null) {
 					parkingSpace = parkingLot.getParkingSpaces()[booking.getParkingSpace().getId()];
-					// W.I.P: Understand how parking space states are handled
 					if (parkingSpace.isEnabled() && !parkingSpace.isOccupied()) {
 						booking.getParkingSpace().setOccupied(true);
-						// Booking Deposit: **(Confused whether to assign deposit or full total)**
 						booking.setTotalPrice(this.calculateDepositClient());
-						// Full total:
-						// System.out.println(booking.getTotalPrice()); Test Case DO NOT REMOVE
-//						long hoursDifference = Duration.between(booking.getStartTime(), booking.getEndTime()).toHours();
-//						booking.setTotalPrice(booking.getTotalPrice() + (hoursDifference*this.calculateDepositClient()));
 						this.bookings.add(booking);
-						// System.out.println(booking.getTotalPrice()); Test Case DO NOT REMOVE
 					}
 					else {
 						System.out.println("bad!");
@@ -165,7 +150,7 @@ public abstract class Client {
 	    	return active;
 	    }
 
-	// Changed change string to LocalDateTime array for simplicity
+
 	public boolean updateParking(String changeType, LocalDateTime[] change, Booking booking) {
 		Database db = Database.getInstance();
 		
@@ -175,10 +160,7 @@ public abstract class Client {
 		}
 		
 		if (changeType.toLowerCase().equals("cancel")) {
-			//cannot cancel at the current
-			//provide refund
 			if (this.bookings.contains(booking)) {
-				// Check if current time is before the start time of the booking
 				if (LocalDateTime.now().isBefore(change[0])) {
 					booking.setTotalPrice(0);
 					booking.getPayment().setIsRefunded(true);
@@ -191,13 +173,10 @@ public abstract class Client {
 			this.bookings.remove(booking);
 		}
 		else if (changeType.toLowerCase().equals("extend")) {
-			//Recalculate the total
 			long hoursDifference = Duration.between(booking.getEndTime(), change[1]).toHours();
 			booking.setTotalPrice(booking.getTotalPrice() + (hoursDifference*this.calculateDepositClient()));
 			boolean overlap = false;
-			// Add # of hrs extended * rate of client type
 			for (Booking bookings : db.getAllBookings()) {
-				// If there is an overlap in time
 				if (booking.getStartTime().isBefore(bookings.getEndTime()) && bookings.getStartTime().isBefore(booking.getEndTime())) {
 					overlap = true;
 				}
@@ -213,9 +192,6 @@ public abstract class Client {
 			return false;
 		}
 		else if (changeType.toLowerCase().equals("edit")) {
-			//update payment
-			//long hoursDifference = Duration.between(change[0], change[1]).toHours();
-			//booking.setTotalPrice(booking.getTotalPrice() + (hoursDifference*this.calculateDepositClient()));
 			boolean overlap = false;
 			
 	        for (Booking existingBooking : db.getAllBookings()) {

@@ -8,11 +8,10 @@ public class Payment {
     private PaymentStrategy strategy;
 
 
-    // Constructors
     public Payment() {
     	
     }
-    // Constructor
+
     public Payment(int id, double total, boolean isRefunded, PaymentStrategy strategy) {
         this.id = id;
         this.total = total;
@@ -25,13 +24,12 @@ public class Payment {
     }
     
     public Payment(double total, boolean isRefunded, PaymentStrategy strategy) {
-        this.id = nextPaymentId++; // Increment the ID automatically
+        this.id = nextPaymentId++;
         this.total = total;
         this.isRefunded = isRefunded;
         this.strategy = strategy;
     }
 
-    // Getters
     public int getId() {
         return id;
     }
@@ -66,7 +64,6 @@ public class Payment {
         return strategy;
     }
 
-    // Setters
     public void setTotal(double total) {
         this.total = total;
     }

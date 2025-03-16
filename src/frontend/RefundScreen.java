@@ -17,7 +17,7 @@ public class RefundScreen {
     public RefundScreen(Client client, Booking booking, CancelBookingFlow cancelBookingFlow) {
         this.client = client;
         this.booking = booking;
-        this.cancelBookingFlow = cancelBookingFlow; // Store reference to CancelBookingFlow
+        this.cancelBookingFlow = cancelBookingFlow;
         initialize();
     }
 
@@ -50,7 +50,7 @@ public class RefundScreen {
             JOptionPane.showMessageDialog(frame, "Refund has been successfully processed to your original booking method.");
         }
 
-        frame.dispose(); // Close refund screen
-        cancelBookingFlow.completeCancellation(booking, true); // Proceed to cancel booking
+        frame.dispose(); 
+        cancelBookingFlow.completeCancellation(booking, true); 
     }
 }

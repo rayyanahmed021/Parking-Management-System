@@ -8,12 +8,6 @@ import java.awt.event.WindowEvent;
 public class LoginRegisterScreen {
 
     public static void startGUI() {
-//    	JFrame mainFrame = new JFrame("Client Portal");
-//        mainFrame.setSize(400, 300);
-//        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Prevent immediate exit
-
-        // Attach Window Closing Event
-        
         JFrame frame = new JFrame("Client Portal");
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -101,7 +95,7 @@ public class LoginRegisterScreen {
         registerLabel.setFont(new Font("Arial", Font.BOLD, 16));
         registerPanel.add(registerLabel, gbc);
 
-        String[] roles = {"Student", "Faculty", "NonFaculty", "Visitor"}; // Removed "Manager"
+        String[] roles = {"Student", "Faculty", "NonFaculty", "Visitor"};
         for (String role : roles) {
             gbc.gridy++;
             JButton roleButton = new JButton(role);
@@ -134,7 +128,7 @@ public class LoginRegisterScreen {
         formPanel.add(formLabel, gbc);
 
         gbc.gridy++;
-        formPanel.add(new JLabel("Email:"), gbc); // No longer checking for Manager role
+        formPanel.add(new JLabel("Email:"), gbc);
         gbc.gridx = 1;
         JTextField usernameEmailField = new JTextField(15);
         formPanel.add(usernameEmailField, gbc);
@@ -160,7 +154,7 @@ public class LoginRegisterScreen {
             else if (Client.isStrongPassword(password) == false) {
             	JOptionPane.showMessageDialog(formFrame, "Please use a strong password (i.e., a combination of uppercase letters, lowercase letters, numbers, and symbols).", "Error", JOptionPane.ERROR_MESSAGE);
             }
-            else { // Removed Manager role check
+            else { 
             	try {
             	    Client newClient = Client.registerUser(role, usernameOrEmail, password);
 
@@ -175,7 +169,6 @@ public class LoginRegisterScreen {
             	    	new OptionsScreen(newClient);
             	    }
             	   
-            	    // Redirect to OptionsScreen after successful registration
             	} catch (Exception e1) {
             	    JOptionPane.showMessageDialog(formFrame, "Failed to register", "Error", JOptionPane.INFORMATION_MESSAGE);
             	}
@@ -254,7 +247,7 @@ public class LoginRegisterScreen {
             if (username.isEmpty() || password.isEmpty() || selectedRole[0].isEmpty()) {
                 JOptionPane.showMessageDialog(loginFrame, "Please enter all details!", "Error", JOptionPane.ERROR_MESSAGE);
             } 
-            else if (!selectedRole[0].equals("Manager")) { // Ensure only clients are handled
+            else if (!selectedRole[0].equals("Manager")) {
                 boolean isAuthorized = Client.authenticate(username, password);
                 if (isAuthorized) {
                     Client loggedInClient = Client.getClientByEmail(username);
@@ -275,9 +268,9 @@ public class LoginRegisterScreen {
 										"Account approval is pending. You will be able to login once approved.",
 										"Error", JOptionPane.ERROR_MESSAGE);
 							} else {
-								loginFrame.dispose(); // Close login window
+								loginFrame.dispose();
 								JOptionPane.showMessageDialog(loginFrame, "Logged in successfully as " + username);
-								new OptionsScreen(loggedInClient); // Redirect to OptionsScreen
+								new OptionsScreen(loggedInClient);
 							}
 						}
                     } else {
@@ -287,7 +280,7 @@ public class LoginRegisterScreen {
                     JOptionPane.showMessageDialog(loginFrame, "Login Failed. Please try again.");
                 }
             } else {
-                // Handle Manager Login (if needed)
+            	
             }
         });
 
@@ -352,13 +345,10 @@ public class LoginRegisterScreen {
                 if (isAuthenticated) {
                     loginFrame.dispose();
                     JOptionPane.showMessageDialog(loginFrame, (isSuperManager ? "Super" : "") +"Manager Login Successful!");
-                    // Open Manager/Super Manager's main page
                     if(isSuperManager){
                         MainApplication.openSuperManagerPage(username);
-//                    	ManagerFlow.showManagerActions(username);
                     } else{
                         MainApplication.openManagerPage(username);
-//                    	ManagerFlow.showManagerActions(username);
                     }
 
                 } else {

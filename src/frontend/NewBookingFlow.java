@@ -164,11 +164,6 @@ public class NewBookingFlow {
         frame.add(buttonPanel, BorderLayout.SOUTH);
         frame.revalidate();
         frame.repaint();
-        
-//        JButton backButton = new JButton("Back");
-//        backButton.addActionListener(e -> showParkingLotSelection());
-//        frame.add(backButton);
-        
         frame.setVisible(true);
     }
 
@@ -207,7 +202,6 @@ public class NewBookingFlow {
             }
         }
 
-        // Create a radio button for each available space
         ButtonGroup group = new ButtonGroup();
         for (ParkingSpace space : availableSpaces) {
             JRadioButton radioButton = new JRadioButton("Space: " + space.getId());
@@ -216,16 +210,13 @@ public class NewBookingFlow {
             radioButton.addActionListener(e -> newBooking.setParkingSpace(space));
         }
 
-        // Wrap spacePanel in a scroll pane for large lists
         JScrollPane scrollPane = new JScrollPane(spacePanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Confirm button
         JButton confirmButton = new JButton("Confirm and Proceed to Payment");
         confirmButton.addActionListener(e -> {
             if (newBooking.getParkingSpace() != null) {
-                // Link the selected space to the new booking
                 client.selectSpace(newBooking);
                 
                 double depositAmount = client.calculateDepositClient();
@@ -234,7 +225,6 @@ public class NewBookingFlow {
                 ArrayList<Booking> bookings = db.getAllBookings();
                 client.getBookings().add(newBooking);
                 bookings.add(newBooking);
-                // Close the frame and show payment screen
                 frame.dispose();
                 new PaymentScreen(client, newBooking, depositAmount);
             } else {

@@ -1,48 +1,12 @@
 package backend;
 public class ValidateClientRegistrationCommand implements ParkingCommand {
     private String clientId;
-//    private String email;
-//    private String password;
-//    private Database database;
-//
-//    public ValidateClientRegistrationCommand(String clientType, String email, String password) {
-//        this.clientType = clientType;
-//        this.email = email;
-//        this.password = password;
-//        this.database = Database.getInstance();
-//    }
     
     public ValidateClientRegistrationCommand(String clientId) {
     	this.clientId = clientId;
     }
     @Override
     public void execute() {
-//        if (!isValidEmail(email, clientType)) {
-//            //System.out.println("Registration failed");
-//            return;
-//        }
-//
-//        Client newClient;
-//        switch (clientType.toLowerCase()) {
-//            case "student":
-//                newClient = new Student(email, password);
-//                break;
-//            case "faculty":
-//                newClient = new Faculty(email, password);
-//                break;
-//            case "nonfaculty":
-//                newClient = new NonFaculty(email, password);
-//                break;
-//            case "visitor":
-//                newClient = new NonFaculty(email, password);
-//                break;
-//            default:
-//                //System.out.println("Invalid");
-//                return;
-//        }
-
-//        database.getAllClients().add(newClient);
-        //System.out.println("registered and validated.");
     	
     	Database database = Database.getInstance();
     	for (Client c: database.getAllClients()) {

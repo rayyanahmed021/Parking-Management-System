@@ -10,7 +10,7 @@ import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 
 public class Database implements ParkingObserver{
-	private static Database instance = null; // Singleton instance
+	private static Database instance = null;
 
 	private ArrayList<Payment> allPayments;
 	private ArrayList<Booking> allBookings;
@@ -19,7 +19,6 @@ public class Database implements ParkingObserver{
 	private ArrayList<ParkingLot> allParkingLots;
 	private ArrayList<ParkingSpace> allParkingSpaces;
 
-	// Private constructor to prevent direct instantiation
 	private Database() {
 		this.allPayments = new ArrayList<>();
 		this.allBookings = new ArrayList<>();
@@ -29,7 +28,6 @@ public class Database implements ParkingObserver{
 		this.allParkingSpaces = new ArrayList<>();
 	}
 
-	// Singleton getInstance method
 	public static Database getInstance() {
 		if (instance == null) {
 			instance = new Database();
@@ -146,7 +144,6 @@ public class Database implements ParkingObserver{
             ParkingSpace parkingSpace = new ParkingSpace();
             parkingSpaceId = Integer.parseInt(reader.get("id"));
             parkingSpace.setId(parkingSpaceId);
-//            parkingSpace.setParkingLot(new ParkingLot(Integer.parseInt(reader.get("lot"))))); //change this
             parkingLotId = reader.get("lot");
             for (ParkingLot lot: this.allParkingLots) {
             	if (lot.getId().equals(parkingLotId)) {
@@ -156,7 +153,6 @@ public class Database implements ParkingObserver{
             		lot.setParkingSpaces(parkingSpaces);
             	}
             }
-//            parkingSpace.setParkingLot(new ParkingLot());
             parkingSpace.setOccupied(Boolean.parseBoolean(reader.get("occupied")));
             parkingSpace.setEnabled(Boolean.parseBoolean(reader.get("isEnabled")));
             this.allParkingSpaces.add(parkingSpace);
@@ -431,9 +427,9 @@ public class Database implements ParkingObserver{
 					csvOutput.write(mobilePaymentStrategy.getMobileNumber());
 					csvOutput.write(mobilePaymentStrategy.getProvider());
 				}
-				csvOutput.endRecord(); // Ends the row properly
+				csvOutput.endRecord();
 			}
-			csvOutput.flush(); // Ensure data is written before closing
+			csvOutput.flush();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -470,9 +466,9 @@ public class Database implements ParkingObserver{
 					csvOutput.write("");
 				}
 
-				csvOutput.endRecord(); // Ends the row properly
+				csvOutput.endRecord();
 			}
-			csvOutput.flush(); // Ensure data is written before closing
+			csvOutput.flush();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -511,117 +507,8 @@ public class Database implements ParkingObserver{
 			db.loadParkingLot(parkingLotDataPath);
 			db.loadParkingSpaces(parkingSpaceDataPath);
 			db.loadBookings(bookingDataPath);
-			
-//			System.out.println(db.getAllParkingLots().get(0));
-//			NonFaculty n = (NonFaculty) db.allClients.get(0);
-//			System.out.println(n.getAccountApproved());
-//			Student newClient = (Student) Client.registerUser("Student", "test@gmail.com", "321");
-//			System.out.println(newClient.getAccountApproved());
-//			SuperManager superM = SuperManager.getSuperManagerInstance("admin", "admin");
-////			superM.executeCommand(new UpdateParkingSpaceCommand("disable",3,"1"));
-//			
-//			System.out.println(db.getAllParkingLots().get(0).getParkingSpaces()[3].isEnabled());
-//			superM.executeCommand(new AddParkingLotCommand(ParkingLot.randomIdGenerator(),"60"));
-//			System.out.println("asdada");
-////			System.out.println(db.getAllParkingLots().get(0));
-//			System.out.println(db.getAllParkingLots().get(3).getName());
-////			System.out.println(SuperManager.getSuperManagerInstance("", "").getSuperManagerData());
-//			
-////			System.out.println(Manager.authenticate("justin", "67823123"));
-////			Student s = new Student("jordan","123");
-//			LocalDateTime startTime = LocalDateTime.of(2025, 3, 1, 10, 0);
-//			LocalDateTime endTime = LocalDateTime.of(2025, 3, 1, 12, 0);
-//			Payment p = new Payment();
-////			p.setPaymentMethod(new PayPalStrategy("email", "password"));
-////			p.payAmount(35.0);
-//			
-//			// Test selectSpace booking deposit
-//			System.out.println(newClient.getBookings());
-//			System.out.println(newClient.selectSpace("1", 3, "ABC-123", 100, 0,startTime, endTime, p));
-//			System.out.println(newClient.getBookings().get(0).getTotalPrice());
-////			
-//			s.updateParking("Extend", null, s.bookings.get(0));
-//			System.out.println(s.bookings.size());
-			
-//			// Updating Booking (UpdateParking Method)
-//			LocalDateTime startTime = LocalDateTime.of(2025, 3, 5, 10, 0);
-//			LocalDateTime endTime = LocalDateTime.of(2025, 3, 5, 12, 0);
-//			LocalDateTime[] change = new LocalDateTime[]{startTime, endTime};
-//			Booking booking = new Booking();
-//			Payment p = new Payment();
-//			booking.setPayment(p);
-//			booking.setStartTime(startTime);
-//			booking.setEndTime(endTime);
-//			newClient.bookings.add(booking);
-//			long hoursDifference = Duration.between(change[0], change[1]).toHours();
-			
-			// Test Cancel Booking
-//			System.out.println(newClient.bookings);
-//			System.out.println(newClient.updateParking("Cancel", change, booking));
-//			System.out.println(newClient.bookings);
-			
-			// Test Extend Booking
-//			booking.setTotalPrice(hoursDifference*newClient.calculateDepositClient());
-//			System.out.println(booking.getEndTime() + " " + booking.getTotalPrice());
-//			endTime = LocalDateTime.of(2025, 3, 5, 18, 0);
-//			change[1] = endTime;
-//			System.out.println(newClient.updateParking("Extend", change, booking));
-//			System.out.println(booking.getEndTime() + " " + booking.getTotalPrice());
-			
-			// Test Edit Booking
-//			booking.setTotalPrice(hoursDifference*newClient.calculateDepositClient());
-//			System.out.println(booking.getStartTime() + " " + booking.getEndTime() + " " + booking.getTotalPrice());
-//			startTime = LocalDateTime.of(2025, 3, 5, 14, 0);
-//			endTime = LocalDateTime.of(2025, 3, 5, 20, 0);
-//			change[0] = startTime;
-//			change[1] = endTime;
-//			System.out.println(newClient.updateParking("Edit", change, booking));
-//			System.out.println(booking.getStartTime() + " " + booking.getEndTime() + " " + booking.getTotalPrice());
-			
-			//System.out.println(s.isValidLicensePlate("ABC-123"));
-//			System.out.println(s.bookings.get(0).getEndTime());
-//			db.updateBookings(bookingDataPath);
-			
-//			db.updateParkingSpaces(parkingSpaceDataPath);
-//			db.updateParkingLot(parkingLotDataPath);
-//			Client client = new Student("ugly@gmail.com", "123");
-//
-//	        // Creating a payment strategy (Credit Card)
-//	        PaymentStrategy payPalStrategy = new PayPalStrategy("user@example.com", "securepassword");
-//
-//	        // Processing the payment
-//	        Payment payment = new Payment();
-//	        payment.setPaymentMethod(payPalStrategy);
-//	        payment = payment.payAmount(100.0);
-//
-//	        // Creating a parking space
-//	        ParkingSpace parkingSpace = new ParkingSpace();
-//
-//	        // Creating start and end times for the booking
-//	        LocalDateTime startTime = LocalDateTime.of(2025, 3, 1, 10, 0); // March 1, 2025, 10:00 AM
-//	        LocalDateTime endTime = LocalDateTime.of(2025, 3, 1, 12, 0);   // March 1, 2025, 12:00 PM
-//	        
-//	        ParkingLot parkingLot = null;
-//	        
-//
-//	        // Creating a booking with the processed payment
-//	        Booking booking = new Booking(1, client, 100.0, "ABC-123", startTime, endTime, payment, parkingSpace, parkingLot);
-//
-//			//System.out.println(c.authenticate("ra@gmail.com", "123"));
-//	        printBookingDetails(booking);
-////			db.update("Client", clientDataPath);
-
-//			db.loadPayments(paymentDataPath);
-//			PaymentStrategy paymentStrategy = new MobilePaymentStrategy("asdasd","google pay");
-//			Payment p = new Payment(++Payment.nextPaymentId,31,false,paymentStrategy);
-//			db.allPayments.add(p);
-//			db.updatePayments(paymentDataPath);
-//			Payment p = paymentStrategy.processPayment(100);
-//			System.out.println(p.getId());
-//			db.update("Client", clientDataPath);
-			
 		} catch (Exception e) {
-			e.printStackTrace(); // Print exception details
+			e.printStackTrace();
 		}
 		
 	  
@@ -630,12 +517,11 @@ public class Database implements ParkingObserver{
 	private static void printBookingDetails(Booking booking) {
         System.out.println("\n--- Booking Details ---");
         System.out.println("Booking ID: " + booking.getID());
-//        System.out.println("Client: " + booking.getClient().getEmail());
+
         System.out.println("Email: " + booking.getClient().getEmail());
         System.out.println("License Plate: " + booking.getLicensePlate());
         System.out.println("Start Time: " + booking.getStartTime());
         System.out.println("End Time: " + booking.getEndTime());
-//        System.out.println("Parking Space ID: " + booking.getParkingSpace().getSpaceID());
 
         System.out.println("\n--- Payment Details ---");
         System.out.println("Amount Paid: $" + booking.getPayment().getTotal());

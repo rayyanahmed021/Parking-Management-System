@@ -17,10 +17,8 @@ public class UpdateParkingLotCommand implements ParkingCommand {
     public void execute() {
         if (actionType.equalsIgnoreCase("enable")) {
             lot.setState(new EnabledState());
-            //System.out.println("enabled.");
         } else if (actionType.equalsIgnoreCase("disable")) {
             lot.setState(new DisabledState());
-           // System.out.println("disabled.");
         }
     }
 }

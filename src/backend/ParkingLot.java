@@ -17,8 +17,7 @@ public class ParkingLot {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-
-	//    public ParkingLot(String id, String name, ParkingLotState state) {
+	
     public ParkingLot(String id, String name,ParkingLotState state, ParkingSpace[] parkingSpaces, String location) {
         this.id = id;
         this.name = name;
@@ -28,17 +27,14 @@ public class ParkingLot {
     }
     
     public static String randomIdGenerator() {
-    	//generate id
     	Database db = Database.getInstance();
     	String generatedId;
         boolean idExists;
 
         do {
-            // Generate a random unique identifier
             generatedId = UUID.randomUUID().toString().substring(0, 5);
             idExists = false;
             
-            // Check if the generated ID already exists in the database
             for (ParkingLot lot : db.getAllParkingLots()) {
                 if (lot.getId().equals(generatedId)) {
                     idExists = true;
@@ -81,7 +77,7 @@ public class ParkingLot {
     public ParkingLotState getState() {
         return state;
     }
-  /// check class diagram if we need this method in diagram
+
     public void handleStateChange() {
         state.handle(this);
     }

@@ -5,7 +5,6 @@ public class DebitCardStrategy implements PaymentStrategy {
     private String cvv;
     private String expiryDate;
 
-    // Constructor
     public DebitCardStrategy(long cardNumber, String cardHolderName, String cvv, String expiryDate) {
         this.cardNumber = cardNumber;
         this.cardHolderName = cardHolderName;
@@ -13,14 +12,12 @@ public class DebitCardStrategy implements PaymentStrategy {
         this.expiryDate = expiryDate;
     }
 
-    // Process Payment
     @Override
     public Payment processPayment(double amount) {
         System.out.println("Processing debit card payment of $" + amount);
         return new Payment(++Payment.nextPaymentId, amount, false, this);
     }
 
-    // Getters
     public long getCardNumber() {
         return cardNumber;
     }
@@ -37,7 +34,6 @@ public class DebitCardStrategy implements PaymentStrategy {
         return expiryDate;
     }
 
-    // Setters
     public void setCardNumber(long cardNumber) {
         this.cardNumber = cardNumber;
     }

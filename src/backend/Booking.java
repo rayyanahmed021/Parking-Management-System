@@ -15,7 +15,6 @@ public class Booking {
     private ParkingLot parkingLot;
     private Payment payment;
     
-    // Constructor
     public Booking(int id, Client client, double totalPrice, String licensePlate, 
                    LocalDateTime startTime, LocalDateTime endTime, 
                    Payment payment, ParkingSpace parkingSpace, ParkingLot parkingLot) {
@@ -39,7 +38,6 @@ public class Booking {
     	this.id = nextBookingId++;
     }
 
-    // Getters
     public int getID() {
         return id;
     }
@@ -76,7 +74,6 @@ public class Booking {
         return parkingLot;
     }
 
-    // Setters
     public void setID(int id) {
         this.id = id;
         if (id >= nextBookingId) {
@@ -89,7 +86,6 @@ public class Booking {
     }
 
     public void setTotalPrice(double totalPrice) {
-    	// this.payment.setTotal(totalPrice);
         this.totalPrice = totalPrice;
     }
 

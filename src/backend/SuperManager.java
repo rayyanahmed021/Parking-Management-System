@@ -4,7 +4,7 @@ public class SuperManager extends Manager {
     private static SuperManager singleSuperManagerInstance;
 
     private SuperManager(String name, String password) {
-        super(name, password); // Default credentials
+        super(name, password);
     }
     
     public static String generateStrongPassword(int length) {
@@ -20,18 +20,15 @@ public class SuperManager extends Manager {
 
         StringBuilder password = new StringBuilder(length);
         
-        // Ensure at least one character from each required category
         password.append(UPPERCASE.charAt(random.nextInt(UPPERCASE.length())));
         password.append(LOWERCASE.charAt(random.nextInt(LOWERCASE.length())));
         password.append(NUMBERS.charAt(random.nextInt(NUMBERS.length())));
         password.append(SYMBOLS.charAt(random.nextInt(SYMBOLS.length())));
         
-        // Fill the rest with random characters
         for (int i = 4; i < length; i++) {
             password.append(ALL_CHARACTERS.charAt(random.nextInt(ALL_CHARACTERS.length())));
         }
         
-        // Shuffle the password to ensure randomness
         return shuffleString(password.toString(), random);
     }
 

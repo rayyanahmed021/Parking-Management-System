@@ -33,11 +33,10 @@ public class ViewBookingScreen {
 
         frame.add(new JScrollPane(bookingPanel), BorderLayout.CENTER);
 
-        // Back button
         JButton backButton = new JButton("Back to Options");
         backButton.addActionListener(e -> {
             frame.dispose();
-            new OptionsScreen(client); // Redirect back to options
+            new OptionsScreen(client); 
         });
 
         JPanel bottomPanel = new JPanel();

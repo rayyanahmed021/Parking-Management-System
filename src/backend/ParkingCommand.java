@@ -1,4 +1,3 @@
-// ParkingCommand.java (Command Interface)
 package backend;
 
 public interface ParkingCommand {

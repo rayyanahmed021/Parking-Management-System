@@ -31,30 +31,25 @@ public class EditBookingFlow {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
-        // Title Label
         JLabel titleLabel = new JLabel("Select and modify one of your bookings", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         frame.add(titleLabel, BorderLayout.NORTH);
 
-        // Main panel for inputs
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(4, 2, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
-        // Booking selection dropdown
         JLabel selectBookingLabel = new JLabel("Select Booking:");
         bookingDropdown = new JComboBox<>(getBookingsArray());
         panel.add(selectBookingLabel);
         panel.add(bookingDropdown);
 
-        // Start time input
         JLabel startTimeLabel = new JLabel("New Start Time (yyyy-MM-dd HH:mm):");
         startTimeField = new JTextField();
         panel.add(startTimeLabel);
         panel.add(startTimeField);
 
-        // End time input
         JLabel endTimeLabel = new JLabel("New End Time (yyyy-MM-dd HH:mm):");
         endTimeField = new JTextField();
         panel.add(endTimeLabel);
@@ -62,7 +57,6 @@ public class EditBookingFlow {
 
         frame.add(panel, BorderLayout.CENTER);
 
-        // Buttons Panel
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout());
 
@@ -101,10 +95,8 @@ public class EditBookingFlow {
             
             if (updateSuccess) {
                 JOptionPane.showMessageDialog(frame, "Booking updated successfully.");
-                //double depositAmount = client.calculateDepositClient();
                 double depositAmount = client.calculateDepositClient();
 
-                //PaymentScreen p = new PaymentScreen(client, selectedBooking, depositAmount);
                 new OptionsScreen(client);
                 frame.dispose();
             } else {
