@@ -19,9 +19,11 @@ public class EditBookingFlow {
     private JComboBox<Booking> bookingDropdown;
     private JTextField startTimeField;
     private JTextField endTimeField;
+    private String action;
 
-    public EditBookingFlow(Client client) {
+    public EditBookingFlow(Client client, String action) {
         this.client = client;
+        this.action = action;
         initialize();
     }
 
@@ -91,7 +93,14 @@ public class EditBookingFlow {
             LocalDateTime newEndTime = LocalDateTime.parse(endTimeField.getText().trim(), formatter);
             
             LocalDateTime[] change = new LocalDateTime[] {newStartTime, newEndTime}; 
-            boolean updateSuccess = client.updateParking("Edit", change, selectedBooking);
+            boolean updateSuccess = false;
+            
+            if (this.action.toLowerCase().equals("edit")) {
+            	updateSuccess = client.updateParking("Edit", change, selectedBooking);
+            }
+            else if (this.action.toLowerCase().equals("extend")) {
+            	updateSuccess = client.updateParking("Extend", change, selectedBooking);
+            }
             
             if (updateSuccess) {
                 JOptionPane.showMessageDialog(frame, "Booking updated successfully.");

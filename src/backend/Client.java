@@ -173,26 +173,30 @@ public abstract class Client {
 			this.bookings.remove(booking);
 		}
 		else if (changeType.toLowerCase().equals("extend")) {
-			long hoursDifference = Duration.between(booking.getEndTime(), change[1]).toHours();
-			booking.setTotalPrice(booking.getTotalPrice() + (hoursDifference*this.calculateDepositClient()));
+			
+			if (change[0].isBefore(LocalDateTime.now()) || change[1].isBefore(LocalDateTime.now())) {
+				return false;
+			}
+			
 			boolean overlap = false;
 			for (Booking bookings : db.getAllBookings()) {
-				if (booking.getStartTime().isBefore(bookings.getEndTime()) && bookings.getStartTime().isBefore(booking.getEndTime())) {
+				if (booking.getEndTime().isBefore(bookings.getEndTime()) && 
+					bookings.getStartTime().isBefore(change[1])) {
 					overlap = true;
 				}
 			}
 			if (!overlap) {
-				for (Booking bookings2 : this.bookings) {
-					if (bookings2 == booking) {
-						bookings2.setEndTime(change[1]);
-						return true;
-					}
-				}
+				booking.setEndTime(change[1]);
+				return true;
 			}
 			return false;
 		}
 		else if (changeType.toLowerCase().equals("edit")) {
 			boolean overlap = false;
+			
+			if (change[0].isBefore(LocalDateTime.now()) || change[1].isBefore(LocalDateTime.now())) {
+				return false;
+			}
 			
 	        for (Booking existingBooking : db.getAllBookings()) {
 	            if (booking.getParkingLot().equals(existingBooking.getParkingLot())) {

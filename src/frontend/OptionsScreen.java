@@ -86,7 +86,7 @@ public class OptionsScreen {
         viewBookingsBtn.addActionListener(e -> openScreen("ViewBookingScreen"));
         newBookingBtn.addActionListener(e -> openScreen("NewBookingScreen"));
         editBookingBtn.addActionListener(e -> openScreen("EditBookingScreen"));
-        extendBookingBtn.addActionListener(e -> openScreen("EditBookingScreen"));
+        extendBookingBtn.addActionListener(e -> openScreen("ExtendBookingScreen"));
         cancelBookingBtn.addActionListener(e -> {
             new CancelBookingFlow(client);
         });
@@ -113,8 +113,11 @@ public class OptionsScreen {
             	new NewBookingFlow(client);
             	break;
             case "EditBookingScreen":
-                new EditBookingFlow(client);
+                new EditBookingFlow(client, "Edit");
                 break;
+            case "ExtendBookingScreen":
+            	new EditBookingFlow(client, "Extend");
+            	break;
             case "CancelBookingScreen":
                 new CancelBookingFlow(client);
                 break;
