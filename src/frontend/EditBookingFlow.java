@@ -74,7 +74,7 @@ public class EditBookingFlow {
     }
 
     private Booking[] getBookingsArray() {
-        List<Booking> bookings = client.getBookings();
+        List<Booking> bookings = client.activeBookings();
         return bookings.toArray(new Booking[0]);
     }
 
