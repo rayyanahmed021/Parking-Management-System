@@ -7,26 +7,29 @@ import java.awt.event.WindowEvent;
 
 public class LoginRegisterScreen {
 
+    // Keep a reference to the home page frame
+    private static JFrame homeFrame;
+
+    // Main Home Screen
     public static void startGUI() {
-        JFrame frame = new JFrame("Client Portal");
-        frame.addWindowListener(new WindowAdapter() {
+        homeFrame = new JFrame("Client Portal");
+        homeFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-            	try {
-					Database.updateEverything();
-				} catch (Exception exception) {
-					exception.printStackTrace();
-				}
-                frame.dispose();
+                try {
+                    Database.updateEverything();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                homeFrame.dispose();
                 System.exit(0);
             }
         });
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
-        frame.setLocationRelativeTo(null);
+        homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        homeFrame.setSize(400, 300);
+        homeFrame.setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
+        JPanel panel = new JPanel(new GridBagLayout());
         panel.setBackground(Color.LIGHT_GRAY);
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -42,49 +45,36 @@ public class LoginRegisterScreen {
         gbc.gridy++;
         JButton clientLoginButton = new JButton("Client Login");
         clientLoginButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        clientLoginButton.addActionListener(e -> {
-            frame.dispose();
-            showLoginForm();
-        });
+        clientLoginButton.addActionListener(e -> showLoginForm());
         panel.add(clientLoginButton, gbc);
 
         gbc.gridy++;
         JButton managerLoginButton = new JButton("Manager Login");
         managerLoginButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        managerLoginButton.addActionListener(e -> {
-            frame.dispose();
-            showManagerLoginForm();
-        });
+        managerLoginButton.addActionListener(e -> showManagerLoginForm());
         panel.add(managerLoginButton, gbc);
 
         gbc.gridy++;
         JButton superManagerLoginButton = new JButton("Super Manager Login");
         superManagerLoginButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        superManagerLoginButton.addActionListener(e -> {
-            frame.dispose();
-            showSuperManagerLoginForm();
-        });
+        superManagerLoginButton.addActionListener(e -> showSuperManagerLoginForm());
         panel.add(superManagerLoginButton, gbc);
 
         gbc.gridy++;
         JButton registerButton = new JButton("Register");
         registerButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        registerButton.addActionListener(e -> {
-            showRegisterRoles();
-            frame.dispose();
-        });
+        registerButton.addActionListener(e -> showRegisterRoles());
         panel.add(registerButton, gbc);
 
-        frame.add(panel);
-        frame.setVisible(true);
+        homeFrame.add(panel);
+        homeFrame.setVisible(true);
     }
 
     private static void showRegisterRoles() {
         JFrame registerFrame = new JFrame("Register");
         registerFrame.setSize(400, 300);
         registerFrame.setLocationRelativeTo(null);
-        JPanel registerPanel = new JPanel();
-        registerPanel.setLayout(new GridBagLayout());
+        JPanel registerPanel = new JPanel(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -110,13 +100,12 @@ public class LoginRegisterScreen {
         registerFrame.add(registerPanel);
         registerFrame.setVisible(true);
     }
-    
+
     private static void showRegisterForm(String role) {
         JFrame formFrame = new JFrame("Register - " + role);
         formFrame.setSize(400, 300);
         formFrame.setLocationRelativeTo(null);
-        JPanel formPanel = new JPanel();
-        formPanel.setLayout(new GridBagLayout());
+        JPanel formPanel = new JPanel(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -151,28 +140,24 @@ public class LoginRegisterScreen {
             if (usernameOrEmail.isEmpty() || password.isEmpty()) {
                 JOptionPane.showMessageDialog(formFrame, "Please fill in all fields!", "Error", JOptionPane.ERROR_MESSAGE);
             }
-            else if (Client.isStrongPassword(password) == false) {
-            	JOptionPane.showMessageDialog(formFrame, "Please use a strong password (i.e., a combination of uppercase letters, lowercase letters, numbers, and symbols).", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-            else { 
-            	try {
-            	    Client newClient = Client.registerUser(role, usernameOrEmail, password);
-
-            	    if (!role.toLowerCase().equals("visitor")) {
-            	    	JOptionPane.showMessageDialog(formFrame, "Pending Approval", "Error!", JOptionPane.INFORMATION_MESSAGE);
-            	    	formFrame.dispose();
-            	    	startGUI();
-            	    }
-            	    else {
-            	    	JOptionPane.showMessageDialog(formFrame, "Successfully registered!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            	    	formFrame.dispose();
-            	    	new OptionsScreen(newClient);
-            	    }
-            	   
-            	} catch (Exception e1) {
-            	    JOptionPane.showMessageDialog(formFrame, "Failed to register", "Error", JOptionPane.INFORMATION_MESSAGE);
-            	}
-
+            else if (!Client.isStrongPassword(password)) {
+                JOptionPane.showMessageDialog(formFrame,
+                        "Please use a strong password (uppercase, lowercase, numbers, symbols).",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                try {
+                    Client newClient = Client.registerUser(role, usernameOrEmail, password);
+                    if (!role.equalsIgnoreCase("visitor")) {
+                        JOptionPane.showMessageDialog(formFrame, "Pending Approval", "Info", JOptionPane.INFORMATION_MESSAGE);
+                        formFrame.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(formFrame, "Successfully registered!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        formFrame.dispose();
+                        new OptionsScreen(newClient);
+                    }
+                } catch (Exception e1) {
+                    JOptionPane.showMessageDialog(formFrame, "Failed to register", "Error", JOptionPane.INFORMATION_MESSAGE);
+                }
             }
         });
         formPanel.add(submitButton, gbc);
@@ -180,13 +165,12 @@ public class LoginRegisterScreen {
         formFrame.add(formPanel);
         formFrame.setVisible(true);
     }
-    
-    private static void showLoginForm() {
+
+        private static void showLoginForm() {
         JFrame loginFrame = new JFrame("Login");
         loginFrame.setSize(400, 400);
         loginFrame.setLocationRelativeTo(null);
-        JPanel loginPanel = new JPanel();
-        loginPanel.setLayout(new GridBagLayout());
+        JPanel loginPanel = new JPanel(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -221,8 +205,7 @@ public class LoginRegisterScreen {
         loginPanel.add(roleLabel, gbc);
 
         String[] roles = {"Student", "Faculty", "NonFaculty", "Visitor"};
-        JPanel rolePanel = new JPanel();
-        rolePanel.setLayout(new FlowLayout());
+        JPanel rolePanel = new JPanel(new FlowLayout());
         ButtonGroup roleGroup = new ButtonGroup();
         final String[] selectedRole = {""};
 
@@ -247,7 +230,7 @@ public class LoginRegisterScreen {
             if (username.isEmpty() || password.isEmpty() || selectedRole[0].isEmpty()) {
                 JOptionPane.showMessageDialog(loginFrame, "Please enter all details!", "Error", JOptionPane.ERROR_MESSAGE);
             } 
-            else if (!selectedRole[0].equals("Manager")) {
+            else if (!selectedRole[0].equalsIgnoreCase("manager")) {
                 boolean isAuthorized = Client.authenticate(username, password);
                 if (isAuthorized) {
                     Client loggedInClient = Client.getClientByEmail(username);
@@ -255,24 +238,27 @@ public class LoginRegisterScreen {
                     if (loggedInClient != null) {
                         String actualRole = loggedInClient.getClientType().toLowerCase();
                         String selectedRoleLower = selectedRole[0].toLowerCase();
-                        
                         if (!actualRole.equals(selectedRoleLower)) {
-                            JOptionPane.showMessageDialog(loginFrame, "Incorrect role selected. Select proper role", "Error", JOptionPane.ERROR_MESSAGE);
-						} else {
-							if (loggedInClient instanceof Student student && !student.getAccountApproved()
-									|| loggedInClient instanceof Faculty faculty && !faculty.getAccountApproved()
-									|| loggedInClient instanceof NonFaculty nonFaculty
-											&& !nonFaculty.getAccountApproved()) {
-
-								JOptionPane.showMessageDialog(loginFrame,
-										"Account approval is pending. You will be able to login once approved.",
-										"Error", JOptionPane.ERROR_MESSAGE);
-							} else {
-								loginFrame.dispose();
-								JOptionPane.showMessageDialog(loginFrame, "Logged in successfully as " + username);
-								new OptionsScreen(loggedInClient);
-							}
-						}
+                            JOptionPane.showMessageDialog(loginFrame, 
+                                "Incorrect role selected. Select proper role", 
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            if ((loggedInClient instanceof Student student && !student.getAccountApproved()) 
+                               || (loggedInClient instanceof Faculty faculty && !faculty.getAccountApproved()) 
+                               || (loggedInClient instanceof NonFaculty nonFaculty && !nonFaculty.getAccountApproved())) 
+                            {
+                                JOptionPane.showMessageDialog(loginFrame, 
+                                    "Account approval pending. You can log in once approved.",
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(loginFrame, "Logged in successfully as " + username);
+                                loginFrame.dispose();
+                                if (homeFrame != null) {
+                                    homeFrame.dispose();
+                                }
+                                new OptionsScreen(loggedInClient);
+                            }
+                        }
                     } else {
                         JOptionPane.showMessageDialog(loginFrame, "Error retrieving client information.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -280,7 +266,6 @@ public class LoginRegisterScreen {
                     JOptionPane.showMessageDialog(loginFrame, "Login Failed. Please try again.");
                 }
             } else {
-            	
             }
         });
 
@@ -290,20 +275,18 @@ public class LoginRegisterScreen {
         loginFrame.setVisible(true);
     }
 
-
     private static void showManagerLoginForm() {
         showManagerLogin(false);
     }
-    private static void showSuperManagerLoginForm(){
+    private static void showSuperManagerLoginForm() {
         showManagerLogin(true);
     }
 
     private static void showManagerLogin(boolean isSuperManager) {
-        JFrame loginFrame = new JFrame((isSuperManager ? "Super" : "") + "Manager Login");
+        JFrame loginFrame = new JFrame((isSuperManager ? "Super " : "") + "Manager Login");
         loginFrame.setSize(400, 200);
         loginFrame.setLocationRelativeTo(null);
-        JPanel loginPanel = new JPanel();
-        loginPanel.setLayout(new GridBagLayout());
+        JPanel loginPanel = new JPanel(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -335,22 +318,22 @@ public class LoginRegisterScreen {
             if (username.isEmpty() || password.isEmpty()) {
                 JOptionPane.showMessageDialog(loginFrame, "Please enter all details!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                boolean isAuthenticated = false;
-                if(isSuperManager){
-                    isAuthenticated = SuperManager.authenticate(username, password);
-                } else {
-                    isAuthenticated = Manager.authenticate(username, password);
-                }
+                boolean isAuthenticated = isSuperManager
+                                          ? SuperManager.authenticate(username, password)
+                                          : Manager.authenticate(username, password);
 
                 if (isAuthenticated) {
+                    JOptionPane.showMessageDialog(loginFrame, 
+                        (isSuperManager ? "Super " : "") + "Manager Login Successful!");
                     loginFrame.dispose();
-                    JOptionPane.showMessageDialog(loginFrame, (isSuperManager ? "Super" : "") +"Manager Login Successful!");
-                    if(isSuperManager){
+                    if (homeFrame != null) {
+                        homeFrame.dispose();
+                    }
+                    if (isSuperManager) {
                         MainApplication.openSuperManagerPage(username);
-                    } else{
+                    } else {
                         MainApplication.openManagerPage(username);
                     }
-
                 } else {
                     JOptionPane.showMessageDialog(loginFrame, "Login Failed. Please try again.");
                 }

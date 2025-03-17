@@ -187,6 +187,7 @@ public abstract class Client {
 			}
 			if (!overlap) {
 				booking.setEndTime(change[1]);
+				booking.setTotalPrice(booking.calculateCheckout());
 				return true;
 			}
 			return false;
@@ -211,6 +212,7 @@ public abstract class Client {
 			if (!overlap) {
 				booking.setStartTime(change[0]);
 				booking.setEndTime(change[1]);
+				booking.setTotalPrice(booking.calculateCheckout());
 			}
 			else {
 				return false;

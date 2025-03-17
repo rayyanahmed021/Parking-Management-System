@@ -99,7 +99,7 @@ id,lot,occupied,isEnabled
 97,b25a3,false,false
 98,b25a3,true,true
 99,b25a3,false,true
-0,b25a5,false,true
+0,b25a5,true,true
 1,b25a5,true,true
 2,b25a5,false,false
 3,b25a5,true,true

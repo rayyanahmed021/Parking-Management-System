@@ -226,6 +226,7 @@ public class NewBookingFlow {
                 client.getBookings().add(newBooking);
                 bookings.add(newBooking);
                 frame.dispose();
+                JOptionPane.showMessageDialog(frame, "You need to pay a deposit of $" + depositAmount);
                 new PaymentScreen(client, newBooking, depositAmount);
             } else {
                 JOptionPane.showMessageDialog(frame, "Please select a parking space.");
