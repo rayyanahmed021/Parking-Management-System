@@ -35,7 +35,7 @@ public class ParkingSensor {
 
     public void notifyObservers() {
         for (ParkingObserver observer : observers) {
-            observer.update(parkingSpace.getId(), parkingLot.getId()  , parkingSpace.isOccupied());
+            observer.update(parkingSpace.getId(), parkingSpace.getParkingLot().getId()  , parkingSpace.isOccupied());
         }
     }
 }
