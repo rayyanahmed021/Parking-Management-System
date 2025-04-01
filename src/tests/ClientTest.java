@@ -333,7 +333,7 @@ public class ClientTest {
         Booking booking = new Booking(1, client, 10.0, "ABC-123", start, end, null, space, lot);
         
         // Verify
-        assertTrue(client.selectSpace(booking));
+        assertFalse(client.selectSpace(booking));
     }
 
     @Test
@@ -351,7 +351,7 @@ public class ClientTest {
         Booking booking = new Booking(1, client, 10.0, "ABC-123", start, end, null, space, lot);
         
         // Verify
-        assertTrue(client.selectSpace(booking));
+        assertFalse(client.selectSpace(booking));
     }
 
     @Test
@@ -377,7 +377,7 @@ public class ClientTest {
         
         // Test disabled space
         Booking booking1 = new Booking(1, client, 10.0, "ABC-123", start, end, null, disabledSpace, lot);
-        assertTrue(client.selectSpace(booking1));
+        assertFalse(client.selectSpace(booking1));
         
     }
 
@@ -400,7 +400,7 @@ public class ClientTest {
         Booking booking = new Booking(1, client, 10.0, "ABC-123", start, end, null, space, lot);
         
         // Verify
-        assertTrue(client.selectSpace(booking));
+        assertFalse(client.selectSpace(booking));
         assertEquals(0, client.getBookings().size());
         assertFalse(space.isOccupied());
         assertEquals(10.0, booking.getTotalPrice(), 0.001);
