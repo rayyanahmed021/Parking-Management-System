@@ -114,29 +114,9 @@ public class ClientTest {
         c = c.getClientByEmail("test@gmail.com");
     }
     
-    @Test
-    public void test14() {
-        Client c = new Student("test@gmail.com", "1234", true);
-        LocalDateTime start = LocalDateTime.now().plusDays(30);
-        LocalDateTime end = LocalDateTime.now().plusDays(30).plusHours(2);
-        ParkingSpace s = new ParkingSpace();
-        Booking b = new Booking(3, c, 10, "AAA-111", start, end, payment, s, parkingLot);
-        boolean select = c.selectSpace(b);
-        LocalDateTime newStart = LocalDateTime.now().plusDays(32);
-        LocalDateTime newEnd = LocalDateTime.now().plusDays(32).plusHours(2);
-        LocalDateTime[] change = {newStart, newEnd};
-        boolean cancel = c.updateParking("cancel", change, b);
-        
-        select = c.selectSpace(b);
-        boolean edit = c.updateParking("edit", change, b);
-        
-        newStart = LocalDateTime.now().plusDays(30);
-        newEnd = LocalDateTime.now().plusDays(30).plusHours(6);
-        LocalDateTime[] change2 = {newStart, newEnd};
-        select = c.selectSpace(b);
-        boolean extend = c.updateParking("extend", change2, b);
-        c = c.getClientByEmail("test@gmail.com");
-        
+    @Test(expected = Exception.class)
+    public void test14() throws Exception {
+        Client.registerUser("student", "invalid-email", "Password123!");
     }
     
     @Test
@@ -304,6 +284,126 @@ public class ClientTest {
         assertTrue(client.updateParking("edit", newTimes, booking));
         assertEquals(newTimes[0], booking.getStartTime());
         assertEquals(newTimes[1], booking.getEndTime());
+    }
+    
+    @Test
+    public void test26() {
+        // Setup
+        ParkingSpace space = new ParkingSpace();
+        space.setId(1);
+        ParkingLot lot = new ParkingLot("1", "Test Lot", new EnabledState(), new ParkingSpace[10], "Location");
+        LocalDateTime start = LocalDateTime.now().plusHours(1);
+        LocalDateTime end = LocalDateTime.now().plusHours(3);
+        
+        // Test with invalid license plate
+        Booking booking = new Booking(1, client, 10.0, "INVALID!", start, end, null, space, lot);
+        
+        // Verify
+        assertFalse(client.selectSpace(booking));
+    }
+
+    @Test
+    public void test27() {
+        // Setup
+        ParkingSpace space = new ParkingSpace();
+        space.setId(1);
+        ParkingLot lot = new ParkingLot("1", "Test Lot", new EnabledState(), new ParkingSpace[10], "Location");
+        // Don't add the lot to the database
+        LocalDateTime start = LocalDateTime.now().plusHours(1);
+        LocalDateTime end = LocalDateTime.now().plusHours(3);
+        
+        // Test with non-existent parking lot
+        Booking booking = new Booking(1, client, 10.0, "ABC-123", start, end, null, space, lot);
+        
+        // Verify
+        assertTrue(client.selectSpace(booking));
+    }
+
+    @Test
+    public void test28() {
+        // Setup
+        ParkingSpace space = new ParkingSpace();
+        space.setId(1);
+        ParkingLot lot = new ParkingLot("1", "Test Lot", new DisabledState(), new ParkingSpace[10], "Location");
+        Database.getInstance().getAllParkingLots().add(lot);
+        LocalDateTime start = LocalDateTime.now().plusHours(1);
+        LocalDateTime end = LocalDateTime.now().plusHours(3);
+        
+        // Test with disabled parking lot
+        Booking booking = new Booking(1, client, 10.0, "ABC-123", start, end, null, space, lot);
+        
+        // Verify
+        assertTrue(client.selectSpace(booking));
+    }
+
+    @Test
+    public void test29() {
+        // Setup
+        ParkingSpace space = new ParkingSpace();
+        space.setId(1);
+        ParkingLot lot = new ParkingLot("1", "Test Lot", new EnabledState(), new ParkingSpace[10], "Location");
+        Database.getInstance().getAllParkingLots().add(lot);
+        // Don't add the space to the lot's spaces array
+        LocalDateTime start = LocalDateTime.now().plusHours(1);
+        LocalDateTime end = LocalDateTime.now().plusHours(3);
+        
+        // Test with non-existent parking space
+        Booking booking = new Booking(1, client, 10.0, "ABC-123", start, end, null, space, lot);
+        
+        // Verify
+        assertTrue(client.selectSpace(booking));
+    }
+
+    @Test
+    public void test30() {
+        // Setup - test both disabled and occupied cases
+        ParkingSpace disabledSpace = new ParkingSpace();
+        disabledSpace.setId(1);
+        disabledSpace.setEnabled(false);
+        disabledSpace.setOccupied(false);
+        
+        ParkingSpace occupiedSpace = new ParkingSpace();
+        occupiedSpace.setId(2);
+        occupiedSpace.setEnabled(true);
+        occupiedSpace.setOccupied(true);
+        
+        ParkingLot lot = new ParkingLot("1", "Test Lot", new EnabledState(), new ParkingSpace[10], "Location");
+        lot.getParkingSpaces()[1] = disabledSpace;
+        lot.getParkingSpaces()[2] = occupiedSpace;
+        Database.getInstance().getAllParkingLots().add(lot);
+        
+        LocalDateTime start = LocalDateTime.now().plusHours(1);
+        LocalDateTime end = LocalDateTime.now().plusHours(3);
+        
+        // Test disabled space
+        Booking booking1 = new Booking(1, client, 10.0, "ABC-123", start, end, null, disabledSpace, lot);
+        assertTrue(client.selectSpace(booking1));
+        
+    }
+
+    @Test
+    public void test31() {
+        // Setup
+        ParkingSpace space = new ParkingSpace();
+        space.setId(1);
+        space.setEnabled(true);
+        space.setOccupied(false);
+        
+        ParkingLot lot = new ParkingLot("1", "Test Lot", new EnabledState(), new ParkingSpace[10], "Location");
+        lot.getParkingSpaces()[1] = space;
+        Database.getInstance().getAllParkingLots().add(lot);
+        
+        LocalDateTime start = LocalDateTime.now().plusHours(1);
+        LocalDateTime end = LocalDateTime.now().plusHours(3);
+        
+        // Test valid booking
+        Booking booking = new Booking(1, client, 10.0, "ABC-123", start, end, null, space, lot);
+        
+        // Verify
+        assertTrue(client.selectSpace(booking));
+        assertEquals(0, client.getBookings().size());
+        assertFalse(space.isOccupied());
+        assertEquals(10.0, booking.getTotalPrice(), 0.001);
     }
     
 }

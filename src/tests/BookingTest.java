@@ -116,4 +116,18 @@ public class BookingTest {
         b.setTotalPrice(10);
         assertNotNull(b.getTotalPrice());
     }
+    
+    @Test
+    public void test16() {
+        Booking b = new Booking();
+        PaymentStrategy paymentStrategy = new CreditCardStrategy(411111111, "John Doe", "12/25", "123");
+        payment = new Payment(100.0, false, paymentStrategy);
+        parkingLot = new ParkingLot("PL123", "Test Lot", new EnabledState(), new ParkingSpace[100], "123 Test St.");
+        parkingSpace = new ParkingSpace(1, parkingLot, true);
+        b.setParkingLot(parkingLot);
+        b.setParkingSpace(parkingSpace);
+        b.setPayment(payment);
+        assertNotNull(b.getParkingLot());
+        assertNotNull(b.getParkingSpace());
+    }
 }
